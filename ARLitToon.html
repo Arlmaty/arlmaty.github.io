@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARLit Toon Shader 導入・使用ガイド | ALTIMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           Brand Variables (ALTIMA High-Tech Theme)
+           ========================================= */
+        :root {
+            --bg-base: #050508;
+            --bg-surface: rgba(20, 20, 30, 0.6);
+            --bg-surface-hover: rgba(30, 30, 45, 0.8);
+            --sidebar-bg: rgba(10, 10, 15, 0.95);
+            --text-main: #d1d5db;
+            --text-muted: #9ca3af;
+            --text-heading: #ffffff;
+            --accent-cyan: #00f0ff;
+            --accent-blue: #0051ff;
+            --accent-glow: rgba(0, 240, 255, 0.3);
+            --warning-red: #ff2a6d;
+            --warning-bg: rgba(255, 42, 109, 0.1);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-light: rgba(0, 240, 255, 0.2);
+            --code-bg: #0d0d14;
+        }
+
+        /* =========================================
+           Reset & Base
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 81, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 25%);
+            background-attachment: fixed;
+            display: flex;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text {
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            color: var(--text-heading);
+        }
+
+        a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: text-shadow 0.3s ease, color 0.3s ease;
+        }
+
+        /* =========================================
+           Layout: Sidebar & Main Content
+           ========================================= */
+        .sidebar {
+            width: 320px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-header {
+            padding: 30px 25px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .brand-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .nav-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 15px 40px;
+        }
+        
+        /* スクロールバー非表示 (webkit) */
+        .nav-wrapper::-webkit-scrollbar { display: none; }
+        .nav-wrapper { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 20px 0 8px 10px;
+            font-weight: 700;
+        }
+        .nav-menu:first-child .nav-group-title { margin-top: 0; }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: var(--text-muted);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text-heading);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-link.active {
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            box-shadow: inset 5px 0 15px -5px var(--accent-glow);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .main-content {
+            margin-left: 320px;
+            padding: 50px 60px 100px;
+            width: calc(100% - 320px);
+            min-height: 100vh;
+        }
+
+        /* Tabs Logic */
+        .tab-section {
+            display: none;
+            animation: fade-in-bottom 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        /* =========================================
+           Animista Animations
+           ========================================= */
+        @keyframes fade-in-bottom {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes text-focus-in {
+            0% { filter: blur(12px); opacity: 0; }
+            100% { filter: blur(0px); opacity: 1; }
+        }
+
+        /* =========================================
+           Typography & Components
+           ========================================= */
+        .page-title {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            animation: text-focus-in 0.8s both;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            margin: 3rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 24px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-glow);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--text-heading);
+            margin: 2.5rem 0 1.2rem;
+            padding-left: 10px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Callout Boxes (Quotes) */
+        .callout {
+            padding: 20px 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.05) 0%, rgba(0, 240, 255, 0.01) 100%);
+            border-left: 4px solid var(--accent-cyan);
+            line-height: 1.7;
+        }
+
+        .callout-warning {
+            background: linear-gradient(90deg, var(--warning-bg) 0%, rgba(255, 42, 109, 0.02) 100%);
+            border-left: 4px solid var(--warning-red);
+        }
+
+        .callout p { margin-bottom: 0.8rem; }
+        .callout p:last-child { margin-bottom: 0; }
+
+        /* Glassmorphism Cards */
+        .card {
+            background: var(--bg-surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-surface);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-cyan);
+            font-weight: 500;
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover td { background: rgba(0, 240, 255, 0.03); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            position: relative;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+
+        pre::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f;
+            margin-bottom: 15px;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: var(--accent-cyan);
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            color: #a6accd;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 24px;
+        }
+        li { margin-bottom: 8px; }
+
+        /* Details / Summary */
+        details {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        summary {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+            list-style: none; /* Hide default arrow */
+            display: flex;
+            align-items: center;
+        }
+        summary::before {
+            content: '►';
+            font-size: 0.8em;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+        details[open] summary::before { transform: rotate(90deg); }
+        details[open] summary {
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        details ul { font-size: 0.9rem; margin-bottom: 0; }
+        details li { margin-bottom: 12px; }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-color);
+            margin: 50px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 0;
+            }
+            .sidebar-header { padding: 20px; }
+            .nav-wrapper {
+                max-height: 300px; /* スクロール可能なメニュー */
+                padding: 10px 20px;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-badge">ALTIMA Creator Tools</div>
+            <h1>ARLit Toon</h1>
+        </div>
+        
+        <div class="nav-wrapper">
+            <div class="nav-group-title">Setup</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link active" data-target="tab-intro" onclick="switchTab('tab-intro')">はじめに・導入</a></li>
+            </ul>
+
+            <div class="nav-group-title">Core Features</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link" data-target="tab-rendering" onclick="switchTab('tab-rendering')">Transparency / Rendering</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-base" onclick="switchTab('tab-base')">Base (基本の見た目)</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-layer" onclick="switchTab('tab-layer')">Texture Layer (重ね合わせ)</a></li>
+            </ul>
+
+            <div class="nav-group-title">Lighting & Shading</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link" data-target="tab-light" onclick="switchTab('tab-light')">Lighting & Shadow</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-pbr" onclick="switchTab('tab-pbr')">PBR & Specular</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-matcap" onclick="switchTab('tab-matcap')">Matcap</a></li>
+            </ul>
+
+            <div class="nav-group-title">Visual Effects</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link" data-target="tab-emission" onclick="switchTab('tab-emission')">Emission & AudioLink</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-dissolve" onclick="switchTab('tab-dissolve')">Dissolve & Rim Light</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-outline" onclick="switchTab('tab-outline')">Outline & Sweep</a></li>
+            </ul>
+
+            <div class="nav-group-title">Advanced & Misc</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link" data-target="tab-particle" onclick="switchTab('tab-particle')">アニメ・パーティクル連携</a></li>
+                <li class="nav-item"><a class="nav-link" data-target="tab-misc" onclick="switchTab('tab-misc')">パフォーマンス・利用規約</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+
+        <section id="tab-intro" class="tab-section active">
+            <h1 class="page-title">ARLit トゥーンシェーダー（ARLitToon Shader）<br>導入・使用ガイド</h1>
+            <p class="page-subtitle">ALTIMA Official Documentation</p>
+
+            <h2>概要</h2>
+            <div class="card">
+                <p>ARLit（エーアール・リット）は、VRChatのアバター装飾品やパーティクルエフェクトのための、<strong>軽量・高機能なアニメ・トゥーン調（Toon）カスタムシェーダー</strong>です。物理ベースのリアル質感ではなく、イラスト風やセル画風の表現に最適化されています。</p>
+                <p>パーティクルのカラー連携、ディゾルブ、ソフトパーティクル、HDR発光、リムライトといった機能を標準で備えた、<strong>エフェクト制作に特化した汎用のトゥーンシェーダー</strong>です。</p>
+            </div>
+
+            <h2>ファイル構成</h2>
+            <pre><code>Assets/
+└── ALTIMA/
+    ├── ARLitToon/                  ← シェーダー本体（独立サブフォルダ）
+    │   ├── Shaders/
+    │   │   └── ARLitToon.shader    ← シェーダー本体
+    │   ├── Editor/
+    │   │   └── ARLitToonGUI.cs     ← マテリアル Inspector GUI
+    │   └── README.md               ← 本ガイド
+    └── (アバターアイテム各種)       ← アイテムは ALTIMA 直下に併存</code></pre>
+            <div class="callout">
+                <p><strong>配置のポイント</strong><br>
+                シェーダーは <code>ALTIMA/ARLitToon/</code> という専用サブフォルダで独立させています。<br>
+                これにより、同じ ARLitToon シェーダーを使う別のアバターアイテムを追加購入した際の二重インポートや、アイテムフォルダ削除によるシェーダーの巻き込み削除を防げます。</p>
+            </div>
+
+            <h2>動作環境</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>要件</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unity</td>
+                            <td>2019.4 LTS 以上（2022.3 LTS 推奨）</td>
+                        </tr>
+                        <tr>
+                            <td>レンダリングパイプライン</td>
+                            <td>Built-in（Legacy）</td>
+                        </tr>
+                        <tr>
+                            <td>VRChat SDK</td>
+                            <td>SDK3（Avatars / Worlds）</td>
+                        </tr>
+                        <tr>
+                            <td>対応プラットフォーム</td>
+                            <td><strong>PC 専用</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ Android / Quest 非対応</strong><br>
+                VRChat の Android（Quest）版では、アバターに使用できるシェーダーは VRChat SDK 付属の <strong>VRChat Mobile シェーダーのみ</strong>に制限されています。<br>
+                本シェーダーを Quest アバターに適用した場合、VRChat クライアントがカスタムシェーダーを自動的に VRChat Mobile シェーダーへ置き換えます。<br>
+                <strong>本シェーダーは PC プラットフォーム向けのアバター・パーティクルエフェクト専用です。</strong></p>
+            </div>
+
+            <h2>インポート手順</h2>
+            <ol class="card">
+                <li>配布パッケージ（<code>.unitypackage</code>）をプロジェクトにインポートすると <code>Assets/ALTIMA/ARLitToon/</code> に展開されます。</li>
+                <li>Unity が自動コンパイルを行います。マテリアルの Shader ドロップダウンから <strong>ALTIMA &gt; ARLitToon</strong> を選択して適用してください。</li>
+            </ol>
+            <div class="callout">
+                <p><strong>配置場所について</strong><br>
+                <code>ARLitToonGUI.cs</code> は必ず <code>Editor</code> フォルダ内に配置してください。<br>
+                <code>Editor</code> フォルダ外に置いた場合でも <code>#if UNITY_EDITOR</code> ガードにより動作しますが、<code>Editor</code> 内への配置を推奨します。</p>
+            </div>
+
+            <hr>
+            <h2 id="feature-list">機能とプロパティ一覧</h2>
+            <div class="callout">
+                <p>セクションの並びは Unity の Inspector（マテリアル設定画面）の表示順と同じです。Inspector と本ガイドを見比べながら設定できます。<br>
+                ※左側のメニューから各機能の解説ページへ移動できます。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-rendering" class="tab-section">
+            <h1 class="page-title">Transparency / Rendering</h1>
+            <p class="page-subtitle">透明度と描画設定</p>
+
+            <p>用途に合わせて Preset から選択するだけで、内部のブレンドや Cutoff 設定が自動で最適化されます。基本的には <strong>Preset を選ぶだけ</strong>で、下記の詳細設定を手動で触る必要はありません。</p>
+
+            <h4>Blend Preset（ブレンドプリセット）</h4>
+            <div class="card">
+                <ul>
+                    <li><strong>Opaque</strong>: 不透明（デフォルト）。通常の体や服、武器など。最も処理が軽いです。</li>
+                    <li><strong>Cutout</strong>: 葉っぱや金網など。テクスチャのアルファでバッサリと切り抜きます。</li>
+                    <li><strong>Fade</strong>: 魔法のエフェクトなど、全体が徐々に透けていく表現。<strong>アルファ値で段階的にフェード（フェードイン/アウト）させたい場合はこのモードを使います。</strong>※複数光源下でも白飛びしない事前乗算（Premult）方式に最適化されています。</li>
+                    <li><strong>Additive</strong>: 炎や光る魔法陣など、背景に色を加算して光らせる表現。アルファ値によるフェードも可能です。</li>
+                    <li><strong>Transparent</strong>: ガラスやスライムなど。透明にしつつ光の反射（ハイライト）は残したい時に。<strong>常時半透明の「素材の質感」表現向けで、アルファで徐々に消すフェード用途ではありません。</strong></li>
+                </ul>
+                <p style="margin-top:15px; color:var(--text-muted);">（※半透明系のプリセットでは、完全な透明部分に発生する描画エラーを防ぐための安全処理が自動適用されます）</p>
+            </div>
+
+            <div class="callout">
+                <p><strong>💡 アルファでフェードさせたいときは <code>Fade</code> を使ってください</strong><br>
+                他のシェーダーでは Transparent 系モードでアルファによる段階的フェードを行えることが多いですが、本シェーダーの <strong>Transparent はガラス等の常時半透明の質感表現に最適化</strong>されており、マテリアルの透明度（<code>_Color.a</code> やテクスチャのアルファ）を下げても、ハイライト（鏡面反射）・環境反射（映り込み）・発光は<strong>透けずに残ります</strong>（質感を保つため）。アニメーションで <code>_Color.a</code> を 0 にしても照り返し・映り込み・発光だけが残ります。<br>
+                そのため、マテリアルのアルファや <code>_Color</code> のアルファでオブジェクト全体を<strong>フェードイン/アウト</strong>したい場合は、<strong><code>Fade</code>（不透明な発光・反射も含めて透ける）</strong> または <strong><code>Additive</code></strong> を選択してください。<br>
+                <strong>【例外：パーティクルの寿命フェード】</strong> Transparent でも、<strong>パーティクルの頂点カラーのアルファ（Color over Lifetime）</strong> で下げた場合は、ハイライト・環境反射・発光（Dissolve エッジ・Rim・Emission 含む）もすべて<strong>完全に消えます</strong>。これは「マテリアル透明度＝ガラスの透け具合（映り込みは残る）」「パーティクル寿命＝存在そのもの（消えれば全部消える）」を区別しているためです。<strong>Transparent のガラスマテリアルを Dissolve で消すエフェクト</strong>もこの仕組みで、映り込みごと自然に消滅します。<code>Vertex Color Blend Mode</code> を <code>Multiply</code> にして使ってください。</p>
+            </div>
+
+            <h4>詳細設定（通常は変更不要）</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ZWrite（深度書き込み）</strong></td>
+                            <td>オブジェクトの前後関係（奥行き）情報を書き込むかどうかの設定です。Preset が自動で最適な値を設定するため、通常は変更不要です。<code>On</code> は不透明向けで前後関係が正しく描画され、<code>Off</code> は半透明向けで重なり順の描画を可能にします。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cull（カリング）</strong></td>
+                            <td>描画する面を指定します。<code>Back</code>（標準）は表面のみ、<code>Off</code> は裏表両面、<code>Front</code> は裏面のみを描画します。布や葉、リボンなど裏側も見せたい薄い形状では <code>Off</code> にします。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Alpha Cutoff</strong></td>
+                            <td>テクスチャのアルファ値が、この数値より低い部分を切り抜く（消す）しきい値です。主に Cutout モードで使用します。半透明系プリセットでは透明部分のエラー防止のため自動で <code>0.001</code> に設定されます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Render Queue（描画順）</strong></td>
+                            <td>オブジェクトを描画する順番です。数値が大きいほど後（手前）に描画されます。Preset が自動設定します。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p>💡 <strong>【描画順のバグ対策（Zソート）】</strong><br>
+                <code>Fade</code> / <code>Additive</code> は既定で <code>Render Queue</code> = <strong>3001</strong>（ガラス等の <code>Transparent</code> = 3000 より手前）に設定されます。これは、同じ <code>Render Queue</code>（3000 同士）だと Unity が前後をオブジェクト単位の距離で並べ替えるため、半透明エフェクトがガラスの裏に回り込んで見える現象を避けるためです。<br>
+                それでもパーティクルやエフェクトが奥のガラスなどに隠れて見えなくなる場合は、インスペクターの <code>Render Queue</code> の数値を <strong>3050</strong> などへさらに上げることで手前に描画できます。逆に手前に出すぎる場合は数値を下げてください。</p>
+            </div>
+
+            <h4>Soft Particles（ソフトパーティクル）</h4>
+            <p>半透明（Fade/Additive等）のオブジェクトが、地面や壁などの不透明オブジェクトにめり込む際の不自然な境界線を消し、滑らかに溶け込ませる機能です。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fade Distance</strong></td>
+                            <td>境界線がフェードアウト（透ける）距離を調整します。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>仕様上の注意:</strong> ZWrite が Off の時（半透明プリセット時）にのみ動作します。また、VRChatのサムネイルカメラ等（正投影カメラ）では不具合を防ぐため自動で無効化されます。</p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ ワールド環境依存の機能です</strong><br>
+                ソフトパーティクルは、VRChat ワールド側のカメラが「深度テクスチャ」を生成している場合にのみ動作します。具体的には、ワールドが <strong>Deferred Rendering</strong>、<strong>ポストプロセスを使用</strong>、または<strong>他のソフトパーティクルシェーダーを使用</strong>している場合に有効になります。<br>
+                上記の条件を満たさないシンプルな Forward Rendering ワールドでは、ソフトパーティクル機能は自動的に無効化され、通常の半透明描画として表示されます。<br>
+                これは VRChat ワールド側のレンダリング設定に依存する仕様上の制約であり、アバター側のシェーダーから制御することはできません。他のVRChat用シェーダーでも同様の制約があります。<br>
+                <strong>【未対応ワールドでの挙動】</strong> 境界線が残った状態で半透明描画されますが、エフェクト自体は正常に表示されます。完全透過などの破綻は発生しません。</p>
+            </div>
+
+            <h4>Distance Fade（カメラ距離フェード）</h4>
+            <p>カメラからの距離に応じてオブジェクトのアルファをフェードさせる機能です。一人称視点で自分のオーラやエフェクトが視界を塞ぐのを防いだり、近づくと消える演出に使えます。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use Distance Fade</strong></td>
+                            <td>機能の有効/無効。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fade Near</strong></td>
+                            <td>この距離（カメラからの距離）以下で完全に透明になります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fade Far</strong></td>
+                            <td>この距離以上で完全に不透明（通常表示）になります。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>仕様上の注意:</strong> アルファを操作する機能のため、半透明プリセット（<strong>Fade / Additive / Transparent</strong>）での使用を前提としています。<code>Fade Near</code> を <code>Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code>_DistanceFadeNear</code> / <code>_DistanceFadeFar</code> はアニメーションも可能です。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-base" class="tab-section">
+            <h1 class="page-title">Base</h1>
+            <p class="page-subtitle">基本の見た目</p>
+
+            <p>キャラクターの肌や服、エフェクトの基本的な色と模様を決定します。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Albedo テクスチャ</strong></td>
+                            <td>モデルの表面に貼り付ける基本の画像です。A（アルファ）チャンネルを持たせることで、切り抜きや半透明の表現も可能です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Color</strong></td>
+                            <td>全体の色合いを調整します。テクスチャの色を上書きして別の色にしたり、暗いワールドに合わせて少し暗く落としたい時に使います。（アニメーションで色を変えることも可能です）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Color Intensity</strong></td>
+                            <td>色の明るさ（強度）を 0 から調整します。全体をパッと明るく見せたい時に数値を上げます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hue Shift（色相）</strong></td>
+                            <td>テクスチャを編集せずに色相を回転させて色違いを作れます。<code>0</code> で無変化。アニメーションさせると虹色に変化させることもできます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Saturation（彩度）/ Brightness（明度）</strong></td>
+                            <td>彩度と明度を補正します。どちらも <code>1</code> で無変化（<code>2</code> で2倍）。色をくすませたり鮮やかにしたい時に。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Albedo/Normal Scroll（スクロール）</strong></td>
+                            <td><code>X</code>・<code>Y</code> にスクロール速度を入れると、Albedo と Normal が同じ速度で流れます（<code>0</code> で停止）。流れる炎・水・スキャンライン等のエフェクトに使います。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>補足:</strong> Hue/Saturation/Brightness はデフォルト値（Hue=0 / Sat=1 / Bright=1）では一切処理を行わない（恒等変換）ため、既存マテリアルの見た目とパフォーマンスに影響しません。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-layer" class="tab-section">
+            <h1 class="page-title">Texture Layer</h1>
+            <p class="page-subtitle">テクスチャレイヤー / 2枚目の重ね合わせ・透明マスク</p>
+
+            <div class="card">
+                <p>ベーステクスチャの上にもう1枚の画像を重ねる「色オーバーレイ」と、画像の明るさでベースを透明にくり抜く「透明マスク」の2つを備えた機能です。<strong>両者は独立したトグル</strong>で、片方だけ・両方の併用ができます（同じ Layer テクスチャを共有します）。</p>
+            </div>
+
+            <h4>① 色オーバーレイ（Use Texture Layer）</h4>
+            <p>ロゴ・刺繍・ワンポイント模様・タトゥー・メイク・エフェクトの二層パターンなどに使えます。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use Texture Layer</strong></td>
+                            <td>色オーバーレイの有効/無効。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Layer テクスチャ (A=合成マスク)</strong></td>
+                            <td>重ねる画像を設定します。<strong>画像のアルファ（透明度）チャンネルが合成強度のマスクになります</strong>（白=合成 / 黒=スキップ）。別途マスク画像を用意する必要はありません。Tiling/Offset でベースとは独立に配置・繰り返しを調整できます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Color Tint (HDR)</strong></td>
+                            <td>レイヤー画像にかける色味。HDR 対応のため、Add/Screen と組み合わせて発光的な重ねも可能です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blend Mode</strong></td>
+                            <td>合成方法。<code>Normal</code>（通常の上重ね）/ <code>Multiply</code>（乗算・陰影や汚し）/ <code>Add</code>（加算・発光的な重ね）/ <code>Screen</code>（スクリーン・明るく重ねる）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Opacity</strong></td>
+                            <td>合成の強さ（<code>0</code>=完全に透明 〜 <code>1</code>=最大）。アニメーション可能で、模様をフェードイン/アウトさせられます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scroll（スクロール）</strong></td>
+                            <td><code>X</code>・<code>Y</code> に速度を入れるとレイヤー画像が流れます（<code>0</code> で停止）。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>② 透明マスク（Use Texture Layer as Alpha Mask）</h4>
+            <p>グレースケールのマスク画像でベース形状を切り抜く機能です。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use Texture Layer as Alpha Mask</strong></td>
+                            <td>透明マスクの有効/無効。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Layer / マスク テクスチャ</strong></td>
+                            <td>マスク画像を設定します（色オーバーレイと共有）。<strong>画像の明るさが透明度になります</strong>（黒=透明 / 白=不透明 / グラデーション=半透明）。色オーバーレイ OFF でマスクだけ使う場合は、このトグルを開くとテクスチャ欄が表示されます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scroll（スクロール）</strong></td>
+                            <td>マスクを流して、くり抜く位置を動かせます（<code>0</code> で停止）。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p><strong>マスクの使い方:</strong> グレースケール（黒〜白）のマスク画像を用意し、透けさせたい部分を黒、残したい部分を白で描きます。中間色やグラデーションは半透明になります。色オーバーレイと併用する場合は同じ画像の <strong>明るさ＝透明マスク／アルファ＝色の合成マスク</strong> と役割が分かれます。<br><br>
+                <strong>重要 — 描画モードの前提:</strong> 透明マスクが見えるのは半透明系の <strong>Blend Preset（Cutout / Fade / Transparent）</strong> のときです。<code>Opaque</code>（不透明）では不透明度が無視されるため透けません。くっきり切り抜くなら <code>Cutout</code>、グラデーションで滑らかに透かすなら <code>Fade</code> が向いています。<code>Transparent</code> では素材の透明感を保つ設計上、反射・発光などのハイライトはマスクで消えずに残ります（ガラス表現用）。</p>
+            </div>
+            <div class="callout">
+                <p><strong>仕様上の注意:</strong> 色オーバーレイの重ね合わせはオブジェクトの<strong>色（見た目）にのみ</strong>作用し、不透明度は変更しません。色相シフト（Hue Shift）はベース色のみに作用し、このレイヤー画像には影響しません（ロゴ等の色を保つため）。<br>
+                なお本機能はシェーダーキーワードを使わない動的分岐で実装されているため、有効化してもアップロード時のコンパイル時間（バリアント数）は増えません。無効時はほぼ負荷ゼロです。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-light" class="tab-section">
+            <h1 class="page-title">Lighting & Shadow</h1>
+            <p class="page-subtitle">光と影・トゥーン調整</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Unlit モード</strong></td>
+                            <td>光源を完全に無視して常に100%の明るさで表示します。パーティクルや発光エフェクト向けです。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shadow Color / Intensity</strong></td>
+                            <td>影の色と、影の濃さ（暗さ）を調整します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shadow Border</strong></td>
+                            <td>光と影の境界線の位置を調整します。アニメ調（トゥーン）の表現を作る際に重要です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shadow Blur</strong></td>
+                            <td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Light Limit（環境光クランプ・白飛び/黒つぶれ防止）</h4>
+            <p>ワールドの環境光が過剰に明るい・暗いときに、アバターが受ける光量を一定範囲に制限し、白飛びや真っ暗で何も見えない状況を防ぎます。<br>
+            暗いワールドではより暗く、明るいワールドでは白飛びしない範囲で明るさに余裕を持たせています。</p>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Light Min Limit</strong></td>
+                            <td>暗所での明るさの下限。下げるほど暗いワールドで暗くなります（<code>0</code> で下限なし＝完全に暗くできます）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Light Max Limit</strong></td>
+                            <td>明所での明るさの上限（白飛び防止）。上げるほど明るいワールドで明るく見えます。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>仕様上の注意:</strong> 本機能は<strong>常時有効</strong>です（v3 以降はシェーダー既定値として組み込み。有効/無効のチェックボックスはありません）。Lit（Unlit OFF）のときのみ作用し、<strong>Unlit モードのときは光に応答しないため、この項目自体が自動的に非表示</strong>になります。発光（Emission）と環境反射の映り込みは制限の対象外です。<strong>v25 以降は追加のリアルタイムライトもメイン光・環境光とまとめて 1 回の上限・下限処理にかかります</strong>（追加ライトは頂点単位・最大4灯として扱われます）。<code>_LightMinLimit</code> / <code>_LightMaxLimit</code> はアニメーション可能です。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-pbr" class="tab-section">
+            <h1 class="page-title">PBR & Specular</h1>
+            <p class="page-subtitle">質感・リアルな光の反射 / 環境反射・ガラス/金属の映り込み</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Metallic / Smoothness</strong></td>
+                            <td>金属っぽさと表面の滑らかさを調整します。周囲の景色を反射するツヤっとした金属質にしたい時に数値を上げます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Normal Map + Scale</strong></td>
+                            <td>ポリゴン数を増やさずに細かい凹凸（服のシワ、レンガの溝など）を表現したい時に使います。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Specular Reflection（環境反射・ガラス/金属の映り込み）</h4>
+            <p>ワールドの景色（リフレクションプローブ／スカイボックス）を表面に映り込ませる機能です。ガラス・金属・濡れた質感などに使います。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Reflection Strength</strong></td>
+                            <td>映り込みの強さ。<code>0</code> で無効（デフォルト・従来どおり負荷ゼロ）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fresnel Power</strong></td>
+                            <td>輪郭反射の鋭さ。大きいほど視線が浅い「縁」だけが強く反射し、ガラスらしくなります。小さくすると面全体が均一に反射（鏡・金属向け）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fresnel Min</strong></td>
+                            <td>正面を向いた面の反射量。ガラスは <code>0</code> 付近、鏡・金属は上げます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Specular Highlight</strong></td>
+                            <td>Metallic とは独立に光源のハイライト（テカリ）を足します。ガラス/プラスチックのキラッとした反射に。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>反射の鮮鋭さは Smoothness で決まります</strong>（高い＝鏡のようにくっきり / 低い＝すりガラスのようにぼやける）。</p>
+            </div>
+            <div class="callout">
+                <p><strong>💡 ガラスの作り方</strong><br>
+                Blend Preset を <strong>Transparent</strong>、<strong>Unlit は OFF（Lit）</strong> にし、<strong>Reflection Strength</strong> を上げ、<strong>Fresnel Power</strong> を 4〜6 程度にします。必要に応じて <strong>Specular Highlight</strong> でテカリを、Matcap で擬似的な光沢を追加します。Transparent はマテリアル透明度（<code>_Color.a</code>）では反射・ハイライト・Matcap を透かさない設計のため、薄く透けつつ映り込みがしっかり乗ります（Fade/Additive では反射もアルファに追従して透けます）。<br>
+                なお Transparent のガラスを<strong>パーティクルで使い、Color over Lifetime でフェードアウト</strong>させた場合は、環境反射・Matcap・発光も含めてすべて完全に消えます。ガラスを Dissolve で消すエフェクトでも映り込みごと自然に消滅します。<br>
+                <strong>※ Unlit モードは光に応答しないため、環境反射・鏡面ハイライト・Matcap がいずれも表示されません。ガラスは必ず Lit（Unlit OFF）で使用してください。</strong></p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ ワールド環境依存の機能です</strong><br>
+                映り込む内容は、VRChat ワールド側のリフレクションプローブ／スカイボックスに依存します。プローブが配置されていないワールドでは反射が暗くなる場合があります（ソフトパーティクル・AudioLink と同様、ワールド側の環境に依存する仕様上の制約です）。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-matcap" class="tab-section">
+            <h1 class="page-title">Matcap</h1>
+            <p class="page-subtitle">擬似的な光沢・環境反射</p>
+
+            <p>常に一定の美しい光沢や環境の映り込みを「擬似的」に表現します。非常に処理が軽いため VRChat で重宝します。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Matcap テクスチャ</strong></td>
+                            <td>球状に描かれた環境反射風の画像を設定します（髪の天使の輪やシルクのテカり等）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Strength / Blend</strong></td>
+                            <td>合成強度と合成モード（0=乗算落とし込み / 1=加算発光）を調整します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contrast</strong></td>
+                            <td>マットキャップの<strong>明暗のメリハリ</strong>を強めます。値を上げると暗部を持ち上げずにハイライトが締まり、<strong>金属的な質感</strong>になります（既定 1.0＝変化なし）。金属表現は Blend=Add ＋ Contrast 高めが目安です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Highlight Threshold / Boost</strong></td>
+                            <td><strong>Threshold</strong>（明るさのしきい値）より明るい部分だけに <strong>Boost</strong> のゲインを乗せ、<strong>鏡面のテカりだけを尖らせ</strong>ます。暗部・ベースは持ち上げません。Contrast と併用するとより金属らしくなります（既定 Boost=0＝変化なし）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>裏面で無効化</strong></td>
+                            <td>両面描画（Cull = Off）のとき、<strong>裏面のメッシュに Matcap を当てません</strong>。服の袖裏・コートの裏側などを暗く落ち着かせたいときに使います。既定は OFF。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2枚目 Matcap（Mask Select）</strong></td>
+                            <td>1枚のマテリアルで、<strong>部位ごとに 2 種類の Matcap を出し分け</strong>ます。領域マスク（グレースケール）の<strong>黒=1枚目／白=2枚目</strong>で切り替わります。<strong>1枚目と2枚目はそれぞれ独立して、カラー Tint・Strength・Blend を設定できます</strong>（例：トリムは明るい金属、布は落ち着いたシルク）。既定は OFF。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p><strong>2枚目 Matcap（部位ごとの質感切り替え）について</strong><br>
+                「2枚目 Matcap を使う」を ON にすると、<strong>Matcap テクスチャ 2</strong>・<strong>Matcap 2 のカラー Tint / Strength / Blend / Contrast / Highlight</strong>・<strong>領域マスク</strong>が表示されます。マスクのグレースケールで Matcap を出し分け（黒=1枚目 / 白=2枚目 / 中間は補間）、マスクはメインテクスチャと同じ UV で参照します。1枚目と2枚目は<strong>それぞれ独立して色・強さ・合成モード・コントラスト・ハイライト強調を設定</strong>できるため、部位ごとに別の質感を作り込めます。裏面無効化と寿命フェードは両 Matcap に共通で適用されます。<strong>OFF のときや 2枚目を割り当てないときは、従来どおり 1枚の Matcap として動作し、処理負荷も変わりません。</strong></p>
+            </div>
+            <div class="callout">
+                <p><strong>「裏面で無効化」について</strong><br>
+                このオプションは描画設定の <strong>Cull が Off（両面描画）</strong> のときに効果を持ちます。裏面で Matcap を切ると、その面にはハイライトが乗らなくなるぶん自然に暗く見えます（裏地の沈み）。Cull が <strong>Back（裏面を描画しない・既定）</strong> の場合は裏面そのものが表示されないため、この項目を ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります。</p>
+            </div>
+            <div class="callout">
+                <p><strong>補足:</strong> Matcap もハイライト系として、パーティクルカラーのアルファに追従してフェードします（<code>Fade</code>/<code>Additive</code>、および <code>Transparent</code> のパーティクル寿命フェード時）。<code>Transparent</code> ではマテリアル透明度（<code>_Color.a</code>）では透けずに残り、パーティクルの Color over Lifetime で映り込みごと自然に消えます。</p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ Unlit モードでは Matcap は表示されません</strong><br>
+                Unlit モードは光に応答しない自己発光専用のため、Matcap・環境反射・鏡面ハイライトはいずれも表示されません。Matcap や映り込みを使ったガラス表現は <strong>Lit（Unlit OFF）</strong> で使用してください。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-emission" class="tab-section">
+            <h1 class="page-title">Emission & AudioLink</h1>
+            <p class="page-subtitle">発光・HDR対応 / 音楽連動・発光リアクション</p>
+
+            <h4>Emission（発光・HDR対応）</h4>
+            <p>暗闇でも自己発光するマテリアルを作ります。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Emission Color HDR / Intensity</strong></td>
+                            <td>発光色と強さを調整します。Intensity を上げると Unity の Bloom（光があふれる効果）が綺麗に効きます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emission Map</strong></td>
+                            <td>発光させたい場所を白黒画像等で指定します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scroll（スクロール）</strong></td>
+                            <td><code>X</code>・<code>Y</code> に速度を入れると Emission Map が流れます（<code>0</code> で停止）。エネルギーの流動表現等に。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pulse Speed / Pulse Min</strong></td>
+                            <td>発光を脈動（明滅）させます。<code>Pulse Speed</code> が点滅の速さ（<code>0</code> で無効）、<code>Pulse Min</code> が一番暗くなった時の明るさ（<code>0</code> で完全に消えるまで点滅）。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>補足:</strong> 発光（Emission）も、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code>Fade</code>/<code>Additive</code>、および <code>Transparent</code> のパーティクル寿命フェード時）。Color over Lifetime で発光ごと自然に消えます。</p>
+            </div>
+
+            <hr>
+
+            <h4>AudioLink（音楽連動・発光リアクション）</h4>
+            <p>ワールドで再生されている音楽に合わせて発光させる機能です。VRChat のクラブワールドやライブ演出で定番の機能です。</p>
+            <p>本シェーダーの AudioLink は、通常の <strong>Emission（恒常発光）とは独立した「音反応専用の発光レイヤー」</strong> として動作します。音の大きさに応じて発光を base（色×Intensity）に向けて加算するため、<strong>通常 Emission を OFF にしても、AudioLink だけで音に合わせて発光させられます</strong>。逆に通常 Emission を ON にすれば、恒常発光の上に音反応発光が重なります（両者は打ち消し合いません）。</p>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use AudioLink</strong></td>
+                            <td>機能の有効/無効。ON にすると反応量・Intensity が自動で <code>1</code> に設定され、すぐ反応する状態になります（既に値がある場合は維持）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AudioLink Band</strong></td>
+                            <td>反応させる音域を <code>Bass</code>（低音）/ <code>LowMid</code> / <code>HighMid</code> / <code>Treble</code>（高音）から選びます。低音はキック、高音はハイハット等に反応します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>発光への反応量 (Master)</strong></td>
+                            <td>音への追従量。<code>0</code> で無反応、<code>1</code> で音量に完全連動（無音時は AudioLink 発光が消える）。<code>_AudioLinkEmission</code> はアニメーション可能です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AudioLink Emission Color (HDR)</strong></td>
+                            <td>音反応で光らせる色（HDR）。通常 Emission とは別に指定できます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AudioLink Emission Intensity</strong></td>
+                            <td>音反応発光の強さ。音のピーク時に到達する明るさの上限です（<code>0</code>〜<code>16</code>）。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p><strong>発光する「場所」は Emission Map を共用します。</strong> 通常 Emission を OFF にしている場合は、AudioLink セクションに表示される Emission Map で光らせたい場所を指定してください（白＝光る / 黒＝光らない。未設定なら全面が反応）。通常 Emission を ON にしている場合は、Emission セクションで設定した Emission Map がそのまま使われます。</p>
+            </div>
+            <div class="callout">
+                <p><strong>💡 仕組み（重要）</strong><br>
+                AudioLink 発光は <code>Emission Map × AudioLink Emission Color × Intensity × （音量 × 反応量）</code> で計算される<strong>加算レイヤー</strong>です。<code>反応量</code> または <code>Intensity</code> が <code>0</code> だと光らないため、両方を <code>0</code> より大きくしてください（各 <code>1</code> が標準）。通常 Emission の Color / Intensity とは別系統なので、<strong>通常 Emission の Intensity を <code>0</code> にしても AudioLink 発光には影響しません</strong>。</p>
+            </div>
+            <div class="callout">
+                <p><strong>使用上の注意:</strong> 通常 Emission（恒常発光）も使いたい場合は Emission セクションを ON にしてください。AudioLink 発光のみで使う場合は Emission は OFF のままで構いません。</p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ ワールド環境依存の機能です</strong><br>
+                AudioLink は、VRChat ワールド側に <strong>AudioLink システムが導入されている</strong>場合にのみ動作します（ワールドがグローバルな音響データテクスチャを提供している必要があります）。<br>
+                AudioLink 非対応ワールドでは、本機能は自動的に無効化されます（破綻は発生しません）。これはソフトパーティクルと同様、ワールド側の環境に依存する仕様上の制約です。<br>
+                なお本機能はシェーダーキーワードを使わない動的分岐で実装されているため、有効化してもアップロード時のコンパイル時間（バリアント数）は増えません。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-dissolve" class="tab-section">
+            <h1 class="page-title">Dissolve & Rim Light</h1>
+            <p class="page-subtitle">ディゾルブ / 消失エフェクト ＆ 輪郭の光・逆光表現</p>
+
+            <h4>Dissolve（ディゾルブ / 消失エフェクト）</h4>
+            <p>オブジェクトをノイズ模様に合わせて溶かすように消滅・出現させる機能です。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Dissolve Texture</strong></td>
+                            <td>溶け方の基準となるノイズ画像を設定します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Threshold</strong></td>
+                            <td>消失の進行度（<code>-1.0</code>=完全表示 〜 <code>1.1</code>=完全消去）。これをアニメーションさせることで美しい消失エフェクトが作れます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Noise Scale</strong></td>
+                            <td>ノイズパターンの細かさ（<code>1</code>=標準 / <code>10</code>=細かい）。オブジェクト空間・Triplanarマッピングを採用しているため、スケール変更や面の向きに関わらず均一な模様が維持されます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Edge Width / Edge Color</strong></td>
+                            <td>溶け際（エッジ）の発光幅とHDRカラーを指定します。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>補足:</strong> 溶け際（エッジ）の発光は、パーティクルカラーのアルファ（不透明度）に追従してフェードイン/アウトします（<code>Fade</code>/<code>Additive</code>、および <code>Transparent</code> のパーティクル寿命フェード時）。Transparent のガラスマテリアルを Dissolve で消す演出でも、エッジ発光ごと自然に消えます。</p>
+            </div>
+
+            <hr>
+
+            <h4>Rim Light（輪郭の光・逆光表現）</h4>
+            <p>モデルの輪郭（エッジ）部分を強調する機能です。Blend Mode で「光らせる」か「暗く落とす」かを切り替えられます。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Rim Color HDR / Intensity</strong></td>
+                            <td>輪郭の色と強さです。<code>Add</code> ではキャラクターを浮き上がらせたり魔法のオーラを、<code>Multiply</code> では縁を暗く落とす縁取りを表現します。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rim Power</strong></td>
+                            <td>効果の太さを調整します。大きくするほど太く柔らかく、小さくするほど細く鋭いエッジになります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blend Mode</strong></td>
+                            <td><code>Add</code>（既定）は縁を<strong>加算で発光</strong>させます（逆光・オーラ）。<code>Multiply</code> は縁を<strong>暗色化</strong>します。Rim Color を黒系にすると縁を暗く落とす縁取り（黒いリム）になります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>裏面で無効化</strong></td>
+                            <td>両面描画（Cull = Off）のとき、<strong>裏面のメッシュにリムを出しません</strong>（Add/Multiply 両モードに作用）。服の袖裏・コートの裏側などを暗く落ち着かせたいときに使います。既定は OFF。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout">
+                <p><strong>黒いリム（縁を暗くする）にするには:</strong> Blend Mode を <code>Multiply</code> にし、Rim Color を黒〜暗色に設定してください。Intensity で暗くする強さ、Rim Power で縁取りの太さを調整します。<br><br>
+                <strong>「裏面で無効化」について:</strong> このオプションは描画設定の <strong>Cull が Off（両面描画）</strong> のときに効果を持ちます。Cull が <strong>Back（裏面を描画しない・既定）</strong> の場合は裏面そのものが表示されないため、ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります（Matcap の同名オプションと同じ考え方です）。<br><br>
+                <strong>補足:</strong> <code>Multiply</code> は Lit（Unlit OFF）でのみ効果が出ます（Unlit モードは光に応答しないため）。<code>Add</code> のリムライト発光は、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code>Fade</code>/<code>Additive</code>、および <code>Transparent</code> のパーティクル寿命フェード時）。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-outline" class="tab-section">
+            <h1 class="page-title">Outline & Sweep</h1>
+            <p class="page-subtitle">アウトライン / 輪郭線 ＆ 周回発光オプション</p>
+
+            <h4>Outline（アウトライン / 輪郭線）</h4>
+            <div class="card">
+                <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<strong>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</strong>し、スキンメッシュではアニメーションにも追従します。テクスチャ・UV展開・専用マスクは一切不要です。</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use Outline</strong></td>
+                            <td>機能の有効/無効。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base Color (HDR)</strong></td>
+                            <td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intensity（光の強さ）</strong></td>
+                            <td>線の発光の強さ（<code>0</code>〜<code>16</code>）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Line Width（線の太さ）</strong></td>
+                            <td>輪郭線の太さ（メッシュの押し出し量）。スライダーは <code>0〜20</code>（<code>0.01</code> 刻み・小数第2位まで）で、<code>0</code> で線が消えます。細い線の微調整向けのレンジです（表示値は内部値の便宜的な倍率で、効果・保存値の意味は値の大小に依存しません）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extrude Mode（押し出し方式）</strong></td>
+                            <td><code>Normal</code>＝法線方向（<strong>ベベル付き文字・文字列など複数パーツのメッシュ・スムーズな一般モデル向け</strong>）/ <code>PivotScale</code>＝ピボットから外向き（<strong>キューブ等のハードエッジな単一凸形状向け</strong>・角が割れません）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Self-Illuminate（自己発光）</strong></td>
+                            <td>輪郭線がワールドのライティングを無視して自己発光する度合い（<code>0</code>〜<code>1</code>・<strong>既定 <code>0</code></strong>）。<code>0</code>（既定）では<strong>輪郭線がシーンの明るさ（メイン Directional Light の総量＋環境光、Light Min/Max Limit に追従）に均一に追従</strong>します（<strong>Directional Light があれば明るく（白）、シーン全体が暗いときだけ灰色〜黒</strong>・線は均一で明暗の境界は出ません・真っ暗では Light Min Limit で止まり <code>0</code> で消灯）。<code>1</code> ではライティングを無視して<strong>常時発光（従来のネオン）</strong>になります。発光の強さは <strong>Base Color (HDR) の明るさ</strong>で調整してください。アニメーション可能です。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p><strong>💡 有効化したときの初期値</strong><br>
+                Outline を有効にすると、扱いやすい初期設定（Intensity <code>1</code> / Line Width <code>0.1</code> / Sweep OFF）で始まります。値はあとから自由に変更できます。なお Outline を一度 OFF にして再び有効化すると、この初期設定に戻ります。</p>
+            </div>
+            <div class="callout">
+                <p><strong>💡 仕組み（重要）</strong><br>
+                輪郭線は「メッシュを少し膨らませた複製を裏面だけ描画する」方式（反転外殻）で幾何学的に描かれます。そのため<strong>キューブのような平面メッシュでも正確に輪郭線が出ます</strong>。</p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ Extrude Mode の使い分け</strong><br>
+                - <code>Normal</code>：法線に沿って押し出すため線の太さが均一。ハードエッジ（フラットシェーディング）の角では線が途切れることがあります。その場合は <code>PivotScale</code> に切り替えるか、モデル側にベベル/スムーズ法線を付けてください。<br>
+                - <code>PivotScale</code>：ピボットから放射状に押し出すため角が割れませんが、<strong>文字列のような複数パーツのメッシュや凹形状では線の太さが不均一になります</strong>（ピボットを向く側に線が出ません）。単一の凸形状専用と考えてください。</p>
+            </div>
+            <div class="callout">
+                <p><strong>🧍 アバター本体への適用ガイド</strong><br>
+                - スキンメッシュのボーン変形に輪郭線が追従します。Extrude Mode は <strong><code>Normal</code> を使用</strong>してください（<code>PivotScale</code> は全身メッシュでは破綻します）。<br>
+                - 線の太さはアバターのスケールに比例します（巨大/小型アバターでも見た目の比率が保たれます）。<br>
+                - 顔など<strong>輪郭線を出したくない部位は、そのマテリアル側で Outline を OFF</strong>（または Line Width を <code>0</code>）にしてください。アバターは部位ごとにマテリアルが分かれているのが一般的なので、これが部位制御の基本手段です。<br>
+                - 該当マテリアルの頂点処理が約2倍＋ドローコールが1つ増えます。本体規模でも実用範囲ですが、Performance Rank を重視する場合は適用範囲を絞ってください。</p>
+            </div>
+
+            <hr>
+
+            <h4>Sweep（周回発光オプション）</h4>
+            <p>Outline の輪郭線の上を、ひときわ明るい発光の筋がぐるりと周回するオプションです。ネオン管・サイバーガジェット・魔法陣などの「光が走る」演出に使えます。Outline が有効なときのみ機能します。</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Use Sweep</strong></td>
+                            <td>オプションの有効/無効。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base Glow（管の基本輝度）</strong></td>
+                            <td>周回する筋が走る土台＝輪郭線（管）の基本の明るさ（<code>0</code>〜<code>1</code>・既定 <code>1</code>）。<strong>下げると「淡く光る管の上を強い光の筋が走る」コントラスト</strong>が作れます。Sweep 専用の設定です（Sweep を有効化すると表示）。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Width（筋の長さ）</strong></td>
+                            <td>光の筋の全長。小さいほど点状に、大きいほど長く光ります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sharpness（減衰の鋭さ）</strong></td>
+                            <td>筋の中心から<strong>両側へ対称に</strong>かかる減衰の鋭さ。大きいほど中心が鋭く際立ち、小さいほど全体がなだらかに光ります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Speed（周回速度）</strong></td>
+                            <td>周回する速さ。<strong>符号で周回方向が反転</strong>します（正＝一方向 / 負＝逆方向）。<code>0</code> で停止。アニメーション可能です。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Count（筋の本数）</strong></td>
+                            <td>同時に周回する筋の本数（<code>1</code>〜<code>8</code> の<strong>整数</strong>）。<code>2</code> 以上で等間隔の複数の光が追いかけ合います。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pivot Offset（周回中心）</strong></td>
+                            <td>筋が周回する中心のオフセット（オブジェクト空間）。通常は <code>(0,0,0)</code> のままで構いません。<strong>アバター本体に使う場合は Y を胸の高さ（例: <code>1.0</code>）に</strong>設定すると周回が均等になります。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Edge Fade（透過時の放射抑制）</strong></td>
+                            <td>半透明（Transparent / Fade）で本体越しに <strong>Sweep が放射状に透けて見える</strong>場合に、リムの筋を残して内側の放射だけを抑えます（<code>0</code>〜<code>8</code>・既定 <code>2</code>）。<code>0</code> で無効。<strong>滑らかな曲面（球・有機的なメッシュ）向けの機能</strong>です。<strong>不透明では裏側が本体に隠れるため効果はありません。</strong> ⚠️ ハードエッジのメッシュ（キューブ等）ではリムの筋も減衰するため、その場合は <code>0</code> にしてください（輪郭線そのものは Edge Fade の影響を受けず、常に表示されます）。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout">
+                <p><strong>💡 仕組み</strong><br>
+                光の筋の位置は<strong>カメラから見た画面上の角度</strong>で生成されるため、<strong>どの方向から見ても、いま見えている輪郭を筋が一周</strong>します。ビュー（見る側）基準のエフェクトであるため、頭（カメラ）を傾けると周回の起点も画面と一緒に回ります。また VRChat のミラー内では周回方向が反転して見えますが、これは Matcap など視点依存エフェクト共通の仕様です。</p>
+            </div>
+            <div class="callout callout-warning">
+                <p><strong>⚠️ Outline / Sweep 共通の注意</strong><br>
+                - パーティクルにこのマテリアルを使う場合、輪郭線がパーティクル1粒ごとに描画されるため、<strong>パーティクル用途では OFF を推奨</strong>します（ON の場合、線は寿命フェードに追従します）。<br>
+                - 本機能はシェーダーキーワードを使わないため、有効化しても<strong>アップロード時のコンパイル時間（バリアント数）は増えません</strong>。OFF 時は描画負荷ほぼゼロですが、専用パスの分だけドローコールが 1 つ増えます。<br>
+                - Transparent / Fade 系プリセットでは、本体が半透明になると裏側が本体越しに透けて見える場合があります。<strong>輪郭線そのものは常に表示されます</strong>（幾何学的に描くため、どのメッシュでも消えません）。Sweep の放射状の透けが気になる場合は、滑らかな曲面では Sweep の <strong>Edge Fade</strong>（既定 <code>2</code>）が内側の放射を抑えます（ハードエッジのメッシュでは <code>0</code> を推奨）。裏側の輪郭フィルそのものの透けを完全に消す対策は、今後の上位版で対応予定です。</p>
+            </div>
+        </section>
+
+
+        <section id="tab-particle" class="tab-section">
+            <h1 class="page-title">アニメ・パーティクル連携</h1>
+
+            <h4>Particle Color（パーティクルとの連携）</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>プロパティ</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vertex Color Blend Mode</strong></td>
+                            <td>既定は <code>None</code>（パーティクルの頂点カラーを反映しません）。<code>Multiply</code>（乗算）に変更すると、Particle System 側の色（Color over Lifetime 等）を受け取ります。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
+
+            <h2>アニメーションから操作する方法</h2>
+            <p>Unity Animator で以下のプロパティ名をキーフレームに追加することで、時間経過でエフェクトを動かせます。</p>
+            
+<pre><code>Material._Color              // Color (RGBA)  ─ 全体の色
+Material._ColorIntensity     // Float         ─ 全体の明るさ
+Material._HueShift           // Float         ─ 色相シフト (0〜1)
+Material._Saturation         // Float         ─ 彩度 (1=無変化)
+Material._Brightness         // Float         ─ 明度 (1=無変化)
+Material._Layer1Color        // Color (HDR)   ─ テクスチャレイヤーの色 Tint
+Material._Layer1Opacity      // Float         ─ レイヤー合成強度 (0〜1)
+Material._Layer1AlphaMask    // Float (0/1)   ─ 透明マスクの ON/OFF（出現・消失演出）
+Material._EmissionColor      // Color (HDR)   ─ 発光色
+Material._EmissionIntensity  // Float         ─ 発光の強さ
+Material._EmissionPulseSpeed // Float         ─ 発光の脈動速度 (0=無効)
+Material._DissolveThreshold  // Float         ─ 消失の進行度（-1.0 〜 1.1）
+Material._RimColor           // Color (HDR)   ─ 輪郭光の色
+Material._RimPower           // Float         ─ 輪郭光の太さ
+Material._RimIntensity       // Float         ─ 輪郭光の強さ
+Material._RimBlendMode       // Float (0/1)   ─ 0=Add(加算発光) / 1=Multiply(暗色化・黒リム)
+Material._OutlineColor          // Color (HDR) ─ 輪郭線の色
+Material._OutlineIntensity      // Float       ─ 輪郭線の発光の強さ
+Material._OutlineBaseGlow       // Float       ─ Sweep の管の基本輝度（筋とのコントラスト）
+Material._OutlineSelfGlow       // Float       ─ 輪郭線の自己発光度合い（0=ライティング追従 / 1=自己発光）
+Material._OutlineSweepSpeed     // Float       ─ Sweep の周回速度（符号で方向反転）
+Material._MatcapStrength     // Float         ─ Matcap の合成強度
+Material._MatcapColor        // Color         ─ Matcap のカラー Tint
+Material._ReflectionStrength // Float         ─ 環境反射の強度
+Material._LightMinLimit      // Float         ─ 環境光クランプ下限
+Material._LightMaxLimit      // Float         ─ 環境光クランプ上限
+Material._AudioLinkEmission  // Float         ─ AudioLink 反応量 (Master)
+Material._AudioLinkEmissionColor     // Color (HDR) ─ AudioLink 発光色
+Material._AudioLinkEmissionIntensity // Float       ─ AudioLink 発光の強さ
+</code></pre>
+
+            <p><strong>手順（VRChat Avatar 例）</strong></p>
+            <ol class="card">
+                <li>Animator Controller を開く</li>
+                <li>対象の GameObject を選択した状態でキーフレームを追加</li>
+                <li><code>Add Property</code> → <code>Skinned Mesh Renderer</code>（または <code>Mesh Renderer</code>）→ <code>Materials</code> → 対象マテリアル → 上記プロパティ名で追加</li>
+            </ol>
+
+            <hr>
+
+            <h2>パーティクル（Particle System）での使用について</h2>
+            <p>本シェーダーはパーティクルエフェクトへの使用を想定して設計されています。</p>
+            <ol class="card">
+                <li>Particle System の <code>Renderer > Material</code> に本マテリアルをセット</li>
+                <li>マテリアルの <code>Vertex Color Blend Mode</code> を <code>Multiply</code> に変更</li>
+            </ol>
+            <p><strong>以上で動作します。</strong> <code>Enable Mesh GPU Instancing</code> のチェックや <code>Custom Vertex Streams</code> などの追加設定は一切不要です。</p>
+        </section>
+
+
+        <section id="tab-misc" class="tab-section">
+            <h1 class="page-title">パフォーマンス・利用規約</h1>
+
+            <h2>パフォーマンスと最適化</h2>
+            <div class="card">
+                <p>本シェーダーは、VRChat環境での軽量動作とコンパイル速度のために最大限の最適化を行っています。</p>
+                <ul>
+                    <li>アバター用途で使われない描画パス（ShadowCasterやDeferredパス）や、フォグ・ライトマップ用の内部バリアントを完全にパージし、ビルド（アップロード）時間を大幅に短縮しています。</li>
+                </ul>
+            </div>
+
+            <h2>VRChat Fallback について</h2>
+            <div class="card">
+                <p>シェーダーには <code>"VRCFallback" = "Standard"</code> タグが設定されています。</p>
+                <p>VRChat 内で他のユーザーの Safety 設定によりカスタムシェーダーが無効化された場合でも、自動的に Unity 標準の <strong>Standard シェーダー</strong> に置き換わり、アバターがピンク色（マテリアルエラー）になるのを防ぎます。</p>
+            </div>
+
+            <hr>
+
+            <h2>利用規約（ライセンス）</h2>
+            <div class="card">
+                <p><strong>本シェーダーの著作権は ARL に帰属します。</strong> 本パッケージを購入・ダウンロードした時点で、以下の利用規約に同意したものとみなします。</p>
+
+                <h4>【許可される事項】</h4>
+                <ul>
+                    <li>ご自身の VRChat アバター、ワールド、ゲーム制作等への組み込みおよび商用利用（動画配信などを含む）。</li>
+                    <li>ARLitToonシェーダーを同梱した3Dモデル（アバター、アバターギミック、ワールドアイテム等）の販売および配布。</li>
+                    <li>本シェーダーのコードおよび GUI スクリプトの改変。</li>
+                    <li>本シェーダーを使用した際、作者名（ARL）や本シェーダー名（ARLitToon）のクレジット表記は任意（不要）です。</li>
+                </ul>
+
+                <div class="callout callout-warning">
+                    <p><strong>【同梱配布時の必須ファイル】</strong><br>
+                    ARLitToon シェーダーを作品（アバター・ギミック・ワールドアイテム等）に同梱して配布・販売する場合は、シェーダーが正しく動作するよう、以下の <strong>3 ファイルを必ずセットで同梱</strong>してください。</p>
+                    <ul>
+                        <li><code>ARLitToon.shader</code>（シェーダー本体）</li>
+                        <li><code>ARLitToonGUI.cs</code>（マテリアル Inspector 用 GUI スクリプト／<code>Editor</code> フォルダ内）</li>
+                        <li><code>README.md</code>（本ガイド）</li>
+                    </ul>
+                    <p>※ <code>ARLitToonGUI.cs</code> が欠けると Inspector のカスタム GUI が表示されず、マテリアルを正しく設定できません。<code>README.md</code> は使用方法と本利用規約を受け取り手に伝えるために同梱してください。</p>
+                </div>
+
+                <h4>【禁止事項】</h4>
+                <ul>
+                    <li>本シェーダー（改変物を含む）単体での無断再配布、転載、および販売（※ご自身の作品に同梱して販売・配布する場合は問題ありません）。</li>
+                    <li>VRChat等において、ARLitToonシェーダーを利用したアバターを「パブリックアバター」としてアップロードする行為（第三者がアバターをクローン・抽出できる状態にすること）。</li>
+                </ul>
+
+                <h4>【免責事項】</h4>
+                <ul>
+                    <li>本シェーダーを利用したことによって生じるいかなるトラブルや損害に対しても、作者（ARL）は一切の責任を負わないものとします。</li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <h2>バージョン（更新履歴 / Changelog）</h2>
+            <div class="callout">
+                <p>更新履歴は本ガイドの<strong>末尾</strong>に配置しています（以後の追記もここに追加します）。<br>
+                バージョンは小数点を使わない整数で <code>v{見出し版}_GUIr{GUI 枝番}</code> と表記します。<br>
+                見出し版（<code>v</code> の数字）の基準はシェーダー本体 <code>ARLitToon.shader</code> の <code>_ShaderVersion</code>、<br>
+                <code>GUIr</code> の数字は GUI（<code>ARLitToonGUI.cs</code>）の枝番です。<br>
+                現在の版はマテリアル Inspector のヘッダ（<code>✦ ARLit Toon ✦ v31_GUIr3</code>）で確認できます。<br>
+                本履歴には各版の<strong>変更点のみ</strong>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+            </div>
+
+            <details>
+                <summary>更新履歴を開く（クリックで展開）</summary>
+                <ul>
+                    <li><strong>v31_GUIr3</strong> — <code>Fade</code> / <code>Additive</code> プリセットの既定 <code>Render Queue</code> を <strong>3000 → 3001</strong> に変更しました（GUI のみ）。半透明エフェクトがガラス等（<code>Transparent</code>=3000）より既定で手前に描画されます。<code>Transparent</code> プリセットは従来どおり 3000 です（保存済みマテリアルはプリセットを選び直すと反映されます）。</li>
+                    <li><strong>v31_GUIr2</strong> — Outline の <strong>Line Width</strong> スライダーの表示の数値を1桁繰り上げました（GUI のみ）。表示レンジ <code>0〜2</code> → <code>0〜20</code>。実際の効果・保存値は変わりません。</li>
+                    <li><strong>v31_GUIr1</strong> — Outline の <strong>Line Width</strong> スライダーの表示レンジを <code>0〜5</code> → <code>0〜2</code>・小数第3位に調整しました（GUI のみ）。実際の効果・保存値は変わりません。</li>
+                    <li><strong>v31_GUIr0</strong> — Outline の使い勝手を調整しました。<strong>(1)</strong> <strong>Lighting Influence</strong> を <strong>Self-Illuminate（自己発光）</strong> に名称変更し、値の向きを反転（<code>0</code>＝ライティング追従／<code>1</code>＝自己発光）。<strong>(2)</strong> <strong>Base Glow</strong> を Sweep の設定内へ移動。※既定の輪郭線がライティング追従に変わります。旧来の常時発光にしたい既存マテリアルは <strong>Self-Illuminate を <code>1</code></strong> にしてください。</li>
+                    <li><strong>v30_GUIr0</strong> — <strong>Lighting Influence（暗所追従）</strong> の追従方式を「Directional Light の総量＋環境光で均一の明るさに追従」へ変更しました（輪郭線に明暗の境界が出ないよう改善）。<code>0</code>（既定）での見た目・後方互換は変わりません。</li>
+                    <li><strong>v29_GUIr0</strong> — <strong>Lighting Influence（暗所追従）</strong> がメインの Directional Light＋環境光に追従するよう改良しました（環境光だけを見て線が灰色に沈む問題の改善）。<code>0</code>（既定）での見た目・後方互換は変わりません。</li>
+                    <li><strong>v28_GUIr0</strong> — <strong>Lighting Influence（暗所追従）</strong> を本体（肌・髪など）と同じ明るさで馴染むよう改良しました（薄暗いワールドで線だけ明るく残る問題の改善）。<code>0</code>（既定）での見た目・後方互換は変わりません。</li>
+                    <li><strong>v27_GUIr0</strong> — <strong>Lighting Influence（暗所追従）</strong> の暗所での下限を Light Min Limit と同じ明るさにそろえました（真っ暗なワールドで線が本体より明るく残る不具合の修正）。<code>0</code>（既定）での後方互換は変わりません。</li>
+                    <li><strong>v26_GUIr0</strong> — Outline（輪郭線）に <strong>Lighting Influence（暗所追従）</strong> を追加しました。既定 <code>0</code>＝従来どおりの自己発光（既存マテリアルは見た目不変）。</li>
+                    <li><strong>v25_GUIr0</strong> — リアルタイムライトが<strong>多数</strong>あるワールドでアバターの明るい部分が白飛びする問題を修正しました（追加ライトをまとめて1回の明るさ制御にかける方式に変更）。追加ライトの陰影は簡易（頂点単位・最大4灯）になりますが、トゥーン表現では影響はごくわずかです。</li>
+                    <li><strong>v24_GUIr0</strong> — 強いリアルタイムライトのあるワールドでアバターの明るい部分が白飛びする問題を修正しました（明るさの上限 Light Max Limit が追加のリアルタイムライトにも効くように）。Light Limit 無効時は従来どおりです。</li>
+                    <li><strong>v23_GUIr0</strong> — Outline の <strong>Edge Fade</strong> を <strong>Sweep 専用</strong>に変更しました（ハードエッジのメッシュで輪郭線まで消える不具合の修正）。項目は Sweep の設定内へ移動（保存済みの値は維持されます）。</li>
+                    <li><strong>v22_GUIr0</strong> — Outline に <strong>Edge Fade</strong> を追加しました（半透明時に裏側の Sweep が放射状に透ける問題を軽減）。既定 <code>2</code>＝ON、<code>0</code> で従来動作。不透明では見た目は変わりません。</li>
+                    <li><strong>v19_GUIr0</strong> — Matcap に <strong>Contrast（コントラスト）</strong> を追加しました（既定 1.0＝既存マテリアルは不変）。</li>
+                    <li><strong>v18_GUIr0</strong> — 2枚目 Matcap を<strong>独立レイヤー化</strong>し、カラー Tint・Strength・Blend を 1枚目・2枚目で個別に設定できるようにしました（OFF 時の挙動は不変）。</li>
+                    <li><strong>v17_GUIr0</strong> — Matcap に <strong>2枚目スロット（Mask Select）</strong> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+                    <li><strong>v16_GUIr0</strong> — Rim Light に <strong>「裏面で無効化」</strong> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+                    <li><strong>v15_GUIr0</strong> — Matcap に <strong>「裏面で無効化」</strong> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+                    <li><strong>v14_GUIr0</strong> — Particle の Vertex Color Blend Mode から <strong><code>Additive</code> を削除</strong>しました（<code>None</code> / <code>Multiply</code> の2択）。保存済みマテリアルで <code>Additive</code> を選んでいた場合は <code>Multiply</code> 相当の表示にフォールバックします。あわせて内部のライト下限クランプ処理を整理しました（挙動・見た目は不変）。</li>
+                    <li><strong>v13_GUIr0</strong> — 使い勝手の調整。<strong>(1)</strong> Particle の Vertex Color Blend Mode の初期値を <code>None</code> に変更。<strong>(2)</strong> Outline 有効化時の初期設定を Sweep OFF / Intensity <code>1</code> / Line Width <code>0.1</code> に調整。いずれも保存済みマテリアルの見た目は変わりません。</li>
+                    <li><strong>v12_GUIr0</strong> — <strong>(1)</strong> Rim Light に <strong>Blend Mode（Add / Multiply）</strong> を追加。<strong>(2)</strong> Texture Layer に <strong>透明マスクモード</strong> を追加。あわせて Outline の Line Width スライダー表示レンジを <code>0〜5</code> に変更しました（実際の値・効果は不変）。</li>
+                    <li><strong>v10_GUIr0</strong> — Sweep の減衰を片側から<strong>両側対称</strong>に変更。Count を整数入力（IntRange）に変更し、<strong>Pivot Offset（周回中心）</strong> を追加。アバター本体への適用ガイドを README に追加しました。</li>
+                    <li><strong>v9_GUIr0</strong> — 機能を <strong>Outline（輪郭線）</strong> と <strong>Sweep（周回発光）</strong> の二層構造に再編。Base Glow の既定値を <code>1</code> に変更しました。</li>
+                    <li><strong>v8_GUIr0</strong> — Outline の輪郭描画を反転外殻（Inverted Hull）パス方式に変更。<strong>Line Width</strong>・<strong>Extrude Mode</strong>・<strong>Base Glow</strong> を追加し、Rim Power を廃止しました。</li>
+                    <li><strong>v7_GUIr0</strong> — Outline Sweep の周回基準をカメラビューポイント基点（画面上の角度）に変更し、Axis プロパティを廃止しました。</li>
+                    <li><strong>v6_GUIr0</strong> — <strong>Outline Sweep（アウトライン周回発光）</strong> を追加しました。</li>
+                    <li><strong>v5_GUIr0</strong> — Dissolve のノイズが、回転して配置したオブジェクトの一部の面で一方向に伸びた縞模様になる不具合を修正しました（v0 から潜在していた問題です）。無回転で配置していたオブジェクトの見た目は変わりません。</li>
+                    <li><strong>v4_GUIr0</strong> — 内部コードの整理（リファクタリング）。機能・見た目・パフォーマンスに変更はありません。マテリアルの再設定は不要です。</li>
+                    <li><strong>v3_GUIr1</strong> — Unlit モード ON のとき、影の詳細プロパティ（Shadow Color〜Shadow Blur）を自動的に非表示にするよう変更（Unlit では影が計算されないため。GUI のみの更新）。</li>
+                    <li><strong>v3_GUIr0</strong> — Light Limit の常時 ON をシェーダー既定値（<code>_UseLightLimit=1</code>）として組み込み。Inspector を開いていないマテリアルでもクランプが有効になりました。</li>
+                    <li><strong>v2_GUIr2</strong> — Light Limit 常時 ON の焼き込み処理を Inspector 表示時に確実化（セクション折りたたみ時にクランプが効かず白飛びする不具合を修正。GUI のみの更新）。</li>
+                    <li><strong>v2_GUIr1</strong> — Light Limit を常時 ON 化（有効/無効チェックボックスを廃止）。Unlit モード時は設定 UI を自動的に非表示に変更（GUI のみの更新）。</li>
+                    <li><strong>v2_GUIr0</strong> — Light Limit（Directional Light 影響度クランプ／白飛び・黒つぶれ防止）を追加。</li>
+                    <li><strong>v1_GUIr0</strong> — 初版リリース。</li>
+                </ul>
+            </details>
+        </section>
+
+    </main>
+
+    <script>
+        function switchTab(tabId) {
+            // 全てのタブコンテンツを非表示にする
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 全てのナビゲーションリンクのアクティブ状態を解除する
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 選択されたタブコンテンツを表示する
+            document.getElementById(tabId).classList.add('active');
+            
+            // 選択されたリンクをアクティブ状態にする
+            document.querySelector(`.nav-link[data-target="${tabId}"]`).classList.add('active');
+            
+            // ページ上部へスクロール（モバイル等の配慮）
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

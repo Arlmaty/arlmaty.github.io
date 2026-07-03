@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AngelStarHalo - VN3 License</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f6fb;
+    --card-bg: #ffffff;
+    --text: #2a2438;
+    --sub: #6f6a80;
+    --accent: #7c6fe0;
+    --accent-hover: #6557d1;
+    --border: #e4e1ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17141f;
+      --card-bg: #221e2e;
+      --text: #ece9f5;
+      --sub: #a49fb8;
+      --accent: #9c8ff0;
+      --accent-hover: #b3a8f5;
+      --border: #363047;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  main { max-width: 560px; width: 100%; }
+  h1 {
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+  ul { list-style: none; display: grid; gap: 0.8rem; }
+  a.doc {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  a.doc:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .flag { font-size: 1.5rem; }
+  .lang { font-weight: 600; }
+  .native { color: var(--sub); font-size: 0.85rem; }
+  .arrow { margin-left: auto; color: var(--accent); }
+  footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>AngelStarHalo</h1>
+  <p class="subtitle">VN3ライセンス / VN3 License Documents</p>
+  <ul>
+    <li>
+      <a class="doc" href="vn3license_ja.pdf">
+        <span class="flag">🇯🇵</span>
+        <span><span class="lang">日本語</span><br><span class="native">Japanese (PDF)</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="doc" href="vn3license_en.pdf">
+        <span class="flag">🇺🇸</span>
+        <span><span class="lang">English</span><br><span class="native">英語 (PDF)</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="doc" href="vn3license_ko.pdf">
+        <span class="flag">🇰🇷</span>
+        <span><span class="lang">한국어</span><br><span class="native">Korean (PDF)</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="doc" href="vn3license_zh.pdf">
+        <span class="flag">🇨🇳</span>
+        <span><span class="lang">中文</span><br><span class="native">Chinese (PDF)</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+  </ul>
+  <footer>© Arlmaty — AngelStarHalo VN3 License</footer>
+</main>
+</body>
+</html>

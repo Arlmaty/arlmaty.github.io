@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARLitToon Shader — Setup &amp; Usage Guide | ALTIMA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Spectral:ital,wght@1,600;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafafc; --bg2:#f2f2f7; --ink:#0b0b12; --ink2:#4a4a58; --line:#e3e3ec;
+  --ac:#5b4df1; --ac2:#8b7cf8; --ac-dim:rgba(91,77,241,.08); --ac-line:rgba(91,77,241,.28);
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Noto Sans JP',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.85;overflow-x:hidden}
+::selection{background:var(--ac);color:#fff}
+
+/* ===== animated grid background ===== */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.5;
+  mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  animation:gridMove 24s linear infinite}
+@keyframes gridMove{to{background-position:48px 48px,48px 48px}}
+.bg-beam{position:fixed;top:-20%;right:-10%;width:60vw;height:60vw;z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,77,241,.10) 0%,transparent 60%);
+  animation:beamFloat 14s ease-in-out infinite alternate}
+@keyframes beamFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(-8vw,6vw) scale(1.15)}}
+
+/* ===== scroll progress ===== */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));z-index:100;box-shadow:0 0 12px var(--ac-line)}
+
+/* ===== sidebar ===== */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:264px;z-index:50;background:rgba(250,250,252,.92);backdrop-filter:blur(8px);border-right:1px solid var(--line);padding:28px 0 32px;overflow-y:auto;font-family:var(--mono)}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--line)}
+.brand{padding:0 24px 22px;border-bottom:1px solid var(--line)}
+.brand .tag{font-size:10px;letter-spacing:.24em;color:var(--ac);font-weight:700}
+.brand h1{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:21px;letter-spacing:0;margin-top:8px;display:flex;align-items:center;gap:9px}
+.brand h1 .mk{width:26px;height:26px;flex:none;color:var(--ink)}
+.brand .ver{display:inline-block;margin-top:8px;font-size:10px;padding:2px 8px;border:1px solid var(--ac-line);color:var(--ac);background:var(--ac-dim)}
+.navgrp{padding:18px 24px 0}
+.navgrp .glabel{font-size:9.5px;letter-spacing:.22em;color:var(--ink2);opacity:.65;margin-bottom:8px;text-transform:uppercase}
+.navgrp a{display:block;font-size:12px;color:var(--ink2);text-decoration:none;padding:5px 10px;margin:1px -10px;border-left:2px solid transparent;transition:all .18s;white-space:nowrap}
+.navgrp a:hover{color:var(--ink);background:var(--ac-dim)}
+.navgrp a.on{color:var(--ac);border-left-color:var(--ac);background:var(--ac-dim);font-weight:700}
+.sb-foot{padding:22px 24px 0;font-size:10px;color:var(--ink2);opacity:.6;letter-spacing:.1em}
+
+/* ===== layout ===== */
+.main{position:relative;z-index:1;margin-left:264px}
+.wrap{max-width:880px;margin:0 auto;padding:0 48px}
+
+/* ===== hero ===== */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero .meta{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ac);font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.hero .meta::before{content:"";width:36px;height:1px;background:var(--ac)}
+.hero-logo{display:flex;align-items:center;gap:clamp(18px,3vw,38px)}
+.hero-logo .mark{width:clamp(100px,13vw,180px);height:auto;flex:none;color:var(--ink);transition:color .35s,transform .35s}
+.hero-logo:hover .mark{color:var(--ac);transform:rotate(-6deg) scale(1.04)}
+.hero-title{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:clamp(50px,8.2vw,112px);line-height:1;letter-spacing:-.02em;position:relative;white-space:nowrap}
+.hero-tag{font-family:'Spectral',serif;font-style:italic;font-weight:700;font-size:clamp(19px,2.4vw,32px);text-align:center;margin-top:-4px}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0;opacity:0}
+.g-on .glitch::before{opacity:.85;color:var(--ac);clip-path:inset(12% 0 58% 0);animation:gA .35s steps(2) both}
+.g-on .glitch::after{opacity:.85;color:#e0447a;clip-path:inset(62% 0 8% 0);animation:gB .35s steps(2) both}
+@keyframes gA{0%{transform:translate(-5px,-2px)}50%{transform:translate(4px,2px);clip-path:inset(40% 0 30% 0)}100%{transform:translate(0)}}
+@keyframes gB{0%{transform:translate(5px,2px)}50%{transform:translate(-4px,-1px);clip-path:inset(20% 0 65% 0)}100%{transform:translate(0)}}
+.hero-sub{margin-top:28px;max-width:560px;font-size:15px;color:var(--ink2)}
+.hero-sub b{color:var(--ink)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;font-family:var(--mono)}
+.hero-chips span{font-size:10.5px;letter-spacing:.08em;padding:5px 12px;border:1px solid var(--line);background:#fff;color:var(--ink2);transition:all .2s}
+.hero-chips span:hover{border-color:var(--ac);color:var(--ac);transform:translateY(-2px);box-shadow:0 4px 14px rgba(91,77,241,.15)}
+.hero-scroll{position:absolute;bottom:36px;left:48px;font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ink2);display:flex;align-items:center;gap:10px}
+.hero-scroll .bar{width:1px;height:38px;background:var(--line);position:relative;overflow:hidden}
+.hero-scroll .bar::after{content:"";position:absolute;left:0;top:-100%;width:100%;height:100%;background:var(--ac);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{to{top:100%}}
+.hero-deco{position:absolute;right:48px;top:50%;font-family:var(--mono);font-size:10px;color:var(--ink2);opacity:.5;writing-mode:vertical-rl;letter-spacing:.4em}
+
+/* ===== ticker ===== */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ink2)}
+.ticker .in{display:inline-block;padding:10px 0;animation:tick 30s linear infinite}
+.ticker b{color:var(--ac);margin:0 18px 0 28px;font-weight:400}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ===== sections ===== */
+section{padding:88px 0 8px}
+.sec-head{margin-bottom:36px}
+.sec-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ac);font-weight:700;display:flex;align-items:center;gap:12px}
+.sec-head .num::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--ac-line),transparent)}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px);font-weight:900;letter-spacing:-.01em;line-height:1.25;margin-top:10px}
+.sec-head .sub{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:6px;letter-spacing:.06em}
+h3{font-size:19px;font-weight:700;margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+h3::before{content:"▍";color:var(--ac);font-size:16px}
+h4{font-family:var(--mono);font-size:13.5px;font-weight:700;margin:30px 0 10px;color:var(--ink)}
+h4 .hx{color:var(--ac)}
+p{margin:0 0 14px;color:var(--ink2)}
+p b,li b{color:var(--ink)}
+section ul{margin:0 0 16px 22px;color:var(--ink2)}
+section li{margin-bottom:6px}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ===== tables ===== */
+table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:13.5px;background:#fff;border:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-align:left;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line);color:var(--ink2);text-transform:uppercase}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:var(--ac-dim)}
+td:first-child{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink);white-space:normal;width:32%}
+
+/* ===== code ===== */
+.code{position:relative;background:#0e0e18;color:#d8d8ea;font-family:var(--mono);font-size:12.5px;line-height:1.75;padding:20px 22px;margin:14px 0 22px;overflow-x:auto;border:1px solid #23233a;white-space:pre}
+.code::before{content:attr(data-label);position:absolute;top:0;right:0;font-size:9.5px;letter-spacing:.2em;color:var(--ac2);background:#1a1a2e;padding:3px 12px;border-left:1px solid #23233a;border-bottom:1px solid #23233a}
+.code .cm{color:#a3a3c6}.code .ac{color:var(--ac2)}
+code.inl{font-family:var(--mono);font-size:.88em;background:var(--ac-dim);color:var(--ac);padding:1px 6px;border:1px solid var(--ac-line)}
+
+/* ===== callouts ===== */
+.note{position:relative;border:1px solid var(--line);background:#fff;padding:16px 20px 14px;margin:16px 0 22px;font-size:13.5px}
+.note::before{content:attr(data-label);font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;font-weight:700;display:block;margin-bottom:6px}
+.note p{margin-bottom:8px}.note p:last-child{margin-bottom:0}
+.note.tip{border-color:var(--ac-line)}.note.tip::before{color:var(--ac)}
+.note.warn{border-color:#f0c26e;background:#fffcf4}.note.warn::before{color:#b07818}
+.note.info::before{color:var(--ink2)}
+
+/* ===== preset cards ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:16px 0 22px}
+.card{border:1px solid var(--line);background:#fff;padding:16px 18px;transition:all .22s;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(11,11,18,.08);border-color:var(--ac-line)}
+.card:hover::after{transform:scaleX(1)}
+.card .cn{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ac)}
+.card .cd{font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.7}
+
+/* ===== divider / changelog ===== */
+.hr{height:1px;background:var(--line);margin:70px 0 0}
+details{border:1px solid var(--line);background:#fff;margin:16px 0}
+summary{font-family:var(--mono);font-size:12px;font-weight:700;padding:14px 18px;cursor:pointer;letter-spacing:.08em;color:var(--ac);list-style:none}
+summary::before{content:"[+] "}details[open] summary::before{content:"[-] "}
+details .dbody{padding:4px 22px 18px;font-size:13px}
+details .dbody li{margin-bottom:10px}
+.vtag{font-family:var(--mono);font-size:11px;color:var(--ac);font-weight:700;background:var(--ac-dim);border:1px solid var(--ac-line);padding:1px 7px;margin-right:6px;white-space:nowrap}
+
+.footer{border-top:1px solid var(--line);margin-top:90px;padding:40px 0 60px;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;letter-spacing:.1em}
+.footer .c{color:var(--ac)}
+
+@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.wrap{padding:0 24px}.hero-scroll{left:24px}.hero-deco{display:none}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-beam" id="beam"></div>
+<div class="progress" id="progress"></div>
+
+<nav class="sidebar">
+  <div class="brand">
+    <div class="tag">ALTIMA STUDIO</div>
+    <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
+    <span class="ver">v31_GUIr4 (EN) / PC ONLY</span>
+  </div>
+  <div class="navgrp"><div class="glabel">Language</div>
+    <a href="ARLitToon.html">日本語</a>
+    <a href="#" class="on">English</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Setup</div>
+    <a href="#setup">Getting Started</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Core Features</div>
+    <a href="#rendering">Transparency / Rendering</a>
+    <a href="#base">Base</a>
+    <a href="#layer">Texture Layer</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Lighting &amp; Shading</div>
+    <a href="#lighting">Lighting &amp; Shadow</a>
+    <a href="#pbr">PBR &amp; Specular</a>
+    <a href="#matcap">Matcap</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Visual Effects</div>
+    <a href="#emission">Emission &amp; AudioLink</a>
+    <a href="#dissolve">Dissolve &amp; Rim Light</a>
+    <a href="#outline">Outline &amp; Sweep</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
+    <a href="#particle">Animation &amp; Particles</a>
+    <a href="#license">Performance &amp; License</a>
+  </div>
+  <div class="sb-foot">© ARL / ALTIMA</div>
+</nav>
+
+<main class="main">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="meta">ALTIMA OFFICIAL DOCUMENTATION</div>
+    <div class="hero-logo" id="glitchRoot">
+      <svg class="mark" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>
+      <div>
+        <div class="hero-title"><span class="glitch" data-t="ARLitToon">ARLitToon</span></div>
+        <div class="hero-tag">for VFX and Avatars</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — SETUP &amp; USAGE GUIDE</div>
+    <p class="hero-sub">ARLitToon is a <b>lightweight, full-featured anime / toon-style custom shader</b> for VRChat avatar accessories and particle effects. Optimized for illustration-like and cel-shaded expression, it is a <b>general-purpose toon shader specialized for effect creation</b>.</p>
+    <div class="hero-chips">
+      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span>
+    </div>
+    <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin-top:30px;max-width:640px">
+      <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v31_GUIr4</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
+  <div class="hero-deco">TOON SHADER FOR VRCHAT FX</div>
+</header>
+
+<div class="ticker"><div class="in" id="ticker"></div></div>
+
+<div class="wrap">
+
+<!-- ============ SETUP ============ -->
+<section id="setup">
+  <div class="sec-head rv"><div class="num">SEC. 01 — SETUP</div><h2>Getting Started</h2><div class="sub">// overview, file structure, requirements, import</div></div>
+
+  <div class="rv">
+  <h3>Overview</h3>
+  <p>Rather than physically-based realism, ARLitToon is optimized for illustration-like and cel-shaded expression. Particle color integration, dissolve, soft particles, HDR emission, and rim light are all built in as standard.</p>
+  </div>
+
+  <div class="rv">
+  <h3>File Structure</h3>
+  <div class="code" data-label="TREE">Assets/
+└── ALTIMA/
+    ├── ARLitToon/                  <span class="cm">← shader package (independent subfolder)</span>
+    │   ├── Shaders/
+    │   │   └── <span class="ac">ARLitToon.shader</span>    <span class="cm">← the shader itself</span>
+    │   ├── Editor/
+    │   │   └── <span class="ac">ARLitToonGUI.cs</span>     <span class="cm">← material Inspector GUI</span>
+    │   └── README.md               <span class="cm">← this guide</span>
+    └── (various avatar items)      <span class="cm">← items live alongside, directly under ALTIMA</span></div>
+  <div class="note tip" data-label="POINT — PLACEMENT NOTE">
+    <p>The shader is kept independent in its own <code class="inl">ALTIMA/ARLitToon/</code> subfolder. This prevents double-imports when you additionally purchase another avatar item that uses the same ARLitToon shader, and prevents the shader from being deleted together with an item folder.</p>
+  </div>
+  </div>
+
+  <div class="rv">
+  <h3>Requirements</h3>
+  <table><tbody>
+    <tr><td>Unity</td><td>2019.4 LTS or later (2022.3 LTS recommended)</td></tr>
+    <tr><td>Render pipeline</td><td>Built-in (Legacy)</td></tr>
+    <tr><td>VRChat SDK</td><td>SDK3 (Avatars / Worlds)</td></tr>
+    <tr><td>Supported platform</td><td><b>PC only</b></td></tr>
+  </tbody></table>
+  <div class="note warn" data-label="⚠ ANDROID / QUEST NOT SUPPORTED">
+    <p>On VRChat's Android (Quest) version, shaders usable on avatars are restricted to the <b>VRChat Mobile shaders</b> bundled with the VRChat SDK only. If this shader is applied to a Quest avatar, the VRChat client automatically replaces the custom shader with a VRChat Mobile shader. <b>This shader is exclusively for PC-platform avatars and particle effects.</b></p>
+  </div>
+  </div>
+
+  <div class="rv">
+  <h3>Import Steps</h3>
+  <ul>
+    <li>Importing the distributed package (<code class="inl">.unitypackage</code>) into your project unpacks it into <code class="inl">Assets/ALTIMA/ARLitToon/</code>.</li>
+    <li>Unity compiles automatically. From the material's Shader dropdown, select <b>ALTIMA &gt; ARLitToon</b> to apply it.</li>
+  </ul>
+  <div class="note info" data-label="NOTE — ABOUT PLACEMENT">
+    <p>Always place <code class="inl">ARLitToonGUI.cs</code> inside an <code class="inl">Editor</code> folder. It still works outside an <code class="inl">Editor</code> folder thanks to the <code class="inl">#if UNITY_EDITOR</code> guard, but placement inside <code class="inl">Editor</code> is recommended.</p>
+  </div>
+  <p>The order of the sections below matches the display order in Unity's Inspector (material settings screen). You can configure while comparing the Inspector side by side with this guide.</p>
+  <div class="note tip" data-label="🌐 SWITCHING DISPLAY LANGUAGE">
+    <p>Directly below the Inspector header (<code class="inl">✦ ARLit Toon ✦</code>) there is a language toggle (<b>日本語 / English</b>). It switches the display language of labels and help text. The setting is remembered per editor and applies to all materials (it is not saved on the material itself).</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ RENDERING ============ -->
+<section id="rendering">
+  <div class="sec-head rv"><div class="num">SEC. 02 — CORE</div><h2>Transparency / Rendering</h2><div class="sub">// transparency and rendering settings</div></div>
+
+  <div class="rv">
+  <p>Just pick a Preset to match your purpose, and the internal blend and Cutoff settings are optimized automatically. In most cases <b>just selecting a Preset</b> is enough; you do not need to touch the detailed settings by hand.</p>
+  <h4><span class="hx">#</span> Blend Preset</h4>
+  <div class="cards">
+    <div class="card"><div class="cn">Opaque</div><div class="cd">Opaque (default). For ordinary bodies, clothing, weapons, etc. The lightest to process.</div></div>
+    <div class="card"><div class="cn">Cutout</div><div class="cd">For leaves, wire mesh, etc. Cleanly cuts out by the texture's alpha.</div></div>
+    <div class="card"><div class="cn">Fade</div><div class="cd">For magic effects etc. where the whole object gradually becomes transparent. <b>Use this mode to fade gradually by alpha value.</b> Optimized for a premultiplied (Premult) method that does not blow out under multiple light sources.</div></div>
+    <div class="card"><div class="cn">Additive</div><div class="cd">For flames, glowing magic circles, etc., adding color to the background to make it glow. Fading by alpha value is also possible.</div></div>
+    <div class="card"><div class="cn">Transparent</div><div class="cd">For glass, slime, etc. When you want transparency while keeping the highlights (specular reflections). <b>Intended for constantly semi-transparent "material texture" expression</b> — not for fading out gradually by alpha.</div></div>
+  </div>
+  <p style="font-size:12.5px">(Note: for the semi-transparent presets, safety processing is automatically applied to prevent drawing errors in fully transparent regions.)</p>
+  <div class="note tip" data-label="💡 TIP — TO FADE BY ALPHA, USE FADE">
+    <p>In many shaders, the Transparent-type modes can perform gradual alpha fading; however, this shader's <b>Transparent is optimized for constantly semi-transparent texture expression such as glass</b>, so even if you lower the material's transparency (<code class="inl">_Color.a</code> or the texture's alpha), highlights (specular reflection), environment reflection, and emission <b>remain without becoming transparent</b> (to preserve the texture). Even if you animate <code class="inl">_Color.a</code> to 0, only the reflections, mirrored scenery, and emission remain.</p>
+    <p>Therefore, when you want to <b>fade in/out</b> the whole object via the material alpha or <code class="inl">_Color</code> alpha, select <b>Fade (opaque emission and reflections become transparent too)</b> or <b>Additive</b>.</p>
+    <p><b>[Exception: particle lifetime fade]</b> Even in Transparent, if you lower it via the <b>particle vertex color alpha (Color over Lifetime)</b>, then highlights, environment reflection, and emission (including Dissolve edge, Rim, and Emission) <b>all disappear completely</b>. This is because it distinguishes "material transparency = how see-through the glass is (reflections remain)" from "particle lifetime = existence itself (when it disappears, everything disappears)". The <b>effect of erasing a Transparent glass material with Dissolve</b> works by this mechanism too, naturally vanishing along with the reflections. Use it with <code class="inl">Vertex Color Blend Mode</code> set to <code class="inl">Multiply</code>.</p>
+  </div>
+  </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> Detailed settings (normally no change needed)</h4>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>ZWrite (depth write)</td><td>Whether to write the object's front/back (depth) information. The Preset sets the optimal value automatically, so normally no change is needed. <code class="inl">On</code> is for opaque and draws front/back relationships correctly; <code class="inl">Off</code> is for semi-transparent and enables correct overlap-order drawing.</td></tr>
+    <tr><td>Cull</td><td>Specifies which faces to draw. <code class="inl">Back</code> (standard) draws front faces only, <code class="inl">Off</code> draws both faces, <code class="inl">Front</code> draws back faces only. For thin shapes such as cloth, leaves, and ribbons where you also want to show the back, use <code class="inl">Off</code>.</td></tr>
+    <tr><td>Alpha Cutoff</td><td>The threshold below which texture alpha is cut out (erased). Mainly used in Cutout mode. For semi-transparent presets, it is automatically set to <code class="inl">0.001</code> to prevent errors in transparent regions.</td></tr>
+    <tr><td>Render Queue</td><td>The order in which objects are drawn. The larger the value, the later (more in front) it is drawn. The Preset sets this automatically.</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 TIP — DRAW-ORDER FIX (Z-SORT)">
+    <p><code class="inl">Fade</code> / <code class="inl">Additive</code> default to <code class="inl">Render Queue</code> = <b>3001</b> (in front of glass etc. at <code class="inl">Transparent</code> = 3000). This is to avoid the phenomenon where, when the Render Queue is the same (both 3000), Unity reorders front/back by per-object distance and a semi-transparent effect appears to slip behind the glass.</p>
+    <p>If a particle or effect is still hidden behind distant glass, you can draw it in front by raising the Inspector's Render Queue value further, to <b>3050</b> for example. If it comes too far forward, lower the value.</p>
+  </div>
+  </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> Soft Particles</h4>
+  <p>A feature that erases the unnatural boundary line where a semi-transparent object (Fade/Additive, etc.) intersects with an opaque object such as the ground or a wall, blending it smoothly.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Fade Distance</td><td>Adjusts the distance over which the boundary line fades out (becomes transparent).</td></tr>
+  </tbody></table>
+  <p><b>Specification note:</b> Works only when ZWrite is Off (i.e., a semi-transparent preset). Also, on VRChat thumbnail cameras and the like (orthographic cameras) it is automatically disabled to prevent glitches.</p>
+  <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
+    <p>Soft particles work only when the VRChat world's camera is generating a "depth texture". Specifically, it becomes active when the world uses <b>Deferred Rendering</b>, <b>uses post-processing</b>, or <b>uses another soft-particle shader</b>.</p>
+    <p>In a simple Forward Rendering world that does not meet the above conditions, the soft-particle feature is automatically disabled and displayed as ordinary semi-transparent rendering. This is a specification-level constraint that depends on the VRChat world's rendering settings and cannot be controlled from the avatar-side shader. Other VRChat shaders have the same constraint.</p>
+    <p><b>[Behavior in unsupported worlds]</b> It is drawn semi-transparently with the boundary line remaining, but the effect itself displays normally. No breakdown such as full transparency occurs.</p>
+  </div>
+  </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> Distance Fade</h4>
+  <p>A feature that fades the object's alpha according to distance from the camera. You can use it to prevent your own aura or effects from blocking your view in first-person, or for staging where things disappear as you approach.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Distance Fade</td><td>Enable/disable the feature.</td></tr>
+    <tr><td>Fade Near</td><td>At or below this distance (from the camera), it becomes fully transparent.</td></tr>
+    <tr><td>Fade Far</td><td>At or above this distance, it becomes fully opaque (normal display).</td></tr>
+  </tbody></table>
+  <p><b>Specification note:</b> Since this manipulates alpha, it assumes use with a semi-transparent preset (<b>Fade / Additive / Transparent</b>). Setting <code class="inl">Fade Near</code> to a value larger than <code class="inl">Fade Far</code> reverses the behavior, making it "more transparent the farther away". <code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> can also be animated.</p>
+  </div>
+</section>
+
+<!-- ============ BASE ============ -->
+<section id="base">
+  <div class="sec-head rv"><div class="num">SEC. 03 — CORE</div><h2>Base</h2><div class="sub">// basic colors and patterns of skin, clothing, and effects</div></div>
+  <div class="rv">
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Albedo Texture</td><td>The base image applied to the model's surface. By giving it an A (alpha) channel, you can also express cutouts and semi-transparency.</td></tr>
+    <tr><td>Color</td><td>Adjusts the overall hue. Use it to overwrite the texture's color with a different color, or to darken slightly to match a dark world. (You can also change the color via animation.)</td></tr>
+    <tr><td>Color Intensity</td><td>Adjusts the brightness (intensity) of the color from 0. Raise the value when you want the whole to appear brighter at once.</td></tr>
+    <tr><td>Hue Shift</td><td>Lets you rotate the hue to create color variations without editing the texture. <code class="inl">0</code> = no change. Animating it can cycle through rainbow colors.</td></tr>
+    <tr><td>Saturation / Brightness</td><td>Corrects saturation and brightness. Both are no-change at <code class="inl">1</code> (<code class="inl">2</code> = doubled). For muting or vivifying colors.</td></tr>
+    <tr><td>Albedo/Normal Scroll</td><td>Entering scroll speed in <code class="inl">X</code> / <code class="inl">Y</code> makes Albedo and Normal flow at the same speed (<code class="inl">0</code> = stopped). Used for flowing flames, water, scan-line effects, etc.</td></tr>
+  </tbody></table>
+  <div class="note info" data-label="NOTE">
+    <p>At their default values (Hue=0 / Sat=1 / Bright=1), Hue/Saturation/Brightness perform no processing at all (identity transform), so they do not affect the look or performance of existing materials.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ TEXTURE LAYER ============ -->
+<section id="layer">
+  <div class="sec-head rv"><div class="num">SEC. 04 — CORE</div><h2>Texture Layer</h2><div class="sub">// 2nd-image overlay &amp; alpha mask</div></div>
+  <div class="rv">
+  <p>A feature with two parts: a "color overlay" that lays another image over the base texture, and an "alpha mask" that cuts out the base by the image's brightness. <b>The two are independent toggles</b> — you can use either one alone or both together (they share the same Layer texture).</p>
+  <h4><span class="hx">#</span> ① Color Overlay (Use Texture Layer)</h4>
+  <p>Useful for logos, embroidery, accent patterns, tattoos, makeup, two-layer effect patterns, and more.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Texture Layer</td><td>Enable/disable the color overlay.</td></tr>
+    <tr><td>Layer Texture (A = blend mask)</td><td>Sets the image to overlay. <b>The image's alpha (transparency) channel becomes the blend-strength mask</b> (white = blend / black = skip). You do not need a separate mask image. With Tiling/Offset you can position and repeat it independently of the base.</td></tr>
+    <tr><td>Color Tint (HDR)</td><td>The tint applied to the layer image. Being HDR-capable, combined with Add/Screen it can also produce glowing overlays.</td></tr>
+    <tr><td>Blend Mode</td><td>The compositing method. <code class="inl">Normal</code> (ordinary overlay) / <code class="inl">Multiply</code> (shadows or grime) / <code class="inl">Add</code> (glowing overlay) / <code class="inl">Screen</code> (brightening overlay).</td></tr>
+    <tr><td>Opacity</td><td>The strength of compositing (<code class="inl">0</code> = fully transparent to <code class="inl">1</code> = maximum). Animatable, so you can fade patterns in/out.</td></tr>
+    <tr><td>Scroll</td><td>Entering speed in <code class="inl">X</code> / <code class="inl">Y</code> makes the layer image flow (<code class="inl">0</code> = stopped).</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> ② Alpha Mask (Use Texture Layer as Alpha Mask)</h4>
+  <p>A feature that cuts out the base shape with a grayscale mask image.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Texture Layer as Alpha Mask</td><td>Enable/disable the alpha mask.</td></tr>
+    <tr><td>Layer / Mask Texture</td><td>Sets the mask image (shared with the color overlay). <b>The image's brightness becomes transparency</b> (black = transparent / white = opaque / gradient = semi-transparent). If you use only the mask with the color overlay OFF, opening this toggle reveals the texture field.</td></tr>
+    <tr><td>Scroll</td><td>Flow the mask to move the cut-out position (<code class="inl">0</code> = stopped).</td></tr>
+  </tbody></table>
+  <p><b>How to use the mask:</b> Prepare a grayscale (black-to-white) mask image, painting the parts you want to make transparent in black and the parts you want to keep in white. Midtones and gradients become semi-transparent. When used together with the color overlay, the same image splits roles as <b>brightness = alpha mask / alpha = color blend mask</b>.</p>
+  <div class="note warn" data-label="⚠ IMPORTANT — DRAWING-MODE REQUIREMENT">
+    <p>The alpha mask is visible with the semi-transparent <b>Blend Presets (Cutout / Fade / Transparent)</b>. With <code class="inl">Opaque</code>, opacity is ignored, so it does not become transparent. For a crisp cutout, <code class="inl">Cutout</code> is suitable; for a smooth gradient fade, <code class="inl">Fade</code> is suitable. With <code class="inl">Transparent</code>, by design the material's transparency is preserved, so highlights such as reflections and emission remain without being erased by the mask (for glass expression).</p>
+  </div>
+  <div class="note info" data-label="NOTE — SPECIFICATION">
+    <p>The color-overlay compositing affects only the object's <b>color (appearance)</b> and does not change opacity. Hue Shift affects only the base color and does not affect this layer image (to preserve the color of logos, etc.). When disabled, the load is essentially zero.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ LIGHTING ============ -->
+<section id="lighting">
+  <div class="sec-head rv"><div class="num">SEC. 05 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// light, shadow &amp; toon adjustment</div></div>
+  <div class="rv">
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Unlit Mode</td><td>Completely ignores light sources and always displays at 100% brightness. For particles and emission effects.</td></tr>
+    <tr><td>Shadow Color / Intensity</td><td>Adjusts the shadow color and the depth (darkness) of shadows.</td></tr>
+    <tr><td>Shadow Border</td><td>Adjusts the position of the boundary line between light and shadow. Important when creating an anime-style (toon) look.</td></tr>
+    <tr><td>Shadow Blur</td><td>Adjusts the softness (smoothness) of the shadow edge. If shadows on spheres etc. look jagged, or to blend cast shadows nicely, raise the value a little.</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Light Limit (ambient clamp / prevents blow-out &amp; crushed blacks)</h4>
+  <p>When a world's ambient light is excessively bright or dark, this limits the amount of light the avatar receives to a fixed range, preventing blow-out and situations where everything is pitch black and invisible. It makes dark worlds darker, and in bright worlds leaves headroom for brightness within a range that does not blow out.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Light Min Limit</td><td>The lower bound of brightness in dark places. The lower it is, the darker it gets in dark worlds (<code class="inl">0</code> = no lower bound = can go fully dark).</td></tr>
+    <tr><td>Light Max Limit</td><td>The upper bound of brightness in bright places (prevents blow-out). The higher it is, the brighter it appears in bright worlds.</td></tr>
+  </tbody></table>
+  <div class="note info" data-label="NOTE — SPECIFICATION">
+    <p>This feature is <b>always enabled</b>. It acts only when Lit (Unlit OFF); <b>in Unlit Mode it does not respond to light, so this section itself is automatically hidden</b>. Emission and environment-reflection mirroring are not subject to the limit. <b>Additional realtime lights are also subjected, together with the main light and ambient light, to a single upper/lower-bound pass</b> (additional lights are treated per-vertex, up to 4 lights). <code class="inl">_LightMinLimit</code> / <code class="inl">_LightMaxLimit</code> can be animated.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ PBR ============ -->
+<section id="pbr">
+  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// texture, environment reflection, glass &amp; metal mirroring</div></div>
+  <div class="rv">
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Metallic / Smoothness</td><td>Adjusts metallic-ness and surface smoothness. Raise the values when you want a glossy metallic look that reflects the surrounding scenery.</td></tr>
+    <tr><td>Normal Map + Scale</td><td>Use this when you want to express fine bumps (clothing wrinkles, brick grooves, etc.) without increasing polygon count.</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Specular Reflection (environment reflection / glass &amp; metal mirroring)</h4>
+  <p>A feature that mirrors the world's scenery (reflection probes / skybox) onto the surface. Used for glass, metal, wet surfaces, etc.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Reflection Strength</td><td>The strength of the mirroring. <code class="inl">0</code> = disabled (default; zero load as before).</td></tr>
+    <tr><td>Fresnel Power</td><td>The sharpness of edge reflection. The larger it is, the more only the grazing "edge" reflects strongly, becoming glass-like. Lower it and the whole face reflects uniformly (for mirrors/metal).</td></tr>
+    <tr><td>Fresnel Min</td><td>The reflection amount of front-facing surfaces. Near <code class="inl">0</code> for glass; raise it for mirrors/metal.</td></tr>
+    <tr><td>Specular Highlight</td><td>Adds a light-source highlight (shine) independently of Metallic. For the sparkle of glass/plastic.</td></tr>
+  </tbody></table>
+  <p><b>Reflection sharpness is determined by Smoothness</b> (high = crisp like a mirror / low = blurry like frosted glass).</p>
+  <div class="note tip" data-label="💡 TIP — HOW TO MAKE GLASS">
+    <p>Set Blend Preset to <b>Transparent</b>, <b>Unlit OFF (Lit)</b>, raise <b>Reflection Strength</b>, and set <b>Fresnel Power</b> to about 4–6. As needed, add shine with <b>Specular Highlight</b> and a pseudo-gloss with Matcap. Because Transparent does not let the material transparency (<code class="inl">_Color.a</code>) make reflections, highlights, or Matcap transparent, the mirroring rides on solidly while the object is faintly see-through. (With Fade/Additive, reflections also follow the alpha and become transparent.)</p>
+    <p>Note that if you <b>use Transparent glass on particles and fade it out via Color over Lifetime</b>, everything including environment reflection, Matcap, and emission disappears completely. Even in an effect that erases the glass with Dissolve, it naturally vanishes along with the reflections.</p>
+    <p><b>※ Because Unlit Mode does not respond to light, environment reflection, specular highlights, and Matcap are all not displayed. Always use glass in Lit (Unlit OFF).</b></p>
+  </div>
+  <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
+    <p>What is mirrored depends on the VRChat world's reflection probes / skybox. In worlds without probes placed, reflections may appear dark (a specification-level constraint that depends on the world environment, the same as soft particles and AudioLink).</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ MATCAP ============ -->
+<section id="matcap">
+  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>Matcap</h2><div class="sub">// pseudo gloss &amp; environment reflection</div></div>
+  <div class="rv">
+  <p>Expresses a constant, beautiful gloss or environment mirroring "pseudo-style". It is very light to process, making it valuable in VRChat.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Matcap Texture</td><td>Set a sphere-drawn, environment-reflection-style image (such as a hair angel-ring or silk shine).</td></tr>
+    <tr><td>Strength / Blend</td><td>Adjusts the compositing strength and mode (0 = multiply-down / 1 = additive glow).</td></tr>
+    <tr><td>Contrast</td><td>Strengthens the matcap's <b>light/dark definition</b>. Raising the value tightens the highlights without lifting the dark areas, giving a <b>metallic texture</b> (default 1.0 = no change). For a metal look, the guideline is Blend=Add plus a higher Contrast.</td></tr>
+    <tr><td>Highlight Threshold / Boost</td><td>Applies the gain of <b>Boost</b> only to areas brighter than the <b>Threshold</b> (brightness threshold), <b>sharpening only the specular shine</b>. It does not lift dark areas or the base. Used together with Contrast it becomes even more metallic (default Boost=0 = no change).</td></tr>
+    <tr><td>Disable on Backface</td><td>With double-sided rendering (Cull = Off), <b>does not apply Matcap to backface meshes</b>. Use it when you want to keep sleeve linings, coat interiors, etc. dark and subdued. Default is OFF.</td></tr>
+    <tr><td>2nd Matcap (Mask Select)</td><td>In a single material, <b>switches between 2 kinds of Matcap per part</b>. It switches by the region mask (grayscale): <b>black = 1st / white = 2nd</b>. <b>The 1st and 2nd can each set Color Tint, Strength, and Blend independently</b> (e.g., bright metal for trim, subdued silk for cloth). Default is OFF.</td></tr>
+  </tbody></table>
+  <div class="note info" data-label="NOTE — 2ND MATCAP (PER-PART TEXTURE SWITCHING)">
+    <p>Turning on "Use 2nd Matcap" reveals <b>Matcap Texture 2</b>, <b>Matcap 2's Color Tint / Strength / Blend / Contrast / Highlight</b>, and the <b>region mask</b>. The grayscale of the mask switches the Matcap (black = 1st / white = 2nd / midtones interpolate), and the mask is sampled with the same UV as the main texture. Because the 1st and 2nd can each <b>set color, strength, blend mode, contrast, and highlight emphasis independently</b>, you can craft different textures per part. Backface disable and lifetime fade apply to both Matcaps. <b>When OFF, or when the 2nd is not assigned, it works as a single Matcap as before, with no change in load.</b></p>
+  </div>
+  <div class="note info" data-label="NOTE — ABOUT &quot;DISABLE ON BACKFACE&quot;">
+    <p>This option takes effect when the drawing setting <b>Cull is Off (double-sided)</b>. Turning off Matcap on backfaces means no highlight rides on those faces, so they naturally appear darker (recessed linings). When Cull is <b>Back (backfaces not drawn; default)</b>, backfaces are not displayed, so turning this on does not change the look. Cull is in the "Transparency / Rendering" detailed settings.</p>
+  </div>
+  <p><b>Note:</b> Matcap, as a highlight type, also fades following the particle color's alpha (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade). In <code class="inl">Transparent</code>, it remains without becoming transparent via the material transparency (<code class="inl">_Color.a</code>), and disappears naturally along with the mirroring via the particle Color over Lifetime.</p>
+  <div class="note warn" data-label="⚠ MATCAP IS NOT DISPLAYED IN UNLIT MODE">
+    <p>Because Unlit Mode is for self-emission only and does not respond to light, Matcap, environment reflection, and specular highlights are all not displayed. Use glass expression that relies on Matcap or mirroring in <b>Lit (Unlit OFF)</b>.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ EMISSION ============ -->
+<section id="emission">
+  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission &amp; AudioLink</h2><div class="sub">// HDR-capable emission / music-reactive glow</div></div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Emission (HDR-capable)</h4>
+  <p>Makes a material that self-illuminates even in darkness.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Emission Color HDR / Intensity</td><td>Adjusts the emission color and strength. Raising Intensity makes Unity's Bloom (the light-overflow effect) work nicely.</td></tr>
+    <tr><td>Emission Map</td><td>Specify where to emit with a black-and-white image, etc.</td></tr>
+    <tr><td>Scroll</td><td>Entering speed in <code class="inl">X</code> / <code class="inl">Y</code> makes the Emission Map flow (<code class="inl">0</code> = stopped). For expressing energy flow, etc.</td></tr>
+    <tr><td>Pulse Speed / Pulse Min</td><td>Makes the emission pulse (blink). <code class="inl">Pulse Speed</code> is the blink speed (<code class="inl">0</code> = disabled), and <code class="inl">Pulse Min</code> is the brightness at the darkest point (<code class="inl">0</code> = blinks all the way to fully off).</td></tr>
+  </tbody></table>
+  <p><b>Note:</b> Emission also fades in/out following the particle color's alpha (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade). It disappears naturally along with the emission via Color over Lifetime.</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> AudioLink (music-reactive emission)</h4>
+  <p>A feature that emits in sync with the music playing in the world. A staple feature in VRChat club worlds and live performances.</p>
+  <p>This shader's AudioLink works as a <b>"sound-reactive emission layer" independent of the regular Emission (constant emission)</b>. Because it adds emission toward the base (color × Intensity) according to the loudness, <b>even with regular Emission OFF, you can make it emit in sync with sound using AudioLink alone</b>. Conversely, if you turn regular Emission ON, the sound-reactive emission layers on top of the constant emission (the two do not cancel each other).</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use AudioLink</td><td>Enable/disable the feature. Turning it ON automatically sets the reaction amount and Intensity to <code class="inl">1</code> so it reacts immediately (existing values are kept).</td></tr>
+    <tr><td>AudioLink Band</td><td>Choose the frequency band to react to, from <code class="inl">Bass</code> / <code class="inl">LowMid</code> / <code class="inl">HighMid</code> / <code class="inl">Treble</code>. Bass reacts to kicks, treble to hi-hats, etc.</td></tr>
+    <tr><td>Emission Reaction (Master)</td><td>The amount of tracking to sound. <code class="inl">0</code> = no reaction, <code class="inl">1</code> = fully linked to volume (AudioLink emission vanishes during silence). <code class="inl">_AudioLinkEmission</code> can be animated.</td></tr>
+    <tr><td>AudioLink Emission Color (HDR)</td><td>The color to glow with on sound reaction (HDR). Can be specified separately from regular Emission.</td></tr>
+    <tr><td>AudioLink Emission Intensity</td><td>The strength of sound-reactive emission. The upper bound of brightness reached at sound peaks (<code class="inl">0</code>–<code class="inl">16</code>).</td></tr>
+  </tbody></table>
+  <p><b>The "where it glows" location shares the Emission Map.</b> If you have regular Emission OFF, specify where to glow using the Emission Map shown in the AudioLink section (white = glows / black = does not glow; if unset, the whole surface reacts). If you have regular Emission ON, the Emission Map set in the Emission section is used as-is.</p>
+  <div class="note tip" data-label="💡 TIP — HOW IT WORKS (IMPORTANT)">
+    <p>AudioLink emission is an <b>additive layer</b> computed as <code class="inl">Emission Map × AudioLink Emission Color × Intensity × (volume × reaction amount)</code>. If <code class="inl">reaction amount</code> or <code class="inl">Intensity</code> is <code class="inl">0</code> it does not glow, so set both greater than <code class="inl">0</code> (<code class="inl">1</code> each is standard). Because it is a separate system from the regular Emission Color / Intensity, <b>setting the regular Emission Intensity to 0 does not affect the AudioLink emission</b>.</p>
+    <p><b>Usage note:</b> If you also want regular Emission (constant emission), turn on the Emission section. If you use only AudioLink emission, you can leave Emission OFF.</p>
+  </div>
+  <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
+    <p>AudioLink works only when the <b>AudioLink system is installed</b> on the VRChat world side (the world must provide the global audio data texture). In worlds without AudioLink support, this feature is automatically disabled (no breakdown occurs). Like soft particles, this is a specification-level constraint that depends on the world environment.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ DISSOLVE / RIM ============ -->
+<section id="dissolve">
+  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Dissolve &amp; Rim Light</h2><div class="sub">// disappear effect &amp; edge light / backlight expression</div></div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Dissolve (disappear effect)</h4>
+  <p>A feature that makes objects disappear/appear as if melting along a noise pattern.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Dissolve Texture</td><td>Set the noise image that serves as the basis for how it melts.</td></tr>
+    <tr><td>Threshold</td><td>The progress of disappearance (<code class="inl">-1.0</code> = fully visible to <code class="inl">1.1</code> = fully erased). Animating this creates a beautiful disappear effect.</td></tr>
+    <tr><td>Noise Scale</td><td>The fineness of the noise pattern (<code class="inl">1</code> = standard / <code class="inl">10</code> = fine). Because it uses object-space Triplanar mapping, a uniform pattern is maintained regardless of scale changes or face orientation.</td></tr>
+    <tr><td>Edge Width / Edge Color</td><td>Specifies the glow width and HDR color of the melting edge.</td></tr>
+  </tbody></table>
+  <p><b>Note:</b> The glow of the melting edge fades in/out following the particle color's alpha (opacity) (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade). Even in the staging where a Transparent glass material is erased with Dissolve, it disappears naturally along with the edge glow.</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Rim Light (edge light / backlight expression)</h4>
+  <p>A feature that emphasizes the model's outline (edges). With Blend Mode you can switch between "making it glow" and "darkening it down".</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Rim Color HDR / Intensity</td><td>The color and strength of the edge. With <code class="inl">Add</code>, lift the character off the background or express a magic aura; with <code class="inl">Multiply</code>, express a dark edge outline.</td></tr>
+    <tr><td>Rim Power</td><td>Adjusts the thickness of the effect. The larger it is, the thicker and softer; the smaller, the thinner and sharper the edge.</td></tr>
+    <tr><td>Blend Mode</td><td><code class="inl">Add</code> (default) makes the edge <b>glow additively</b> (backlight / aura). <code class="inl">Multiply</code> <b>darkens</b> the edge. Setting Rim Color to a dark tone makes a dark-edged outline (black rim).</td></tr>
+    <tr><td>Disable on Backface</td><td>With double-sided rendering (Cull = Off), <b>does not produce rim on backface meshes</b> (acts in both Add/Multiply modes). Use it when you want to keep sleeve linings, coat interiors, etc. dark and subdued. Default is OFF.</td></tr>
+  </tbody></table>
+  <p><b>To make a black rim (darkening the edge):</b> Set Blend Mode to <code class="inl">Multiply</code> and set Rim Color to black or a dark tone. Adjust the darkening strength with Intensity and the outline thickness with Rim Power.</p>
+  <p><b>About "Disable on Backface":</b> This option takes effect when the drawing setting <b>Cull is Off (double-sided)</b>. When Cull is <b>Back (backfaces not drawn; default)</b>, backfaces are not displayed, so turning it on does not change the look. Cull is in the "Transparency / Rendering" detailed settings (the same idea as the option of the same name in Matcap).</p>
+  <p><b>Note:</b> <code class="inl">Multiply</code> takes effect only in Lit (Unlit OFF) (because Unlit Mode does not respond to light). The <code class="inl">Add</code> rim-light emission fades in/out following the particle color's alpha (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade).</p>
+  </div>
+</section>
+
+<!-- ============ OUTLINE ============ -->
+<section id="outline">
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Outline</h4>
+  <p>A base feature that draws the mesh outline. It handles everything from a toon-style edge to a glowing outline like a neon tube via HDR color + Bloom. It <b>supports any 3D mesh — spheres, cubes, text, costumes, props, and more</b> — and on skinned meshes it also follows animation. No texture, UV unwrap, or dedicated mask is required at all.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Outline</td><td>Enable/disable the feature.</td></tr>
+    <tr><td>Base Color (HDR)</td><td>The outline color. Being HDR-capable, raising Intensity makes Bloom (the light bleed) work nicely.</td></tr>
+    <tr><td>Intensity</td><td>The strength of the line's emission (<code class="inl">0</code>–<code class="inl">16</code>).</td></tr>
+    <tr><td>Line Width</td><td>The thickness of the outline (the mesh extrusion amount). The slider is <code class="inl">0–20</code> (in <code class="inl">0.01</code> steps, to two decimal places); <code class="inl">0</code> makes the line disappear. This range is intended for fine-tuning thin lines. (The displayed value is a convenient multiplier of the internal value; the effect and the meaning of the saved value do not depend on the magnitude of the display.)</td></tr>
+    <tr><td>Extrude Mode</td><td><code class="inl">Normal</code> = along the normal direction (<b>for beveled text / multi-part meshes such as text strings / smooth general models</b>) / <code class="inl">PivotScale</code> = outward from the pivot (<b>for hard-edged single convex shapes such as cubes</b>; corners do not split).</td></tr>
+    <tr><td>Self-Illuminate</td><td>The degree to which the outline self-illuminates, ignoring the world lighting (<code class="inl">0</code>–<code class="inl">1</code>; <b>default 0</b>). At <code class="inl">0</code> (default), <b>the outline uniformly follows the scene brightness (total of the main Directional Light + ambient light, following Light Min/Max Limit)</b> (bright (white) when a Directional Light is present; gray to black only when the whole scene is dark; the line is uniform and shows no light/dark boundary; in full darkness it stops at Light Min Limit and turns off at <code class="inl">0</code>). At <code class="inl">1</code> it ignores lighting and <b>emits constantly (classic neon)</b>. Adjust the glow strength with the <b>brightness of Base Color (HDR)</b>. Animatable.</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 TIP — INITIAL VALUES WHEN ENABLED">
+    <p>When you enable Outline, it starts with easy-to-handle initial settings (Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code> / Sweep OFF). You can freely change the values afterward. Note that if you turn Outline OFF once and re-enable it, it returns to these initial settings.</p>
+  </div>
+  <div class="note tip" data-label="💡 TIP — HOW IT WORKS (IMPORTANT)">
+    <p>The outline is drawn geometrically by the method of "drawing only the backfaces of a slightly inflated duplicate of the mesh" (inverted hull). Therefore, <b>a correct outline appears even on a flat mesh such as a cube</b>.</p>
+  </div>
+  <div class="note warn" data-label="⚠ CHOOSING THE EXTRUDE MODE">
+    <p><code class="inl">Normal</code>: Because it extrudes along the normal, the line thickness is uniform. On hard-edged (flat-shaded) corners, the line may break. In that case, switch to <code class="inl">PivotScale</code>, or add bevels/smooth normals on the model side.</p>
+    <p><code class="inl">PivotScale</code>: Because it extrudes radially from the pivot, corners do not split, but <b>on multi-part meshes such as text strings or on concave shapes, the line thickness becomes non-uniform</b> (no line appears on the side facing the pivot). Consider it exclusively for single convex shapes.</p>
+  </div>
+  <div class="note info" data-label="🧍 GUIDE FOR APPLYING TO THE AVATAR BODY">
+    <ul style="margin:4px 0 0 20px">
+      <li>The outline follows the bone deformation of skinned meshes. <b>Use Normal for Extrude Mode</b> (<code class="inl">PivotScale</code> breaks down on full-body meshes).</li>
+      <li>The line thickness scales with the avatar's scale (the visual ratio is preserved even on giant/tiny avatars).</li>
+      <li>For parts where you <b>do not want an outline, such as the face, turn Outline OFF on that material</b> (or set Line Width to <code class="inl">0</code>). Since avatars typically have separate materials per part, this is the basic means of per-part control.</li>
+      <li>The vertex processing of the relevant material roughly doubles, and one draw call is added. It is within practical range even at body scale, but if you prioritize Performance Rank, narrow the scope of application.</li>
+    </ul>
+  </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Sweep (orbiting-glow option)</h4>
+  <p>An option in which an especially bright glow streak orbits all the way around on top of the Outline. Usable for "light running" staging such as neon tubes, cyber gadgets, and magic circles. It works only when Outline is enabled.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Sweep</td><td>Enable/disable the option.</td></tr>
+    <tr><td>Base Glow</td><td>The base brightness of the foundation on which the orbiting streak runs — the outline (tube) (<code class="inl">0</code>–<code class="inl">1</code>; default <code class="inl">1</code>). <b>Lowering it creates the contrast of "a strong light streak running over a faintly glowing tube".</b> A Sweep-only setting (shown when Sweep is enabled).</td></tr>
+    <tr><td>Width</td><td>The total length of the light streak. The smaller, the more point-like; the larger, the longer it glows.</td></tr>
+    <tr><td>Sharpness</td><td>The sharpness of the falloff applied <b>symmetrically to both sides</b> from the streak's center. The larger, the more sharply the center stands out; the smaller, the more gently the whole glows.</td></tr>
+    <tr><td>Speed</td><td>The orbit speed. <b>The sign reverses the orbit direction</b> (positive = one way / negative = the other way). <code class="inl">0</code> = stop. Animatable.</td></tr>
+    <tr><td>Count</td><td>The number of streaks orbiting at once (an <b>integer</b> <code class="inl">1</code>–<code class="inl">8</code>). At <code class="inl">2</code> or more, evenly-spaced multiple lights chase each other.</td></tr>
+    <tr><td>Pivot Offset</td><td>The offset of the center around which the streak orbits (object space). Normally you can leave it at <code class="inl">(0,0,0)</code>. <b>When using it on the avatar body, set Y to chest height (e.g., 1.0)</b> to make the orbit even.</td></tr>
+    <tr><td>Edge Fade</td><td>When, in semi-transparent modes (Transparent / Fade), the <b>Sweep is seen bleeding radially through the body</b>, this keeps the rim streak while suppressing only the inner bleed (<code class="inl">0</code>–<code class="inl">8</code>; default <code class="inl">2</code>). <code class="inl">0</code> = disabled. <b>A feature for smooth curved surfaces (spheres, organic meshes).</b> <b>In opaque, the back is hidden by the body, so there is no effect.</b> ⚠️ On hard-edged meshes (cubes, etc.) the rim streak is attenuated too, so set it to <code class="inl">0</code> in that case (the outline itself is unaffected by Edge Fade and is always displayed).</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 TIP — HOW IT WORKS">
+    <p>Because the light streak's position is generated by the <b>angle on screen as seen from the camera</b>, <b>no matter which direction you look from, the streak circles the outline currently visible</b>. Since it is a view-based (viewer-side) effect, tilting your head (camera) rotates the orbit's starting point together with the screen. Also, in VRChat mirrors the orbit direction appears reversed, but this is a specification common to view-dependent effects such as Matcap.</p>
+  </div>
+  <div class="note warn" data-label="⚠ COMMON NOTES FOR OUTLINE / SWEEP">
+    <ul style="margin:4px 0 0 20px">
+      <li>When using this material on particles, the outline is drawn for each individual particle, so <b>OFF is recommended for particle usage</b> (when ON, the line follows the lifetime fade).</li>
+      <li>Because this feature does not use shader keywords, enabling it <b>does not increase the compile time (number of variants) at upload</b>. When OFF, the drawing load is essentially zero, but one draw call is added for the dedicated pass.</li>
+      <li>With Transparent / Fade presets, when the body becomes semi-transparent, the back may be seen through the body. <b>The outline itself is always displayed</b> (because it is drawn geometrically, it never disappears on any mesh). If the radial bleed of Sweep bothers you, on smooth curved surfaces the Sweep <b>Edge Fade</b> (default <code class="inl">2</code>) suppresses the inner bleed (on hard-edged meshes, <code class="inl">0</code> is recommended).</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+<!-- ============ PARTICLE / ANIM ============ -->
+<section id="particle">
+  <div class="sec-head rv"><div class="num">SEC. 11 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Particle Color (integration with particles)</h4>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Vertex Color Blend Mode</td><td>Default is <code class="inl">None</code> (does not reflect the particle vertex color). Changing it to <code class="inl">Multiply</code> receives the color from the Particle System (Color over Lifetime, etc.).</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h3>How to control from animation</h3>
+  <p>By adding the following property names to keyframes in the Unity Animator, you can animate effects over time.</p>
+  <div class="code" data-label="ANIMATABLE PROPERTIES">Material._Color              <span class="cm">// Color (RGBA)  ─ overall color</span>
+Material._ColorIntensity     <span class="cm">// Float         ─ overall brightness</span>
+Material._HueShift           <span class="cm">// Float         ─ hue shift (0–1)</span>
+Material._Saturation         <span class="cm">// Float         ─ saturation (1 = no change)</span>
+Material._Brightness         <span class="cm">// Float         ─ brightness (1 = no change)</span>
+Material._Layer1Color        <span class="cm">// Color (HDR)   ─ texture layer color tint</span>
+Material._Layer1Opacity      <span class="cm">// Float         ─ layer blend strength (0–1)</span>
+Material._Layer1AlphaMask    <span class="cm">// Float (0/1)   ─ alpha mask ON/OFF (appear/disappear staging)</span>
+Material._EmissionColor      <span class="cm">// Color (HDR)   ─ emission color</span>
+Material._EmissionIntensity  <span class="cm">// Float         ─ emission strength</span>
+Material._EmissionPulseSpeed <span class="cm">// Float         ─ emission pulse speed (0 = disabled)</span>
+Material._DissolveThreshold  <span class="cm">// Float         ─ disappearance progress (-1.0 to 1.1)</span>
+Material._RimColor           <span class="cm">// Color (HDR)   ─ rim light color</span>
+Material._RimPower           <span class="cm">// Float         ─ rim light thickness</span>
+Material._RimIntensity       <span class="cm">// Float         ─ rim light strength</span>
+Material._RimBlendMode       <span class="cm">// Float (0/1)   ─ 0 = Add (additive glow) / 1 = Multiply (darken / black rim)</span>
+Material._OutlineColor          <span class="cm">// Color (HDR) ─ outline color</span>
+Material._OutlineIntensity      <span class="cm">// Float       ─ outline emission strength</span>
+Material._OutlineBaseGlow       <span class="cm">// Float       ─ Sweep tube base brightness (contrast with streak)</span>
+Material._OutlineSelfGlow       <span class="cm">// Float       ─ outline self-illuminate degree (0 = follow lighting / 1 = self-emit)</span>
+Material._OutlineSweepSpeed     <span class="cm">// Float       ─ Sweep orbit speed (sign reverses direction)</span>
+Material._MatcapStrength     <span class="cm">// Float         ─ Matcap blend strength</span>
+Material._MatcapColor        <span class="cm">// Color         ─ Matcap color tint</span>
+Material._ReflectionStrength <span class="cm">// Float         ─ environment reflection strength</span>
+Material._LightMinLimit      <span class="cm">// Float         ─ ambient clamp lower bound</span>
+Material._LightMaxLimit      <span class="cm">// Float         ─ ambient clamp upper bound</span>
+Material._AudioLinkEmission  <span class="cm">// Float         ─ AudioLink reaction amount (Master)</span>
+Material._AudioLinkEmissionColor     <span class="cm">// Color (HDR) ─ AudioLink emission color</span>
+Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLink emission strength</span></div>
+  <p><b>Steps (VRChat Avatar example)</b></p>
+  <ul>
+    <li>Open the Animator Controller</li>
+    <li>With the target GameObject selected, add a keyframe</li>
+    <li><code class="inl">Add Property</code> → <code class="inl">Skinned Mesh Renderer</code> (or <code class="inl">Mesh Renderer</code>) → <code class="inl">Materials</code> → target material → add by the property names above</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>About using with the Particle System</h3>
+  <p>This shader is designed with use on particle effects in mind.</p>
+  <ul>
+    <li>Set this material to the Particle System's <code class="inl">Renderer &gt; Material</code></li>
+    <li>Change the material's <code class="inl">Vertex Color Blend Mode</code> to <code class="inl">Multiply</code></li>
+  </ul>
+  <p><b>That is all it takes.</b> No additional settings such as checking <code class="inl">Enable Mesh GPU Instancing</code> or <code class="inl">Custom Vertex Streams</code> are required at all.</p>
+  </div>
+</section>
+
+<!-- ============ LICENSE ============ -->
+<section id="license">
+  <div class="sec-head rv"><div class="num">SEC. 12 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="rv">
+  <h3>Performance &amp; Optimization</h3>
+  <p>This shader is maximally optimized for lightweight operation and compile speed in the VRChat environment.</p>
+  <ul>
+    <li>Drawing passes not used for avatar purposes (ShadowCaster, Deferred passes) and internal variants for fog/lightmaps are completely purged, greatly shortening build (upload) time.</li>
+  </ul>
+  <h3>About VRChat Fallback</h3>
+  <p>The shader has the <code class="inl">"VRCFallback" = "Standard"</code> tag set.</p>
+  <p>Even if a custom shader is disabled by another user's Safety settings within VRChat, it is automatically replaced with Unity's built-in <b>Standard shader</b>, preventing the avatar from turning pink (material error).</p>
+  </div>
+
+  <div class="rv">
+  <h3>License (Terms of Use)</h3>
+  <div class="note warn" data-label="⚠ THE JAPANESE ORIGINAL IS AUTHORITATIVE">
+    <p><b>The original Japanese text is authoritative.</b> The following is an English translation provided for convenience. In case of any discrepancy in interpretation, the <a href="ARLitToon.html#license" style="color:var(--ac);font-weight:700">Japanese original</a> prevails.</p>
+  </div>
+  <h4><span class="hx">#</span> English translation (for reference)</h4>
+  <p><b>The copyright of this shader belongs to ARL.</b> By purchasing or downloading this package, you are deemed to have agreed to the following Terms of Use.</p>
+  <h4><span class="hx">#</span> [Permitted]</h4>
+  <div style="position:relative;border:1px solid var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 60%);padding:20px 22px 16px;margin:14px 0 18px;overflow:hidden">
+    <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;font-weight:700;color:var(--ac);margin-bottom:8px">FOR CREATORS — BUNDLED SALES OK</div>
+    <div style="font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.8">Sale and distribution of 3D models (avatars, avatar gimmicks, world items, etc.) that bundle the ARLitToon shader.</div>
+    <div style="font-size:13px;color:var(--ink2);margin-top:8px">VRChat costume and gimmick creators: you can bundle this shader with your own works and sell/distribute them as-is on BOOTH and elsewhere (no credit required). Just check the "required files when bundling" below.</div>
+  </div>
+  <ul>
+    <li>Incorporation into and commercial use of your own VRChat avatars, worlds, game production, etc. (including video streaming and the like).</li>
+    <li>Modification of this shader's code and GUI script.</li>
+    <li>When using this shader, crediting the author name (ARL) or the shader name (ARLitToon) is optional (not required).</li>
+  </ul>
+  <div class="note info" data-label="[REQUIRED FILES WHEN BUNDLING FOR DISTRIBUTION]">
+    <p>When you bundle and distribute/sell the ARLitToon shader with a work (avatar, gimmick, world item, etc.), be sure to <b>bundle the following 3 files as a set</b> so the shader works correctly.</p>
+    <ul style="margin:4px 0 8px 20px">
+      <li><code class="inl">ARLitToon.shader</code> (the shader itself)</li>
+      <li><code class="inl">ARLitToonGUI.cs</code> (the GUI script for the material Inspector / inside the <code class="inl">Editor</code> folder)</li>
+      <li><code class="inl">README.md</code> (this guide)</li>
+    </ul>
+    <p>※ If <code class="inl">ARLitToonGUI.cs</code> is missing, the custom Inspector GUI will not be displayed and the material cannot be configured correctly. Bundle <code class="inl">README.md</code> to convey the usage and these Terms of Use to the recipient.</p>
+  </div>
+  <h4><span class="hx">#</span> [Prohibited]</h4>
+  <ul>
+    <li>Unauthorized redistribution, reposting, or sale of this shader (including modified versions) by itself (however, bundling it with your own work for sale/distribution is fine).</li>
+    <li>Uploading an avatar that uses the ARLitToon shader as a "Public Avatar" in VRChat or similar (putting it in a state where third parties can clone/extract the avatar).</li>
+  </ul>
+  <h4><span class="hx">#</span> [Disclaimer]</h4>
+  <ul>
+    <li>The author (ARL) assumes no responsibility whatsoever for any trouble or damage arising from the use of this shader.</li>
+  </ul>
+  </div>
+
+  <div class="rv">
+  <h3>Version (Changelog)</h3>
+  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v31_GUIr4</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
+  <details>
+    <summary>Open changelog (click to expand)</summary>
+    <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v31_GUIr4</span> Added the ability to switch the material Inspector's display language between <b>日本語 / English</b> (GUI only). Switch it with the language toggle directly below the header. The setting is remembered per editor and applies to all materials (it is not saved on the material itself = the shader, saved values, and look do not change).</li>
+      <li><span class="vtag">v31_GUIr3</span> Changed the default <code class="inl">Render Queue</code> of the <code class="inl">Fade</code> / <code class="inl">Additive</code> presets from <b>3000 → 3001</b> (GUI only). Semi-transparent effects are drawn in front of glass etc. (<code class="inl">Transparent</code> = 3000) by default. The <code class="inl">Transparent</code> preset stays at 3000 as before (saved materials reflect it when you reselect the preset).</li>
+      <li><span class="vtag">v31_GUIr2</span> Bumped the displayed numbers of the Outline <b>Line Width</b> slider up by one digit (GUI only). Display range <code class="inl">0–2</code> → <code class="inl">0–20</code>. The actual effect and saved value do not change.</li>
+      <li><span class="vtag">v31_GUIr1</span> Adjusted the Outline <b>Line Width</b> slider's display range from <code class="inl">0–5</code> → <code class="inl">0–2</code>, to two decimal places (GUI only). The actual effect and saved value do not change.</li>
+      <li><span class="vtag">v31_GUIr0</span> Adjusted Outline usability. <b>(1)</b> Renamed <b>Lighting Influence</b> to <b>Self-Illuminate</b> and inverted the value direction (<code class="inl">0</code> = follow lighting / <code class="inl">1</code> = self-emit). <b>(2)</b> Moved <b>Base Glow</b> into the Sweep settings. ※ The default outline now follows lighting. For existing materials that want the old constant emission, set <b>Self-Illuminate to 1</b>.</li>
+      <li><span class="vtag">v30_GUIr0</span> Changed the tracking method of <b>Lighting Influence (dark-area tracking)</b> to "track a uniform brightness from the total of the Directional Light + ambient" (improved so no light/dark boundary appears on the outline). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v29_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to follow the main Directional Light + ambient (fixing the problem where the line sank to gray by looking only at ambient). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v28_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to blend at the same brightness as the body (skin, hair, etc.) (fixing the problem where only the line stayed bright in dim worlds). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v27_GUIr0</span> Aligned the dark-area lower bound of <b>Lighting Influence (dark-area tracking)</b> to the same brightness as Light Min Limit (fixing the issue where the line stayed brighter than the body in pitch-dark worlds). Backward compatibility at <code class="inl">0</code> (default) is unchanged.</li>
+      <li><span class="vtag">v26_GUIr0</span> Added <b>Lighting Influence (dark-area tracking)</b> to Outline. Default <code class="inl">0</code> = self-emission as before (existing materials look unchanged).</li>
+      <li><span class="vtag">v25_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with <b>many</b> realtime lights (changed to a method that subjects additional lights to a single brightness control together). The shading of additional lights becomes simplified (per-vertex, up to 4 lights), but the impact on toon expression is negligible.</li>
+      <li><span class="vtag">v24_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with strong realtime lights (so the brightness upper bound Light Max Limit also affects additional realtime lights). When Light Limit is disabled, behavior is as before.</li>
+      <li><span class="vtag">v23_GUIr0</span> Changed Outline <b>Edge Fade</b> to be <b>Sweep-only</b> (fixing the bug where the outline itself disappears on hard-edged meshes). The item moved into the Sweep settings (saved values are kept).</li>
+      <li><span class="vtag">v22_GUIr0</span> Added <b>Edge Fade</b> to Outline (mitigating the problem where the back-side Sweep bleeds radially through when semi-transparent). Default <code class="inl">2</code> = ON, <code class="inl">0</code> for the old behavior. In opaque, the look does not change.</li>
+      <li><span class="vtag">v19_GUIr0</span> Added <b>Contrast</b> to Matcap (default 1.0 = existing materials unchanged).</li>
+      <li><span class="vtag">v18_GUIr0</span> Made the 2nd Matcap an <b>independent layer</b>, allowing Color Tint, Strength, and Blend to be set separately for the 1st and 2nd (behavior when OFF unchanged).</li>
+      <li><span class="vtag">v17_GUIr0</span> Added a <b>2nd slot (Mask Select)</b> to Matcap (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v16_GUIr0</span> Added <b>"Disable on Backface"</b> to Rim Light (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v15_GUIr0</span> Added <b>"Disable on Backface"</b> to Matcap (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v14_GUIr0</span> <b>Removed Additive</b> from the Particle Vertex Color Blend Mode (now a choice of <code class="inl">None</code> / <code class="inl">Multiply</code>). If a saved material had <code class="inl">Additive</code> selected, it falls back to a <code class="inl">Multiply</code>-equivalent display. Also tidied the internal light lower-bound clamp processing (behavior and look unchanged).</li>
+      <li><span class="vtag">v13_GUIr0</span> Usability adjustments. <b>(1)</b> Changed the initial value of the Particle Vertex Color Blend Mode to <code class="inl">None</code>. <b>(2)</b> Adjusted the initial settings when enabling Outline to Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code>. The look of saved materials does not change in either case.</li>
+      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Added <b>Blend Mode (Add / Multiply)</b> to Rim Light. <b>(2)</b> Added an <b>alpha mask mode</b> to Texture Layer. Also changed the Outline Line Width slider display range to <code class="inl">0–5</code> (the actual value and effect unchanged).</li>
+      <li><span class="vtag">v10_GUIr0</span> Changed Sweep falloff from one-sided to <b>symmetric on both sides</b>. Changed Count to integer input (IntRange) and added <b>Pivot Offset</b>. Added a guide for applying to the avatar body to the README.</li>
+      <li><span class="vtag">v9_GUIr0</span> Reorganized features into a two-layer structure of <b>Outline</b> and <b>Sweep (orbiting glow)</b>. Changed the default value of Base Glow to <code class="inl">1</code>.</li>
+      <li><span class="vtag">v8_GUIr0</span> Changed Outline edge drawing to an inverted-hull pass method. Added <b>Line Width</b>, <b>Extrude Mode</b>, and <b>Base Glow</b>, and removed Rim Power.</li>
+      <li><span class="vtag">v7_GUIr0</span> Changed the Outline Sweep orbit basis to the camera viewpoint (angle on screen) and removed the Axis property.</li>
+      <li><span class="vtag">v6_GUIr0</span> Added <b>Outline Sweep (outline orbiting glow)</b>.</li>
+      <li><span class="vtag">v5_GUIr0</span> Fixed the bug where Dissolve noise became a one-directionally stretched stripe pattern on some faces of rotated objects (a latent issue since v0). The look of objects placed without rotation does not change.</li>
+      <li><span class="vtag">v4_GUIr0</span> Internal code tidy-up (refactoring). No change to features, look, or performance. No material re-setup is needed.</li>
+      <li><span class="vtag">v3_GUIr1</span> Changed so that when Unlit Mode is ON, the shadow detail properties (Shadow Color through Shadow Blur) are automatically hidden (since shadows are not computed in Unlit; GUI-only update).</li>
+      <li><span class="vtag">v3_GUIr0</span> Built the always-ON of Light Limit into the shader default value (<code class="inl">_UseLightLimit=1</code>). The clamp is now active even on materials whose Inspector has not been opened.</li>
+      <li><span class="vtag">v2_GUIr2</span> Made the always-ON baking of Light Limit reliable at Inspector display time (fixing the bug where the clamp did not take effect and blew out while a section was collapsed; GUI-only update).</li>
+      <li><span class="vtag">v2_GUIr1</span> Made Light Limit always ON (removed the enable/disable checkbox). Changed so the settings UI is automatically hidden in Unlit Mode (GUI-only update).</li>
+      <li><span class="vtag">v2_GUIr0</span> Added Light Limit (Directional Light influence clamp / prevents blow-out &amp; crushed blacks).</li>
+      <li><span class="vtag">v1_GUIr0</span> Initial release.</li>
+    </ul></div>
+  </details>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer class="footer"><div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%">
+  <div>ARLitToon SHADER <span class="c">//</span> ALTIMA STUDIO</div>
+  <div>© ARL — ALL RIGHTS RESERVED</div>
+</div></footer>
+
+</main>
+
+<script>
+// ticker
+(function(){
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var half=items.map(function(t){return t+"<b>///</b>"}).join("");
+  document.getElementById("ticker").innerHTML=half+half;
+})();
+// scroll progress + parallax beam
+var beam=document.getElementById("beam"),prog=document.getElementById("progress");
+addEventListener("scroll",function(){
+  var h=document.documentElement,max=h.scrollHeight-h.clientHeight;
+  prog.style.width=(max?h.scrollTop/max*100:0)+"%";
+  beam.style.marginTop=(h.scrollTop*-0.08)+"px";
+},{passive:true});
+// reveal
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target)}})},{threshold:.08,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+// scrollspy
+var links=[].slice.call(document.querySelectorAll(".navgrp a[href^='#']")).filter(function(a){return a.getAttribute("href").length>1});
+var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"))});
+var spy=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)});
+    }
+  });
+},{rootMargin:"-20% 0px -70% 0px"});
+secs.forEach(function(s){if(s)spy.observe(s)});
+// glitch pulse
+var gr=document.getElementById("glitchRoot");
+setInterval(function(){gr.classList.add("g-on");setTimeout(function(){gr.classList.remove("g-on")},380)},3400);
+</script>
+</body>
+</html>

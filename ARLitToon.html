@@ -169,6 +169,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="navgrp"><div class="glabel">Setup</div>
     <a href="#setup">はじめに・導入</a>
+    <a href="#changelog">更新履歴 / Changelog</a>
   </div>
   <div class="navgrp"><div class="glabel">Core Features</div>
     <a href="#rendering">Transparency / Rendering</a>
@@ -226,6 +227,56 @@ details .dbody li{margin-bottom:10px}
   <div class="rv">
   <h3>概要</h3>
   <p>ARLitToon は物理ベースのリアル質感ではなく、イラスト風やセル画風の表現に最適化されています。パーティクルのカラー連携、ディゾルブ、ソフトパーティクル、HDR発光、リムライトといった機能を標準で備えています。</p>
+  </div>
+
+  <div class="rv" id="changelog">
+  <h3>バージョン（更新履歴 / Changelog）</h3>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v32_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b>に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</p>
+  </div>
+  <details>
+    <summary>過去の更新履歴を開く（クリックで展開）</summary>
+    <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v32_GUIr0</span> Outline に <b>Use Outline Mask（アウトラインマスク）</b>を追加しました。グレースケールのマスク画像で輪郭線を部分的に消せます（<b>白＝線あり／黒＝線なし</b>）。目尻・口元など 1 枚のマテリアル内で一部だけ線を消したいときに使えます。<b>既定 OFF・マスク未指定（白）で従来と完全に同じ</b>です。あわせて、<b>Sweep を OFF にしたときに Base Glow（Sweep 専用設定）の値が輪郭線の明るさに残り続ける不具合を修正</b>しました（Sweep OFF 時は Base Glow に依存せず均一なソリッド線になります）。</li>
+      <li><span class="vtag">v31_GUIr5</span> 各機能のチェックボックスを <b>OFF→再 ON したときに、調整した値を保持</b>するようにしました（GUI のみ）。誤ってチェックを外してしまっても、Strength や輪郭線の太さ・Sweep の設定などが初期値に戻らなくなります。値が 0（＝その機能が見えない状態）のときだけ、見えるように既定値を補います（Matcap は元から既定で見えるため挙動は変わりません。Outline を新規マテリアルで初めて有効化したときはシェーダー既定の見た目になります）。</li>
+      <li><span class="vtag">v31_GUIr4</span> マテリアル Inspector の表示言語を <b>日本語 / English</b> で切り替えられるようにしました（GUI のみ）。ヘッダ直下の言語トグルで切り替えます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません＝シェーダー・保存値・見た目は変わりません）。</li>
+      <li><span class="vtag">v31_GUIr3</span> <code class="inl">Fade</code> / <code class="inl">Additive</code> プリセットの既定 <code class="inl">Render Queue</code> を <b>3000 → 3001</b> に変更しました（GUI のみ）。半透明エフェクトがガラス等（<code class="inl">Transparent</code>=3000）より既定で手前に描画されます。<code class="inl">Transparent</code> プリセットは従来どおり 3000 です（保存済みマテリアルはプリセットを選び直すと反映されます）。</li>
+      <li><span class="vtag">v31_GUIr2</span> Outline の <b>Line Width</b> スライダーの表示の数値を1桁繰り上げました（GUI のみ）。表示レンジ <code class="inl">0〜2</code> → <code class="inl">0〜20</code>。実際の効果・保存値は変わりません。</li>
+      <li><span class="vtag">v31_GUIr1</span> Outline の <b>Line Width</b> スライダーの表示レンジを <code class="inl">0〜5</code> → <code class="inl">0〜2</code>・小数第3位に調整しました（GUI のみ）。実際の効果・保存値は変わりません。</li>
+      <li><span class="vtag">v31_GUIr0</span> Outline の使い勝手を調整しました。<b>(1)</b> <b>Lighting Influence</b> を <b>Self-Illuminate（自己発光）</b>に名称変更し、値の向きを反転（<code class="inl">0</code>＝ライティング追従／<code class="inl">1</code>＝自己発光）。<b>(2)</b> <b>Base Glow</b> を Sweep の設定内へ移動。※既定の輪郭線がライティング追従に変わります。旧来の常時発光にしたい既存マテリアルは <b>Self-Illuminate を 1</b> にしてください。</li>
+      <li><span class="vtag">v30_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の追従方式を「Directional Light の総量＋環境光で均一の明るさに追従」へ変更しました（輪郭線に明暗の境界が出ないよう改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v29_GUIr0</span> <b>Lighting Influence（暗所追従）</b>がメインの Directional Light＋環境光に追従するよう改良しました（環境光だけを見て線が灰色に沈む問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v28_GUIr0</span> <b>Lighting Influence（暗所追従）</b>を本体（肌・髪など）と同じ明るさで馴染むよう改良しました（薄暗いワールドで線だけ明るく残る問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v27_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の暗所での下限を Light Min Limit と同じ明るさにそろえました（真っ暗なワールドで線が本体より明るく残る不具合の修正）。<code class="inl">0</code>（既定）での後方互換は変わりません。</li>
+      <li><span class="vtag">v26_GUIr0</span> Outline（輪郭線）に <b>Lighting Influence（暗所追従）</b>を追加しました。既定 <code class="inl">0</code>＝従来どおりの自己発光（既存マテリアルは見た目不変）。</li>
+      <li><span class="vtag">v25_GUIr0</span> リアルタイムライトが<b>多数</b>あるワールドでアバターの明るい部分が白飛びする問題を修正しました（追加ライトをまとめて1回の明るさ制御にかける方式に変更）。追加ライトの陰影は簡易（頂点単位・最大4灯）になりますが、トゥーン表現では影響はごくわずかです。</li>
+      <li><span class="vtag">v24_GUIr0</span> 強いリアルタイムライトのあるワールドでアバターの明るい部分が白飛びする問題を修正しました（明るさの上限 Light Max Limit が追加のリアルタイムライトにも効くように）。Light Limit 無効時は従来どおりです。</li>
+      <li><span class="vtag">v23_GUIr0</span> Outline の <b>Edge Fade</b> を <b>Sweep 専用</b>に変更しました（ハードエッジのメッシュで輪郭線まで消える不具合の修正）。項目は Sweep の設定内へ移動（保存済みの値は維持されます）。</li>
+      <li><span class="vtag">v22_GUIr0</span> Outline に <b>Edge Fade</b> を追加しました（半透明時に裏側の Sweep が放射状に透ける問題を軽減）。既定 <code class="inl">2</code>＝ON、<code class="inl">0</code> で従来動作。不透明では見た目は変わりません。</li>
+      <li><span class="vtag">v19_GUIr0</span> Matcap に <b>Contrast（コントラスト）</b>を追加しました（既定 1.0＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v18_GUIr0</span> 2枚目 Matcap を<b>独立レイヤー化</b>し、カラー Tint・Strength・Blend を 1枚目・2枚目で個別に設定できるようにしました（OFF 時の挙動は不変）。</li>
+      <li><span class="vtag">v17_GUIr0</span> Matcap に <b>2枚目スロット（Mask Select）</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v16_GUIr0</span> Rim Light に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v15_GUIr0</span> Matcap に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v14_GUIr0</span> Particle の Vertex Color Blend Mode から <b>Additive を削除</b>しました（<code class="inl">None</code> / <code class="inl">Multiply</code> の2択）。保存済みマテリアルで <code class="inl">Additive</code> を選んでいた場合は <code class="inl">Multiply</code> 相当の表示にフォールバックします。あわせて内部のライト下限クランプ処理を整理しました（挙動・見た目は不変）。</li>
+      <li><span class="vtag">v13_GUIr0</span> 使い勝手の調整。<b>(1)</b> Particle の Vertex Color Blend Mode の初期値を <code class="inl">None</code> に変更。<b>(2)</b> Outline 有効化時の初期設定を Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code> に調整。いずれも保存済みマテリアルの見た目は変わりません。</li>
+      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Rim Light に <b>Blend Mode（Add / Multiply）</b>を追加。<b>(2)</b> Texture Layer に <b>透明マスクモード</b>を追加。あわせて Outline の Line Width スライダー表示レンジを <code class="inl">0〜5</code> に変更しました（実際の値・効果は不変）。</li>
+      <li><span class="vtag">v10_GUIr0</span> Sweep の減衰を片側から<b>両側対称</b>に変更。Count を整数入力（IntRange）に変更し、<b>Pivot Offset（周回中心）</b>を追加。アバター本体への適用ガイドを README に追加しました。</li>
+      <li><span class="vtag">v9_GUIr0</span> 機能を <b>Outline（輪郭線）</b>と <b>Sweep（周回発光）</b>の二層構造に再編。Base Glow の既定値を <code class="inl">1</code> に変更しました。</li>
+      <li><span class="vtag">v8_GUIr0</span> Outline の輪郭描画を反転外殻（Inverted Hull）パス方式に変更。<b>Line Width</b>・<b>Extrude Mode</b>・<b>Base Glow</b> を追加し、Rim Power を廃止しました。</li>
+      <li><span class="vtag">v7_GUIr0</span> Outline Sweep の周回基準をカメラビューポイント基点（画面上の角度）に変更し、Axis プロパティを廃止しました。</li>
+      <li><span class="vtag">v6_GUIr0</span> <b>Outline Sweep（アウトライン周回発光）</b>を追加しました。</li>
+      <li><span class="vtag">v5_GUIr0</span> Dissolve のノイズが、回転して配置したオブジェクトの一部の面で一方向に伸びた縞模様になる不具合を修正しました（v0 から潜在していた問題です）。無回転で配置していたオブジェクトの見た目は変わりません。</li>
+      <li><span class="vtag">v4_GUIr0</span> 内部コードの整理（リファクタリング）。機能・見た目・パフォーマンスに変更はありません。マテリアルの再設定は不要です。</li>
+      <li><span class="vtag">v3_GUIr1</span> Unlit モード ON のとき、影の詳細プロパティ（Shadow Color〜Shadow Blur）を自動的に非表示にするよう変更（Unlit では影が計算されないため。GUI のみの更新）。</li>
+      <li><span class="vtag">v3_GUIr0</span> Light Limit の常時 ON をシェーダー既定値（<code class="inl">_UseLightLimit=1</code>）として組み込み。Inspector を開いていないマテリアルでもクランプが有効になりました。</li>
+      <li><span class="vtag">v2_GUIr2</span> Light Limit 常時 ON の焼き込み処理を Inspector 表示時に確実化（セクション折りたたみ時にクランプが効かず白飛びする不具合を修正。GUI のみの更新）。</li>
+      <li><span class="vtag">v2_GUIr1</span> Light Limit を常時 ON 化（有効/無効チェックボックスを廃止）。Unlit モード時は設定 UI を自動的に非表示に変更（GUI のみの更新）。</li>
+      <li><span class="vtag">v2_GUIr0</span> Light Limit（Directional Light 影響度クランプ／白飛び・黒つぶれ防止）を追加。</li>
+      <li><span class="vtag">v1_GUIr0</span> 初版リリース。</li>
+    </ul></div>
+  </details>
   </div>
 
   <div class="rv">
@@ -667,6 +718,18 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
   </div>
 
   <div class="rv">
+  <h3>リファレンス・謝辞（References &amp; Acknowledgements）</h3>
+  <p>ARLitToon の開発にあたり、以下の先行するシェーダー・ライブラリの仕様や設計を参考にさせていただきました。素晴らしい成果を公開されている各プロジェクト・作者の皆さまに、敬意と感謝を表します。</p>
+  <ul>
+    <li><b>lilToon</b>（lilxyzw）— アバター向けトゥーン表現の機能仕様を参考にしました。<a href="https://github.com/lilxyzw/lilToon" style="color:var(--ac)">https://github.com/lilxyzw/lilToon</a></li>
+    <li><b>OpenLit</b>（lilxyzw）— ライティング設定、とくに多数のリアルタイムライト環境における明るさ制御（追加ライトの扱いと上限クランプ）の考え方を参考にしました。<a href="https://github.com/lilxyzw/OpenLit" style="color:var(--ac)">https://github.com/lilxyzw/OpenLit</a></li>
+    <li><b>Unity Built-in シェーダー</b>（Unity Technologies）— 環境光・環境反射（Global Illumination／リフレクションプローブ）の解決に、Unity 標準のライティング経路を利用しています。</li>
+    <li><b>AudioLink</b>（AudioLink プロジェクト）— 音楽連動の発光機能は、AudioLink の仕様（ワールドがグローバルに提供する音響データテクスチャ）に準拠して実装しています。<a href="https://github.com/llealloo/audiolink" style="color:var(--ac)">https://github.com/llealloo/audiolink</a></li>
+  </ul>
+  <p style="font-size:12.5px">本シェーダーは上記のコードをそのまま流用したものではなく、公開されている仕様・設計思想を参考に独自実装したものです。</p>
+  </div>
+
+  <div class="rv">
   <h3>利用規約（ライセンス）</h3>
   <p><b>本シェーダーの著作権は ARL に帰属します。</b> 本パッケージを購入・ダウンロードした時点で、以下の利用規約に同意したものとみなします。</p>
   <h4><span class="hx">#</span> 【許可される事項】</h4>
@@ -698,54 +761,6 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
   <ul>
     <li>本シェーダーを利用したことによって生じるいかなるトラブルや損害に対しても、作者（ARL）は一切の責任を負わないものとします。</li>
   </ul>
-  </div>
-
-  <div class="rv">
-  <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <details>
-    <summary>更新履歴を開く（クリックで展開）</summary>
-    <div class="dbody"><ul style="list-style:none;margin-left:0">
-      <li><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b>に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</li>
-      <li><span class="vtag">v32_GUIr0</span> Outline に <b>Use Outline Mask（アウトラインマスク）</b>を追加しました。グレースケールのマスク画像で輪郭線を部分的に消せます（<b>白＝線あり／黒＝線なし</b>）。目尻・口元など 1 枚のマテリアル内で一部だけ線を消したいときに使えます。<b>既定 OFF・マスク未指定（白）で従来と完全に同じ</b>です。あわせて、<b>Sweep を OFF にしたときに Base Glow（Sweep 専用設定）の値が輪郭線の明るさに残り続ける不具合を修正</b>しました（Sweep OFF 時は Base Glow に依存せず均一なソリッド線になります）。</li>
-      <li><span class="vtag">v31_GUIr5</span> 各機能のチェックボックスを <b>OFF→再 ON したときに、調整した値を保持</b>するようにしました（GUI のみ）。誤ってチェックを外してしまっても、Strength や輪郭線の太さ・Sweep の設定などが初期値に戻らなくなります。値が 0（＝その機能が見えない状態）のときだけ、見えるように既定値を補います（Matcap は元から既定で見えるため挙動は変わりません。Outline を新規マテリアルで初めて有効化したときはシェーダー既定の見た目になります）。</li>
-      <li><span class="vtag">v31_GUIr4</span> マテリアル Inspector の表示言語を <b>日本語 / English</b> で切り替えられるようにしました（GUI のみ）。ヘッダ直下の言語トグルで切り替えます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません＝シェーダー・保存値・見た目は変わりません）。</li>
-      <li><span class="vtag">v31_GUIr3</span> <code class="inl">Fade</code> / <code class="inl">Additive</code> プリセットの既定 <code class="inl">Render Queue</code> を <b>3000 → 3001</b> に変更しました（GUI のみ）。半透明エフェクトがガラス等（<code class="inl">Transparent</code>=3000）より既定で手前に描画されます。<code class="inl">Transparent</code> プリセットは従来どおり 3000 です（保存済みマテリアルはプリセットを選び直すと反映されます）。</li>
-      <li><span class="vtag">v31_GUIr2</span> Outline の <b>Line Width</b> スライダーの表示の数値を1桁繰り上げました（GUI のみ）。表示レンジ <code class="inl">0〜2</code> → <code class="inl">0〜20</code>。実際の効果・保存値は変わりません。</li>
-      <li><span class="vtag">v31_GUIr1</span> Outline の <b>Line Width</b> スライダーの表示レンジを <code class="inl">0〜5</code> → <code class="inl">0〜2</code>・小数第3位に調整しました（GUI のみ）。実際の効果・保存値は変わりません。</li>
-      <li><span class="vtag">v31_GUIr0</span> Outline の使い勝手を調整しました。<b>(1)</b> <b>Lighting Influence</b> を <b>Self-Illuminate（自己発光）</b>に名称変更し、値の向きを反転（<code class="inl">0</code>＝ライティング追従／<code class="inl">1</code>＝自己発光）。<b>(2)</b> <b>Base Glow</b> を Sweep の設定内へ移動。※既定の輪郭線がライティング追従に変わります。旧来の常時発光にしたい既存マテリアルは <b>Self-Illuminate を 1</b> にしてください。</li>
-      <li><span class="vtag">v30_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の追従方式を「Directional Light の総量＋環境光で均一の明るさに追従」へ変更しました（輪郭線に明暗の境界が出ないよう改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v29_GUIr0</span> <b>Lighting Influence（暗所追従）</b>がメインの Directional Light＋環境光に追従するよう改良しました（環境光だけを見て線が灰色に沈む問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v28_GUIr0</span> <b>Lighting Influence（暗所追従）</b>を本体（肌・髪など）と同じ明るさで馴染むよう改良しました（薄暗いワールドで線だけ明るく残る問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v27_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の暗所での下限を Light Min Limit と同じ明るさにそろえました（真っ暗なワールドで線が本体より明るく残る不具合の修正）。<code class="inl">0</code>（既定）での後方互換は変わりません。</li>
-      <li><span class="vtag">v26_GUIr0</span> Outline（輪郭線）に <b>Lighting Influence（暗所追従）</b>を追加しました。既定 <code class="inl">0</code>＝従来どおりの自己発光（既存マテリアルは見た目不変）。</li>
-      <li><span class="vtag">v25_GUIr0</span> リアルタイムライトが<b>多数</b>あるワールドでアバターの明るい部分が白飛びする問題を修正しました（追加ライトをまとめて1回の明るさ制御にかける方式に変更）。追加ライトの陰影は簡易（頂点単位・最大4灯）になりますが、トゥーン表現では影響はごくわずかです。</li>
-      <li><span class="vtag">v24_GUIr0</span> 強いリアルタイムライトのあるワールドでアバターの明るい部分が白飛びする問題を修正しました（明るさの上限 Light Max Limit が追加のリアルタイムライトにも効くように）。Light Limit 無効時は従来どおりです。</li>
-      <li><span class="vtag">v23_GUIr0</span> Outline の <b>Edge Fade</b> を <b>Sweep 専用</b>に変更しました（ハードエッジのメッシュで輪郭線まで消える不具合の修正）。項目は Sweep の設定内へ移動（保存済みの値は維持されます）。</li>
-      <li><span class="vtag">v22_GUIr0</span> Outline に <b>Edge Fade</b> を追加しました（半透明時に裏側の Sweep が放射状に透ける問題を軽減）。既定 <code class="inl">2</code>＝ON、<code class="inl">0</code> で従来動作。不透明では見た目は変わりません。</li>
-      <li><span class="vtag">v19_GUIr0</span> Matcap に <b>Contrast（コントラスト）</b>を追加しました（既定 1.0＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v18_GUIr0</span> 2枚目 Matcap を<b>独立レイヤー化</b>し、カラー Tint・Strength・Blend を 1枚目・2枚目で個別に設定できるようにしました（OFF 時の挙動は不変）。</li>
-      <li><span class="vtag">v17_GUIr0</span> Matcap に <b>2枚目スロット（Mask Select）</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v16_GUIr0</span> Rim Light に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v15_GUIr0</span> Matcap に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v14_GUIr0</span> Particle の Vertex Color Blend Mode から <b>Additive を削除</b>しました（<code class="inl">None</code> / <code class="inl">Multiply</code> の2択）。保存済みマテリアルで <code class="inl">Additive</code> を選んでいた場合は <code class="inl">Multiply</code> 相当の表示にフォールバックします。あわせて内部のライト下限クランプ処理を整理しました（挙動・見た目は不変）。</li>
-      <li><span class="vtag">v13_GUIr0</span> 使い勝手の調整。<b>(1)</b> Particle の Vertex Color Blend Mode の初期値を <code class="inl">None</code> に変更。<b>(2)</b> Outline 有効化時の初期設定を Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code> に調整。いずれも保存済みマテリアルの見た目は変わりません。</li>
-      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Rim Light に <b>Blend Mode（Add / Multiply）</b>を追加。<b>(2)</b> Texture Layer に <b>透明マスクモード</b>を追加。あわせて Outline の Line Width スライダー表示レンジを <code class="inl">0〜5</code> に変更しました（実際の値・効果は不変）。</li>
-      <li><span class="vtag">v10_GUIr0</span> Sweep の減衰を片側から<b>両側対称</b>に変更。Count を整数入力（IntRange）に変更し、<b>Pivot Offset（周回中心）</b>を追加。アバター本体への適用ガイドを README に追加しました。</li>
-      <li><span class="vtag">v9_GUIr0</span> 機能を <b>Outline（輪郭線）</b>と <b>Sweep（周回発光）</b>の二層構造に再編。Base Glow の既定値を <code class="inl">1</code> に変更しました。</li>
-      <li><span class="vtag">v8_GUIr0</span> Outline の輪郭描画を反転外殻（Inverted Hull）パス方式に変更。<b>Line Width</b>・<b>Extrude Mode</b>・<b>Base Glow</b> を追加し、Rim Power を廃止しました。</li>
-      <li><span class="vtag">v7_GUIr0</span> Outline Sweep の周回基準をカメラビューポイント基点（画面上の角度）に変更し、Axis プロパティを廃止しました。</li>
-      <li><span class="vtag">v6_GUIr0</span> <b>Outline Sweep（アウトライン周回発光）</b>を追加しました。</li>
-      <li><span class="vtag">v5_GUIr0</span> Dissolve のノイズが、回転して配置したオブジェクトの一部の面で一方向に伸びた縞模様になる不具合を修正しました（v0 から潜在していた問題です）。無回転で配置していたオブジェクトの見た目は変わりません。</li>
-      <li><span class="vtag">v4_GUIr0</span> 内部コードの整理（リファクタリング）。機能・見た目・パフォーマンスに変更はありません。マテリアルの再設定は不要です。</li>
-      <li><span class="vtag">v3_GUIr1</span> Unlit モード ON のとき、影の詳細プロパティ（Shadow Color〜Shadow Blur）を自動的に非表示にするよう変更（Unlit では影が計算されないため。GUI のみの更新）。</li>
-      <li><span class="vtag">v3_GUIr0</span> Light Limit の常時 ON をシェーダー既定値（<code class="inl">_UseLightLimit=1</code>）として組み込み。Inspector を開いていないマテリアルでもクランプが有効になりました。</li>
-      <li><span class="vtag">v2_GUIr2</span> Light Limit 常時 ON の焼き込み処理を Inspector 表示時に確実化（セクション折りたたみ時にクランプが効かず白飛びする不具合を修正。GUI のみの更新）。</li>
-      <li><span class="vtag">v2_GUIr1</span> Light Limit を常時 ON 化（有効/無効チェックボックスを廃止）。Unlit モード時は設定 UI を自動的に非表示に変更（GUI のみの更新）。</li>
-      <li><span class="vtag">v2_GUIr0</span> Light Limit（Directional Light 影響度クランプ／白飛び・黒つぶれ防止）を追加。</li>
-      <li><span class="vtag">v1_GUIr0</span> 初版リリース。</li>
-    </ul></div>
-  </details>
   </div>
 </section>
 

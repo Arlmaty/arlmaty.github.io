@@ -169,6 +169,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="navgrp"><div class="glabel">Setup</div>
     <a href="#setup">Getting Started</a>
+    <a href="#changelog">Changelog</a>
   </div>
   <div class="navgrp"><div class="glabel">Core Features</div>
     <a href="#rendering">Transparency / Rendering</a>
@@ -229,6 +230,56 @@ details .dbody li{margin-bottom:10px}
   <div class="rv">
   <h3>Overview</h3>
   <p>Rather than physically-based realism, ARLitToon is optimized for illustration-like and cel-shaded expression. Particle color integration, dissolve, soft particles, HDR emission, and rim light are all built in as standard.</p>
+  </div>
+
+  <div class="rv" id="changelog">
+  <h3>Version (Changelog)</h3>
+  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
+  <div class="note tip" data-label="LATEST — v32_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v32_GUIr1</span> Adjusted Outline usability (GUI only; look and saved values unchanged). <b>(1)</b> Moved <b>Self-Illuminate</b> to <b>right after Base Color (before Intensity)</b> (since this value governs how Intensity / Line Width take effect, the order lets you decide it first). <b>(2)</b> Multiplied the displayed number of the Sweep <b>Speed</b> by <b>10</b> (internal 0.1 = display 1). The effect and saved value do not change.</p>
+  </div>
+  <details>
+    <summary>Open past changelog (click to expand)</summary>
+    <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v32_GUIr0</span> Added <b>Use Outline Mask</b> to Outline. You can partially erase the outline with a grayscale mask image (<b>white = line / black = no line</b>). Useful when you want to erase a line only in part, such as the corners of the eyes or the mouth, within a single material. <b>Default OFF; with no mask assigned (white) it is exactly the same as before.</b> Also <b>fixed a bug where the Base Glow (Sweep-only setting) value lingered in the outline brightness when Sweep was turned OFF</b> (when Sweep is OFF the line becomes a uniform solid line, independent of Base Glow).</li>
+      <li><span class="vtag">v31_GUIr5</span> Made each feature's checkbox <b>retain the adjusted values when toggled OFF and then back ON</b> (GUI only). Even if you accidentally uncheck it, values such as Strength, outline thickness, and Sweep settings no longer revert to defaults. Only when a value is 0 (= the feature is invisible) does it supply a default so it becomes visible (Matcap is visible by default so its behavior is unchanged; enabling Outline for the first time on a new material gives the shader-default look).</li>
+      <li><span class="vtag">v31_GUIr4</span> Added the ability to switch the material Inspector's display language between <b>日本語 / English</b> (GUI only). Switch it with the language toggle directly below the header. The setting is remembered per editor and applies to all materials (it is not saved on the material itself = the shader, saved values, and look do not change).</li>
+      <li><span class="vtag">v31_GUIr3</span> Changed the default <code class="inl">Render Queue</code> of the <code class="inl">Fade</code> / <code class="inl">Additive</code> presets from <b>3000 → 3001</b> (GUI only). Semi-transparent effects are drawn in front of glass etc. (<code class="inl">Transparent</code> = 3000) by default. The <code class="inl">Transparent</code> preset stays at 3000 as before (saved materials reflect it when you reselect the preset).</li>
+      <li><span class="vtag">v31_GUIr2</span> Bumped the displayed numbers of the Outline <b>Line Width</b> slider up by one digit (GUI only). Display range <code class="inl">0–2</code> → <code class="inl">0–20</code>. The actual effect and saved value do not change.</li>
+      <li><span class="vtag">v31_GUIr1</span> Adjusted the Outline <b>Line Width</b> slider's display range from <code class="inl">0–5</code> → <code class="inl">0–2</code>, to two decimal places (GUI only). The actual effect and saved value do not change.</li>
+      <li><span class="vtag">v31_GUIr0</span> Adjusted Outline usability. <b>(1)</b> Renamed <b>Lighting Influence</b> to <b>Self-Illuminate</b> and inverted the value direction (<code class="inl">0</code> = follow lighting / <code class="inl">1</code> = self-emit). <b>(2)</b> Moved <b>Base Glow</b> into the Sweep settings. ※ The default outline now follows lighting. For existing materials that want the old constant emission, set <b>Self-Illuminate to 1</b>.</li>
+      <li><span class="vtag">v30_GUIr0</span> Changed the tracking method of <b>Lighting Influence (dark-area tracking)</b> to "track a uniform brightness from the total of the Directional Light + ambient" (improved so no light/dark boundary appears on the outline). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v29_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to follow the main Directional Light + ambient (fixing the problem where the line sank to gray by looking only at ambient). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v28_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to blend at the same brightness as the body (skin, hair, etc.) (fixing the problem where only the line stayed bright in dim worlds). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
+      <li><span class="vtag">v27_GUIr0</span> Aligned the dark-area lower bound of <b>Lighting Influence (dark-area tracking)</b> to the same brightness as Light Min Limit (fixing the issue where the line stayed brighter than the body in pitch-dark worlds). Backward compatibility at <code class="inl">0</code> (default) is unchanged.</li>
+      <li><span class="vtag">v26_GUIr0</span> Added <b>Lighting Influence (dark-area tracking)</b> to Outline. Default <code class="inl">0</code> = self-emission as before (existing materials look unchanged).</li>
+      <li><span class="vtag">v25_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with <b>many</b> realtime lights (changed to a method that subjects additional lights to a single brightness control together). The shading of additional lights becomes simplified (per-vertex, up to 4 lights), but the impact on toon expression is negligible.</li>
+      <li><span class="vtag">v24_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with strong realtime lights (so the brightness upper bound Light Max Limit also affects additional realtime lights). When Light Limit is disabled, behavior is as before.</li>
+      <li><span class="vtag">v23_GUIr0</span> Changed Outline <b>Edge Fade</b> to be <b>Sweep-only</b> (fixing the bug where the outline itself disappears on hard-edged meshes). The item moved into the Sweep settings (saved values are kept).</li>
+      <li><span class="vtag">v22_GUIr0</span> Added <b>Edge Fade</b> to Outline (mitigating the problem where the back-side Sweep bleeds radially through when semi-transparent). Default <code class="inl">2</code> = ON, <code class="inl">0</code> for the old behavior. In opaque, the look does not change.</li>
+      <li><span class="vtag">v19_GUIr0</span> Added <b>Contrast</b> to Matcap (default 1.0 = existing materials unchanged).</li>
+      <li><span class="vtag">v18_GUIr0</span> Made the 2nd Matcap an <b>independent layer</b>, allowing Color Tint, Strength, and Blend to be set separately for the 1st and 2nd (behavior when OFF unchanged).</li>
+      <li><span class="vtag">v17_GUIr0</span> Added a <b>2nd slot (Mask Select)</b> to Matcap (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v16_GUIr0</span> Added <b>"Disable on Backface"</b> to Rim Light (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v15_GUIr0</span> Added <b>"Disable on Backface"</b> to Matcap (default OFF = existing materials unchanged).</li>
+      <li><span class="vtag">v14_GUIr0</span> <b>Removed Additive</b> from the Particle Vertex Color Blend Mode (now a choice of <code class="inl">None</code> / <code class="inl">Multiply</code>). If a saved material had <code class="inl">Additive</code> selected, it falls back to a <code class="inl">Multiply</code>-equivalent display. Also tidied the internal light lower-bound clamp processing (behavior and look unchanged).</li>
+      <li><span class="vtag">v13_GUIr0</span> Usability adjustments. <b>(1)</b> Changed the initial value of the Particle Vertex Color Blend Mode to <code class="inl">None</code>. <b>(2)</b> Adjusted the initial settings when enabling Outline to Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code>. The look of saved materials does not change in either case.</li>
+      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Added <b>Blend Mode (Add / Multiply)</b> to Rim Light. <b>(2)</b> Added an <b>alpha mask mode</b> to Texture Layer. Also changed the Outline Line Width slider display range to <code class="inl">0–5</code> (the actual value and effect unchanged).</li>
+      <li><span class="vtag">v10_GUIr0</span> Changed Sweep falloff from one-sided to <b>symmetric on both sides</b>. Changed Count to integer input (IntRange) and added <b>Pivot Offset</b>. Added a guide for applying to the avatar body to the README.</li>
+      <li><span class="vtag">v9_GUIr0</span> Reorganized features into a two-layer structure of <b>Outline</b> and <b>Sweep (orbiting glow)</b>. Changed the default value of Base Glow to <code class="inl">1</code>.</li>
+      <li><span class="vtag">v8_GUIr0</span> Changed Outline edge drawing to an inverted-hull pass method. Added <b>Line Width</b>, <b>Extrude Mode</b>, and <b>Base Glow</b>, and removed Rim Power.</li>
+      <li><span class="vtag">v7_GUIr0</span> Changed the Outline Sweep orbit basis to the camera viewpoint (angle on screen) and removed the Axis property.</li>
+      <li><span class="vtag">v6_GUIr0</span> Added <b>Outline Sweep (outline orbiting glow)</b>.</li>
+      <li><span class="vtag">v5_GUIr0</span> Fixed the bug where Dissolve noise became a one-directionally stretched stripe pattern on some faces of rotated objects (a latent issue since v0). The look of objects placed without rotation does not change.</li>
+      <li><span class="vtag">v4_GUIr0</span> Internal code tidy-up (refactoring). No change to features, look, or performance. No material re-setup is needed.</li>
+      <li><span class="vtag">v3_GUIr1</span> Changed so that when Unlit Mode is ON, the shadow detail properties (Shadow Color through Shadow Blur) are automatically hidden (since shadows are not computed in Unlit; GUI-only update).</li>
+      <li><span class="vtag">v3_GUIr0</span> Built the always-ON of Light Limit into the shader default value (<code class="inl">_UseLightLimit=1</code>). The clamp is now active even on materials whose Inspector has not been opened.</li>
+      <li><span class="vtag">v2_GUIr2</span> Made the always-ON baking of Light Limit reliable at Inspector display time (fixing the bug where the clamp did not take effect and blew out while a section was collapsed; GUI-only update).</li>
+      <li><span class="vtag">v2_GUIr1</span> Made Light Limit always ON (removed the enable/disable checkbox). Changed so the settings UI is automatically hidden in Unlit Mode (GUI-only update).</li>
+      <li><span class="vtag">v2_GUIr0</span> Added Light Limit (Directional Light influence clamp / prevents blow-out &amp; crushed blacks).</li>
+      <li><span class="vtag">v1_GUIr0</span> Initial release.</li>
+    </ul></div>
+  </details>
   </div>
 
   <div class="rv">
@@ -670,6 +721,18 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
   </div>
 
   <div class="rv">
+  <h3>References &amp; Acknowledgements</h3>
+  <p>In developing ARLitToon, we referenced the specifications and design of the following prior shaders and libraries. We extend our respect and gratitude to each project and author who has published such excellent work.</p>
+  <ul>
+    <li><b>lilToon</b> (lilxyzw) — Referenced for avatar-oriented toon-expression feature specifications. <a href="https://github.com/lilxyzw/lilToon" style="color:var(--ac)">https://github.com/lilxyzw/lilToon</a></li>
+    <li><b>OpenLit</b> (lilxyzw) — Referenced for lighting settings, particularly the approach to brightness control (handling of additional lights and upper-bound clamping) in environments with many realtime lights. <a href="https://github.com/lilxyzw/OpenLit" style="color:var(--ac)">https://github.com/lilxyzw/OpenLit</a></li>
+    <li><b>Unity Built-in Shaders</b> (Unity Technologies) — Unity's standard lighting pipeline is used to resolve ambient light and environment reflection (Global Illumination / reflection probes).</li>
+    <li><b>AudioLink</b> (the AudioLink project) — The music-reactive emission feature is implemented in compliance with AudioLink's specification (the globally-provided audio data texture supplied by the world). <a href="https://github.com/llealloo/audiolink" style="color:var(--ac)">https://github.com/llealloo/audiolink</a></li>
+  </ul>
+  <p style="font-size:12.5px">This shader does not reuse the above code as-is; it is an original implementation referencing their publicly available specifications and design philosophy.</p>
+  </div>
+
+  <div class="rv">
   <h3>License (Terms of Use)</h3>
   <div class="note warn" data-label="⚠ THE JAPANESE ORIGINAL IS AUTHORITATIVE">
     <p><b>The original Japanese text is authoritative.</b> The following is an English translation provided for convenience. In case of any discrepancy in interpretation, the <a href="ARLitToon.html#license" style="color:var(--ac);font-weight:700">Japanese original</a> prevails.</p>
@@ -705,54 +768,6 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
   <ul>
     <li>The author (ARL) assumes no responsibility whatsoever for any trouble or damage arising from the use of this shader.</li>
   </ul>
-  </div>
-
-  <div class="rv">
-  <h3>Version (Changelog)</h3>
-  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
-  <details>
-    <summary>Open changelog (click to expand)</summary>
-    <div class="dbody"><ul style="list-style:none;margin-left:0">
-      <li><span class="vtag">v32_GUIr1</span> Adjusted Outline usability (GUI only; look and saved values unchanged). <b>(1)</b> Moved <b>Self-Illuminate</b> to <b>right after Base Color (before Intensity)</b> (since this value governs how Intensity / Line Width take effect, the order lets you decide it first). <b>(2)</b> Multiplied the displayed number of the Sweep <b>Speed</b> by <b>10</b> (internal 0.1 = display 1). The effect and saved value do not change.</li>
-      <li><span class="vtag">v32_GUIr0</span> Added <b>Use Outline Mask</b> to Outline. You can partially erase the outline with a grayscale mask image (<b>white = line / black = no line</b>). Useful when you want to erase a line only in part, such as the corners of the eyes or the mouth, within a single material. <b>Default OFF; with no mask assigned (white) it is exactly the same as before.</b> Also <b>fixed a bug where the Base Glow (Sweep-only setting) value lingered in the outline brightness when Sweep was turned OFF</b> (when Sweep is OFF the line becomes a uniform solid line, independent of Base Glow).</li>
-      <li><span class="vtag">v31_GUIr5</span> Made each feature's checkbox <b>retain the adjusted values when toggled OFF and then back ON</b> (GUI only). Even if you accidentally uncheck it, values such as Strength, outline thickness, and Sweep settings no longer revert to defaults. Only when a value is 0 (= the feature is invisible) does it supply a default so it becomes visible (Matcap is visible by default so its behavior is unchanged; enabling Outline for the first time on a new material gives the shader-default look).</li>
-      <li><span class="vtag">v31_GUIr4</span> Added the ability to switch the material Inspector's display language between <b>日本語 / English</b> (GUI only). Switch it with the language toggle directly below the header. The setting is remembered per editor and applies to all materials (it is not saved on the material itself = the shader, saved values, and look do not change).</li>
-      <li><span class="vtag">v31_GUIr3</span> Changed the default <code class="inl">Render Queue</code> of the <code class="inl">Fade</code> / <code class="inl">Additive</code> presets from <b>3000 → 3001</b> (GUI only). Semi-transparent effects are drawn in front of glass etc. (<code class="inl">Transparent</code> = 3000) by default. The <code class="inl">Transparent</code> preset stays at 3000 as before (saved materials reflect it when you reselect the preset).</li>
-      <li><span class="vtag">v31_GUIr2</span> Bumped the displayed numbers of the Outline <b>Line Width</b> slider up by one digit (GUI only). Display range <code class="inl">0–2</code> → <code class="inl">0–20</code>. The actual effect and saved value do not change.</li>
-      <li><span class="vtag">v31_GUIr1</span> Adjusted the Outline <b>Line Width</b> slider's display range from <code class="inl">0–5</code> → <code class="inl">0–2</code>, to two decimal places (GUI only). The actual effect and saved value do not change.</li>
-      <li><span class="vtag">v31_GUIr0</span> Adjusted Outline usability. <b>(1)</b> Renamed <b>Lighting Influence</b> to <b>Self-Illuminate</b> and inverted the value direction (<code class="inl">0</code> = follow lighting / <code class="inl">1</code> = self-emit). <b>(2)</b> Moved <b>Base Glow</b> into the Sweep settings. ※ The default outline now follows lighting. For existing materials that want the old constant emission, set <b>Self-Illuminate to 1</b>.</li>
-      <li><span class="vtag">v30_GUIr0</span> Changed the tracking method of <b>Lighting Influence (dark-area tracking)</b> to "track a uniform brightness from the total of the Directional Light + ambient" (improved so no light/dark boundary appears on the outline). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
-      <li><span class="vtag">v29_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to follow the main Directional Light + ambient (fixing the problem where the line sank to gray by looking only at ambient). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
-      <li><span class="vtag">v28_GUIr0</span> Improved <b>Lighting Influence (dark-area tracking)</b> to blend at the same brightness as the body (skin, hair, etc.) (fixing the problem where only the line stayed bright in dim worlds). The look and backward compatibility at <code class="inl">0</code> (default) are unchanged.</li>
-      <li><span class="vtag">v27_GUIr0</span> Aligned the dark-area lower bound of <b>Lighting Influence (dark-area tracking)</b> to the same brightness as Light Min Limit (fixing the issue where the line stayed brighter than the body in pitch-dark worlds). Backward compatibility at <code class="inl">0</code> (default) is unchanged.</li>
-      <li><span class="vtag">v26_GUIr0</span> Added <b>Lighting Influence (dark-area tracking)</b> to Outline. Default <code class="inl">0</code> = self-emission as before (existing materials look unchanged).</li>
-      <li><span class="vtag">v25_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with <b>many</b> realtime lights (changed to a method that subjects additional lights to a single brightness control together). The shading of additional lights becomes simplified (per-vertex, up to 4 lights), but the impact on toon expression is negligible.</li>
-      <li><span class="vtag">v24_GUIr0</span> Fixed the problem where bright parts of the avatar blow out in worlds with strong realtime lights (so the brightness upper bound Light Max Limit also affects additional realtime lights). When Light Limit is disabled, behavior is as before.</li>
-      <li><span class="vtag">v23_GUIr0</span> Changed Outline <b>Edge Fade</b> to be <b>Sweep-only</b> (fixing the bug where the outline itself disappears on hard-edged meshes). The item moved into the Sweep settings (saved values are kept).</li>
-      <li><span class="vtag">v22_GUIr0</span> Added <b>Edge Fade</b> to Outline (mitigating the problem where the back-side Sweep bleeds radially through when semi-transparent). Default <code class="inl">2</code> = ON, <code class="inl">0</code> for the old behavior. In opaque, the look does not change.</li>
-      <li><span class="vtag">v19_GUIr0</span> Added <b>Contrast</b> to Matcap (default 1.0 = existing materials unchanged).</li>
-      <li><span class="vtag">v18_GUIr0</span> Made the 2nd Matcap an <b>independent layer</b>, allowing Color Tint, Strength, and Blend to be set separately for the 1st and 2nd (behavior when OFF unchanged).</li>
-      <li><span class="vtag">v17_GUIr0</span> Added a <b>2nd slot (Mask Select)</b> to Matcap (default OFF = existing materials unchanged).</li>
-      <li><span class="vtag">v16_GUIr0</span> Added <b>"Disable on Backface"</b> to Rim Light (default OFF = existing materials unchanged).</li>
-      <li><span class="vtag">v15_GUIr0</span> Added <b>"Disable on Backface"</b> to Matcap (default OFF = existing materials unchanged).</li>
-      <li><span class="vtag">v14_GUIr0</span> <b>Removed Additive</b> from the Particle Vertex Color Blend Mode (now a choice of <code class="inl">None</code> / <code class="inl">Multiply</code>). If a saved material had <code class="inl">Additive</code> selected, it falls back to a <code class="inl">Multiply</code>-equivalent display. Also tidied the internal light lower-bound clamp processing (behavior and look unchanged).</li>
-      <li><span class="vtag">v13_GUIr0</span> Usability adjustments. <b>(1)</b> Changed the initial value of the Particle Vertex Color Blend Mode to <code class="inl">None</code>. <b>(2)</b> Adjusted the initial settings when enabling Outline to Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code>. The look of saved materials does not change in either case.</li>
-      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Added <b>Blend Mode (Add / Multiply)</b> to Rim Light. <b>(2)</b> Added an <b>alpha mask mode</b> to Texture Layer. Also changed the Outline Line Width slider display range to <code class="inl">0–5</code> (the actual value and effect unchanged).</li>
-      <li><span class="vtag">v10_GUIr0</span> Changed Sweep falloff from one-sided to <b>symmetric on both sides</b>. Changed Count to integer input (IntRange) and added <b>Pivot Offset</b>. Added a guide for applying to the avatar body to the README.</li>
-      <li><span class="vtag">v9_GUIr0</span> Reorganized features into a two-layer structure of <b>Outline</b> and <b>Sweep (orbiting glow)</b>. Changed the default value of Base Glow to <code class="inl">1</code>.</li>
-      <li><span class="vtag">v8_GUIr0</span> Changed Outline edge drawing to an inverted-hull pass method. Added <b>Line Width</b>, <b>Extrude Mode</b>, and <b>Base Glow</b>, and removed Rim Power.</li>
-      <li><span class="vtag">v7_GUIr0</span> Changed the Outline Sweep orbit basis to the camera viewpoint (angle on screen) and removed the Axis property.</li>
-      <li><span class="vtag">v6_GUIr0</span> Added <b>Outline Sweep (outline orbiting glow)</b>.</li>
-      <li><span class="vtag">v5_GUIr0</span> Fixed the bug where Dissolve noise became a one-directionally stretched stripe pattern on some faces of rotated objects (a latent issue since v0). The look of objects placed without rotation does not change.</li>
-      <li><span class="vtag">v4_GUIr0</span> Internal code tidy-up (refactoring). No change to features, look, or performance. No material re-setup is needed.</li>
-      <li><span class="vtag">v3_GUIr1</span> Changed so that when Unlit Mode is ON, the shadow detail properties (Shadow Color through Shadow Blur) are automatically hidden (since shadows are not computed in Unlit; GUI-only update).</li>
-      <li><span class="vtag">v3_GUIr0</span> Built the always-ON of Light Limit into the shader default value (<code class="inl">_UseLightLimit=1</code>). The clamp is now active even on materials whose Inspector has not been opened.</li>
-      <li><span class="vtag">v2_GUIr2</span> Made the always-ON baking of Light Limit reliable at Inspector display time (fixing the bug where the clamp did not take effect and blew out while a section was collapsed; GUI-only update).</li>
-      <li><span class="vtag">v2_GUIr1</span> Made Light Limit always ON (removed the enable/disable checkbox). Changed so the settings UI is automatically hidden in Unlit Mode (GUI-only update).</li>
-      <li><span class="vtag">v2_GUIr0</span> Added Light Limit (Directional Light influence clamp / prevents blow-out &amp; crushed blacks).</li>
-      <li><span class="vtag">v1_GUIr0</span> Initial release.</li>
-    </ul></div>
-  </details>
   </div>
 </section>
 

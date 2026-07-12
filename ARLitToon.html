@@ -161,7 +161,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v32_GUIr1 / PC ONLY</span>
+    <span class="ver">v33_GUIr0 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -231,13 +231,14 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v32_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b>に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v33_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v33_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v33_GUIr0</span> <b>Distance Fade（カメラ距離フェード）が輪郭線（Outline）にも効く</b>ようになりました。従来は本体だけがフェードし、輪郭線が距離に関係なく残っていた不具合の修正です。輪郭線は本体と同じ距離設定・同じ濃さでフェードします。<b>Distance Fade を使っていないマテリアルの見た目は従来と完全に同じ</b>です。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b>に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</li>
       <li><span class="vtag">v32_GUIr0</span> Outline に <b>Use Outline Mask（アウトラインマスク）</b>を追加しました。グレースケールのマスク画像で輪郭線を部分的に消せます（<b>白＝線あり／黒＝線なし</b>）。目尻・口元など 1 枚のマテリアル内で一部だけ線を消したいときに使えます。<b>既定 OFF・マスク未指定（白）で従来と完全に同じ</b>です。あわせて、<b>Sweep を OFF にしたときに Base Glow（Sweep 専用設定）の値が輪郭線の明るさに残り続ける不具合を修正</b>しました（Sweep OFF 時は Base Glow に依存せず均一なソリッド線になります）。</li>
       <li><span class="vtag">v31_GUIr5</span> 各機能のチェックボックスを <b>OFF→再 ON したときに、調整した値を保持</b>するようにしました（GUI のみ）。誤ってチェックを外してしまっても、Strength や輪郭線の太さ・Sweep の設定などが初期値に戻らなくなります。値が 0（＝その機能が見えない状態）のときだけ、見えるように既定値を補います（Matcap は元から既定で見えるため挙動は変わりません。Outline を新規マテリアルで初めて有効化したときはシェーダー既定の見た目になります）。</li>
       <li><span class="vtag">v31_GUIr4</span> マテリアル Inspector の表示言語を <b>日本語 / English</b> で切り替えられるようにしました（GUI のみ）。ヘッダ直下の言語トグルで切り替えます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません＝シェーダー・保存値・見た目は変わりません）。</li>
@@ -376,7 +377,7 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv">
   <h4><span class="hx">#</span> Distance Fade（カメラ距離フェード）</h4>
-  <p>カメラからの距離に応じてオブジェクトのアルファをフェードさせる機能です。一人称視点で自分のオーラやエフェクトが視界を塞ぐのを防いだり、近づくと消える演出に使えます。</p>
+  <p>カメラからの距離に応じてオブジェクトのアルファをフェードさせる機能です。一人称視点で自分のオーラやエフェクトが視界を塞ぐのを防いだり、近づくと消える演出に使えます。輪郭線（Outline）も本体と同じ距離設定でいっしょにフェードします。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Distance Fade</td><td>機能の有効/無効。</td></tr>
     <tr><td>Fade Near</td><td>この距離（カメラからの距離）以下で完全に透明になります。</td></tr>

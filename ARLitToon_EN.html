@@ -161,7 +161,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v32_GUIr1 (EN) / PC ONLY</span>
+    <span class="ver">v33_GUIr0 (EN) / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="ARLitToon.html">日本語</a>
@@ -218,7 +218,7 @@ details .dbody li{margin-bottom:10px}
 
 <div class="wrap">
   <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin:0 0 40px;max-width:640px">
-    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v32_GUIr1</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
+    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v33_GUIr0</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
   </div>
 </div>
 
@@ -237,13 +237,14 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>Version (Changelog)</h3>
-  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v32_GUIr1</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
-  <div class="note tip" data-label="LATEST — v32_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v32_GUIr1</span> Adjusted Outline usability (GUI only; look and saved values unchanged). <b>(1)</b> Moved <b>Self-Illuminate</b> to <b>right after Base Color (before Intensity)</b> (since this value governs how Intensity / Line Width take effect, the order lets you decide it first). <b>(2)</b> Multiplied the displayed number of the Sweep <b>Speed</b> by <b>10</b> (internal 0.1 = display 1). The effect and saved value do not change.</p>
+  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v33_GUIr0</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
+  <div class="note tip" data-label="LATEST — v33_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v33_GUIr0</span> <b>Distance Fade now also applies to the Outline.</b> This fixes an issue where only the body faded with distance while the outline remained visible regardless of distance. The outline now fades together with the body, using the same distance settings and the same strength. <b>Materials that do not use Distance Fade look exactly the same as before.</b></p>
   </div>
   <details>
     <summary>Open past changelog (click to expand)</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v32_GUIr1</span> Adjusted Outline usability (GUI only; look and saved values unchanged). <b>(1)</b> Moved <b>Self-Illuminate</b> to <b>right after Base Color (before Intensity)</b> (since this value governs how Intensity / Line Width take effect, the order lets you decide it first). <b>(2)</b> Multiplied the displayed number of the Sweep <b>Speed</b> by <b>10</b> (internal 0.1 = display 1). The effect and saved value do not change.</li>
       <li><span class="vtag">v32_GUIr0</span> Added <b>Use Outline Mask</b> to Outline. You can partially erase the outline with a grayscale mask image (<b>white = line / black = no line</b>). Useful when you want to erase a line only in part, such as the corners of the eyes or the mouth, within a single material. <b>Default OFF; with no mask assigned (white) it is exactly the same as before.</b> Also <b>fixed a bug where the Base Glow (Sweep-only setting) value lingered in the outline brightness when Sweep was turned OFF</b> (when Sweep is OFF the line becomes a uniform solid line, independent of Base Glow).</li>
       <li><span class="vtag">v31_GUIr5</span> Made each feature's checkbox <b>retain the adjusted values when toggled OFF and then back ON</b> (GUI only). Even if you accidentally uncheck it, values such as Strength, outline thickness, and Sweep settings no longer revert to defaults. Only when a value is 0 (= the feature is invisible) does it supply a default so it becomes visible (Matcap is visible by default so its behavior is unchanged; enabling Outline for the first time on a new material gives the shader-default look).</li>
       <li><span class="vtag">v31_GUIr4</span> Added the ability to switch the material Inspector's display language between <b>日本語 / English</b> (GUI only). Switch it with the language toggle directly below the header. The setting is remembered per editor and applies to all materials (it is not saved on the material itself = the shader, saved values, and look do not change).</li>
@@ -382,7 +383,7 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv">
   <h4><span class="hx">#</span> Distance Fade</h4>
-  <p>A feature that fades the object's alpha according to distance from the camera. You can use it to prevent your own aura or effects from blocking your view in first-person, or for staging where things disappear as you approach.</p>
+  <p>A feature that fades the object's alpha according to distance from the camera. You can use it to prevent your own aura or effects from blocking your view in first-person, or for staging where things disappear as you approach. The Outline also fades together with the body, using the same distance settings.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Use Distance Fade</td><td>Enable/disable the feature.</td></tr>
     <tr><td>Fade Near</td><td>At or below this distance (from the camera), it becomes fully transparent.</td></tr>

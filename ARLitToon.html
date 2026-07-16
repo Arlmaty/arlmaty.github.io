@@ -161,7 +161,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v33_GUIr0 / PC ONLY</span>
+    <span class="ver">v36_GUIr0 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -231,43 +231,46 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v33_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v33_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v33_GUIr0</span> <b>Distance Fade（カメラ距離フェード）が輪郭線（Outline）にも効く</b>ようになりました。従来は本体だけがフェードし、輪郭線が距離に関係なく残っていた不具合の修正です。輪郭線は本体と同じ距離設定・同じ濃さでフェードします。<b>Distance Fade を使っていないマテリアルの見た目は従来と完全に同じ</b>です。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v36_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v36_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v36_GUIr0</span> <b>Dither Fade（ディザ擬似半透明）</b> を追加しました。Cutout / Opaque の描画のまま、網点（ディザ）でアルファ値どおりの擬似半透明を作ります。Fade などの半透明プリセットは Unity の仕様で落ち影（Receive Shadow）を受けられないため、<b>「前髪を表情に重ねて透かしつつ、影も受けたい」場合は Cutout＋Dither Fade</b> を使ってください（Transparency / Rendering の項を参照）。既定 OFF・既存マテリアルの見た目は従来と完全に同じです。あわせて同梱修正として、<b>Dither Fade 使用時に輪郭線（Outline）の色が網点の穴から面状に透けて飽和して見える問題</b>を修正しました（Alpha Sync が ON のとき輪郭線も本体と同じ網点で追従します）。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
-      <li><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b>に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</li>
-      <li><span class="vtag">v32_GUIr0</span> Outline に <b>Use Outline Mask（アウトラインマスク）</b>を追加しました。グレースケールのマスク画像で輪郭線を部分的に消せます（<b>白＝線あり／黒＝線なし</b>）。目尻・口元など 1 枚のマテリアル内で一部だけ線を消したいときに使えます。<b>既定 OFF・マスク未指定（白）で従来と完全に同じ</b>です。あわせて、<b>Sweep を OFF にしたときに Base Glow（Sweep 専用設定）の値が輪郭線の明るさに残り続ける不具合を修正</b>しました（Sweep OFF 時は Base Glow に依存せず均一なソリッド線になります）。</li>
+      <li><span class="vtag">v35_GUIr0</span> <b>Receive Shadow（落ち影を受ける）</b> を追加しました。ワールドの平行光が落とす影（木々や建物の落ち影、自分の前髪の影など）を、トゥーンの影色（Shadow Color / Border / Blur の設定）として受け取ります。<b>既定 ON</b> です。ワールド側のライトに影の設定があるときのみ発現し、影のないワールドでは従来と同じ表示です。影の縞や粗さが目立つ場合は OFF にするか、Shadow Blur を上げて馴染ませてください（Lighting & Shadow の項を参照）。</li>
+      <li><span class="vtag">v34_GUIr0</span> Outline に <b>Alpha Sync（本体の透明度に追従）</b> を追加しました（既定 ON）。半透明プリセット（<code class="inl">Transparent</code> / <code class="inl">Fade</code> / <code class="inl">Additive</code>）で本体が透けるとき、輪郭線（と本体越しに透けて見える輪郭色）が<b>本体の透明度（Color の A × メインテクスチャの A）に追従して一緒に薄くなります</b>。従来の「透明度に関係なく常時表示」に戻したい場合は OFF にしてください。不透明（<code class="inl">Opaque</code> / <code class="inl">Cutout</code>）プリセットの見た目は変わりません。あわせて、<b>Base Color (HDR) の A（アルファ）が輪郭線自体の不透明度として効く</b>ようになりました（従来は無視されていました。A=1 なら従来どおり。⚠️ 保存済みマテリアルで Base Color の A を 1 未満にしていた場合、v34 から線が薄くなります＝A を 1 に戻してください）。さらに、<b>Sweep の筋が輪郭線を飽和（白飛び）させる問題を修正</b>しました：筋の明るさの上限が Sweep OFF のソリッド線と同じになり、どの設定でも Sweep で輪郭線が飽和しません（従来は筋の部分だけ最大2倍の明るさになっていました）。⚠️ このため <b>Base Glow <code class="inl">1</code>（旧既定）では管と筋が同じ明るさになり筋が見えません</b>＝Sweep を使っている保存済みマテリアルは <b>Base Glow を下げてください</b>（例: 新既定の <code class="inl">0.3</code>。GUI で Sweep を OFF→再 ON しても自動補正されます）。</li>
+      <li><span class="vtag">v33_GUIr0</span> <b>Distance Fade（カメラ距離フェード）が輪郭線（Outline）にも効く</b>ようになりました。従来は本体だけがフェードし、輪郭線が距離に関係なく残っていた不具合の修正です。輪郭線は本体と同じ距離設定・同じ濃さでフェードします。<b>Distance Fade を使っていないマテリアルの見た目は従来と完全に同じ</b>です。</li>
+      <li><span class="vtag">v32_GUIr1</span> Outline の操作性を調整しました（GUI のみ・見た目と保存値は不変）。<b>(1)</b> <b>Self-Illuminate</b> を <b>Base Color の直後（Intensity の前）</b> に移動しました（この値が Intensity / Line Width の効き方を左右するため、先に決められる並びにしました）。<b>(2)</b> Sweep の <b>Speed</b> の表示数値を <b>10 倍</b>にしました（実値0.1＝表示1）。効果・保存値は変わりません。</li>
+      <li><span class="vtag">v32_GUIr0</span> Outline に <b>Use Outline Mask（アウトラインマスク）</b> を追加しました。グレースケールのマスク画像で輪郭線を部分的に消せます（<b>白＝線あり／黒＝線なし</b>）。目尻・口元など 1 枚のマテリアル内で一部だけ線を消したいときに使えます。<b>既定 OFF・マスク未指定（白）で従来と完全に同じ</b>です。あわせて、<b>Sweep を OFF にしたときに Base Glow（Sweep 専用設定）の値が輪郭線の明るさに残り続ける不具合を修正</b>しました（Sweep OFF 時は Base Glow に依存せず均一なソリッド線になります）。</li>
       <li><span class="vtag">v31_GUIr5</span> 各機能のチェックボックスを <b>OFF→再 ON したときに、調整した値を保持</b>するようにしました（GUI のみ）。誤ってチェックを外してしまっても、Strength や輪郭線の太さ・Sweep の設定などが初期値に戻らなくなります。値が 0（＝その機能が見えない状態）のときだけ、見えるように既定値を補います（Matcap は元から既定で見えるため挙動は変わりません。Outline を新規マテリアルで初めて有効化したときはシェーダー既定の見た目になります）。</li>
       <li><span class="vtag">v31_GUIr4</span> マテリアル Inspector の表示言語を <b>日本語 / English</b> で切り替えられるようにしました（GUI のみ）。ヘッダ直下の言語トグルで切り替えます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません＝シェーダー・保存値・見た目は変わりません）。</li>
       <li><span class="vtag">v31_GUIr3</span> <code class="inl">Fade</code> / <code class="inl">Additive</code> プリセットの既定 <code class="inl">Render Queue</code> を <b>3000 → 3001</b> に変更しました（GUI のみ）。半透明エフェクトがガラス等（<code class="inl">Transparent</code>=3000）より既定で手前に描画されます。<code class="inl">Transparent</code> プリセットは従来どおり 3000 です（保存済みマテリアルはプリセットを選び直すと反映されます）。</li>
       <li><span class="vtag">v31_GUIr2</span> Outline の <b>Line Width</b> スライダーの表示の数値を1桁繰り上げました（GUI のみ）。表示レンジ <code class="inl">0〜2</code> → <code class="inl">0〜20</code>。実際の効果・保存値は変わりません。</li>
       <li><span class="vtag">v31_GUIr1</span> Outline の <b>Line Width</b> スライダーの表示レンジを <code class="inl">0〜5</code> → <code class="inl">0〜2</code>・小数第3位に調整しました（GUI のみ）。実際の効果・保存値は変わりません。</li>
-      <li><span class="vtag">v31_GUIr0</span> Outline の使い勝手を調整しました。<b>(1)</b> <b>Lighting Influence</b> を <b>Self-Illuminate（自己発光）</b>に名称変更し、値の向きを反転（<code class="inl">0</code>＝ライティング追従／<code class="inl">1</code>＝自己発光）。<b>(2)</b> <b>Base Glow</b> を Sweep の設定内へ移動。※既定の輪郭線がライティング追従に変わります。旧来の常時発光にしたい既存マテリアルは <b>Self-Illuminate を 1</b> にしてください。</li>
-      <li><span class="vtag">v30_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の追従方式を「Directional Light の総量＋環境光で均一の明るさに追従」へ変更しました（輪郭線に明暗の境界が出ないよう改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v29_GUIr0</span> <b>Lighting Influence（暗所追従）</b>がメインの Directional Light＋環境光に追従するよう改良しました（環境光だけを見て線が灰色に沈む問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v28_GUIr0</span> <b>Lighting Influence（暗所追従）</b>を本体（肌・髪など）と同じ明るさで馴染むよう改良しました（薄暗いワールドで線だけ明るく残る問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
-      <li><span class="vtag">v27_GUIr0</span> <b>Lighting Influence（暗所追従）</b>の暗所での下限を Light Min Limit と同じ明るさにそろえました（真っ暗なワールドで線が本体より明るく残る不具合の修正）。<code class="inl">0</code>（既定）での後方互換は変わりません。</li>
-      <li><span class="vtag">v26_GUIr0</span> Outline（輪郭線）に <b>Lighting Influence（暗所追従）</b>を追加しました。既定 <code class="inl">0</code>＝従来どおりの自己発光（既存マテリアルは見た目不変）。</li>
+      <li><span class="vtag">v31_GUIr0</span> Outline の使い勝手を調整しました。<b>(1)</b> <b>Lighting Influence</b> を <b>Self-Illuminate（自己発光）</b> に名称変更し、値の向きを反転（<code class="inl">0</code>＝ライティング追従／<code class="inl">1</code>＝自己発光）。<b>(2)</b> <b>Base Glow</b> を Sweep の設定内へ移動。※既定の輪郭線がライティング追従に変わります。旧来の常時発光にしたい既存マテリアルは <b>Self-Illuminate を <code class="inl">1</code></b> にしてください。</li>
+      <li><span class="vtag">v30_GUIr0</span> <b>Lighting Influence（暗所追従）</b> の追従方式を「Directional Light の総量＋環境光で均一の明るさに追従」へ変更しました（輪郭線に明暗の境界が出ないよう改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v29_GUIr0</span> <b>Lighting Influence（暗所追従）</b> がメインの Directional Light＋環境光に追従するよう改良しました（環境光だけを見て線が灰色に沈む問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v28_GUIr0</span> <b>Lighting Influence（暗所追従）</b> を本体（肌・髪など）と同じ明るさで馴染むよう改良しました（薄暗いワールドで線だけ明るく残る問題の改善）。<code class="inl">0</code>（既定）での見た目・後方互換は変わりません。</li>
+      <li><span class="vtag">v27_GUIr0</span> <b>Lighting Influence（暗所追従）</b> の暗所での下限を Light Min Limit と同じ明るさにそろえました（真っ暗なワールドで線が本体より明るく残る不具合の修正）。<code class="inl">0</code>（既定）での後方互換は変わりません。</li>
+      <li><span class="vtag">v26_GUIr0</span> Outline（輪郭線）に <b>Lighting Influence（暗所追従）</b> を追加しました。既定 <code class="inl">0</code>＝従来どおりの自己発光（既存マテリアルは見た目不変）。</li>
       <li><span class="vtag">v25_GUIr0</span> リアルタイムライトが<b>多数</b>あるワールドでアバターの明るい部分が白飛びする問題を修正しました（追加ライトをまとめて1回の明るさ制御にかける方式に変更）。追加ライトの陰影は簡易（頂点単位・最大4灯）になりますが、トゥーン表現では影響はごくわずかです。</li>
       <li><span class="vtag">v24_GUIr0</span> 強いリアルタイムライトのあるワールドでアバターの明るい部分が白飛びする問題を修正しました（明るさの上限 Light Max Limit が追加のリアルタイムライトにも効くように）。Light Limit 無効時は従来どおりです。</li>
       <li><span class="vtag">v23_GUIr0</span> Outline の <b>Edge Fade</b> を <b>Sweep 専用</b>に変更しました（ハードエッジのメッシュで輪郭線まで消える不具合の修正）。項目は Sweep の設定内へ移動（保存済みの値は維持されます）。</li>
       <li><span class="vtag">v22_GUIr0</span> Outline に <b>Edge Fade</b> を追加しました（半透明時に裏側の Sweep が放射状に透ける問題を軽減）。既定 <code class="inl">2</code>＝ON、<code class="inl">0</code> で従来動作。不透明では見た目は変わりません。</li>
-      <li><span class="vtag">v19_GUIr0</span> Matcap に <b>Contrast（コントラスト）</b>を追加しました（既定 1.0＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v19_GUIr0</span> Matcap に <b>Contrast（コントラスト）</b> を追加しました（既定 1.0＝既存マテリアルは不変）。</li>
       <li><span class="vtag">v18_GUIr0</span> 2枚目 Matcap を<b>独立レイヤー化</b>し、カラー Tint・Strength・Blend を 1枚目・2枚目で個別に設定できるようにしました（OFF 時の挙動は不変）。</li>
-      <li><span class="vtag">v17_GUIr0</span> Matcap に <b>2枚目スロット（Mask Select）</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v16_GUIr0</span> Rim Light に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v15_GUIr0</span> Matcap に <b>「裏面で無効化」</b>を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
-      <li><span class="vtag">v14_GUIr0</span> Particle の Vertex Color Blend Mode から <b>Additive を削除</b>しました（<code class="inl">None</code> / <code class="inl">Multiply</code> の2択）。保存済みマテリアルで <code class="inl">Additive</code> を選んでいた場合は <code class="inl">Multiply</code> 相当の表示にフォールバックします。あわせて内部のライト下限クランプ処理を整理しました（挙動・見た目は不変）。</li>
+      <li><span class="vtag">v17_GUIr0</span> Matcap に <b>2枚目スロット（Mask Select）</b> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v16_GUIr0</span> Rim Light に <b>「裏面で無効化」</b> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v15_GUIr0</span> Matcap に <b>「裏面で無効化」</b> を追加しました（既定 OFF＝既存マテリアルは不変）。</li>
+      <li><span class="vtag">v14_GUIr0</span> Particle の Vertex Color Blend Mode から <b><code class="inl">Additive</code> を削除</b>しました（<code class="inl">None</code> / <code class="inl">Multiply</code> の2択）。保存済みマテリアルで <code class="inl">Additive</code> を選んでいた場合は <code class="inl">Multiply</code> 相当の表示にフォールバックします。あわせて内部のライト下限クランプ処理を整理しました（挙動・見た目は不変）。</li>
       <li><span class="vtag">v13_GUIr0</span> 使い勝手の調整。<b>(1)</b> Particle の Vertex Color Blend Mode の初期値を <code class="inl">None</code> に変更。<b>(2)</b> Outline 有効化時の初期設定を Sweep OFF / Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code> に調整。いずれも保存済みマテリアルの見た目は変わりません。</li>
-      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Rim Light に <b>Blend Mode（Add / Multiply）</b>を追加。<b>(2)</b> Texture Layer に <b>透明マスクモード</b>を追加。あわせて Outline の Line Width スライダー表示レンジを <code class="inl">0〜5</code> に変更しました（実際の値・効果は不変）。</li>
-      <li><span class="vtag">v10_GUIr0</span> Sweep の減衰を片側から<b>両側対称</b>に変更。Count を整数入力（IntRange）に変更し、<b>Pivot Offset（周回中心）</b>を追加。アバター本体への適用ガイドを README に追加しました。</li>
-      <li><span class="vtag">v9_GUIr0</span> 機能を <b>Outline（輪郭線）</b>と <b>Sweep（周回発光）</b>の二層構造に再編。Base Glow の既定値を <code class="inl">1</code> に変更しました。</li>
+      <li><span class="vtag">v12_GUIr0</span> <b>(1)</b> Rim Light に <b>Blend Mode（Add / Multiply）</b> を追加。<b>(2)</b> Texture Layer に <b>透明マスクモード</b> を追加。あわせて Outline の Line Width スライダー表示レンジを <code class="inl">0〜5</code> に変更しました（実際の値・効果は不変）。</li>
+      <li><span class="vtag">v10_GUIr0</span> Sweep の減衰を片側から<b>両側対称</b>に変更。Count を整数入力（IntRange）に変更し、<b>Pivot Offset（周回中心）</b> を追加。アバター本体への適用ガイドを README に追加しました。</li>
+      <li><span class="vtag">v9_GUIr0</span> 機能を <b>Outline（輪郭線）</b> と <b>Sweep（周回発光）</b> の二層構造に再編。Base Glow の既定値を <code class="inl">1</code> に変更しました。</li>
       <li><span class="vtag">v8_GUIr0</span> Outline の輪郭描画を反転外殻（Inverted Hull）パス方式に変更。<b>Line Width</b>・<b>Extrude Mode</b>・<b>Base Glow</b> を追加し、Rim Power を廃止しました。</li>
       <li><span class="vtag">v7_GUIr0</span> Outline Sweep の周回基準をカメラビューポイント基点（画面上の角度）に変更し、Axis プロパティを廃止しました。</li>
-      <li><span class="vtag">v6_GUIr0</span> <b>Outline Sweep（アウトライン周回発光）</b>を追加しました。</li>
+      <li><span class="vtag">v6_GUIr0</span> <b>Outline Sweep（アウトライン周回発光）</b> を追加しました。</li>
       <li><span class="vtag">v5_GUIr0</span> Dissolve のノイズが、回転して配置したオブジェクトの一部の面で一方向に伸びた縞模様になる不具合を修正しました（v0 から潜在していた問題です）。無回転で配置していたオブジェクトの見た目は変わりません。</li>
       <li><span class="vtag">v4_GUIr0</span> 内部コードの整理（リファクタリング）。機能・見た目・パフォーマンスに変更はありません。マテリアルの再設定は不要です。</li>
       <li><span class="vtag">v3_GUIr1</span> Unlit モード ON のとき、影の詳細プロパティ（Shadow Color〜Shadow Blur）を自動的に非表示にするよう変更（Unlit では影が計算されないため。GUI のみの更新）。</li>
@@ -362,6 +365,26 @@ details .dbody li{margin-bottom:10px}
   </div>
 
   <div class="rv">
+  <h4><span class="hx">#</span> Dither Fade（ディザ擬似半透明）</h4>
+  <p>Cutout / Opaque の描画のまま、細かい網点（ディザ）パターンでピクセルを間引き、アルファ値どおりの<b>擬似半透明</b>を作る機能です。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Dither Fade</td><td>機能の有効/無効（既定 OFF）。ON にするとテクスチャやレイヤーマスクのアルファ値がそのまま「残すピクセルの割合」になります。</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 主な用途 — 前髪を表情に重ねて透かす">
+    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 髪など複数レイヤーが重なる部分について">
+    <p>前髪は薄い毛束が奥行き方向に何枚も重なっているため、単純な網点だと正面から見たとき手前の穴を奥の毛束が塞いでしまい、透けにくくなります。本機能は<b>奥行きに応じて網点の位置をずらす</b>ことで、重なった各層が別々の位置に穴を開け、正面からでも透過が積み重なるようにしています（Dither Fade ON 時は常時この方式です）。そのぶんカメラや頭が動くと網点がわずかに揺らいで見えることがあります（網点方式共通の性質です）。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。</p>
+  </div>
+  <div class="note tip" data-label="💡 輪郭線（Outline）との併用">
+    <p>Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
+  </div>
+  </div>
+
+  <div class="rv">
   <h4><span class="hx">#</span> Soft Particles（ソフトパーティクル）</h4>
   <p>半透明（Fade/Additive等）のオブジェクトが、地面や壁などの不透明オブジェクトにめり込む際の不自然な境界線を消し、滑らかに溶け込ませる機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -383,7 +406,7 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Fade Near</td><td>この距離（カメラからの距離）以下で完全に透明になります。</td></tr>
     <tr><td>Fade Far</td><td>この距離以上で完全に不透明（通常表示）になります。</td></tr>
   </tbody></table>
-  <p><b>仕様上の注意:</b> アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
+  <p><b>仕様上の注意:</b> アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<b>Cutout / Opaque でも Dither Fade を ON にすれば使用できます</b>（アルファが網点の密度として反映されます）。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
   </div>
 </section>
 
@@ -448,7 +471,14 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Shadow Color / Intensity</td><td>影の色と、影の濃さ（暗さ）を調整します。</td></tr>
     <tr><td>Shadow Border</td><td>光と影の境界線の位置を調整します。アニメ調（トゥーン）の表現を作る際に重要です。</td></tr>
     <tr><td>Shadow Blur</td><td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td></tr>
+    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 ON</b>）。影の縞や粗さが目立つワールドでは OFF にするか、Shadow Blur を上げて馴染ませてください。</td></tr>
   </tbody></table>
+  <div class="note info" data-label="NOTE — Receive Shadow の発現条件">
+    <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
+  </div>
+  <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
+    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Transparency / Rendering の項を参照）。</p>
+  </div>
   </div>
   <div class="rv">
   <h4><span class="hx">#</span> Light Limit（環境光クランプ・白飛び/黒つぶれ防止）</h4>
@@ -592,11 +622,12 @@ details .dbody li{margin-bottom:10px}
   <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<b>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</b>し、スキンメッシュではアニメーションにも追従します。基本の輪郭線はテクスチャ・UV展開なしで描けます（<b>マスクは任意</b>：目尻など部分的に線を消したいときだけマスク画像を使えます）。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Outline</td><td>機能の有効/無効。</td></tr>
-    <tr><td>Base Color (HDR)</td><td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。</td></tr>
+    <tr><td>Base Color (HDR)</td><td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。<b>A（アルファ）は輪郭線自体の不透明度</b>です（<code class="inl">v34</code> から有効・既定 <code class="inl">1</code>＝不透明）。</td></tr>
     <tr><td>Self-Illuminate（自己発光）</td><td>輪郭線がワールドのライティングを無視して自己発光する度合い（<code class="inl">0</code>〜<code class="inl">1</code>・<b>既定 0</b>）。<code class="inl">0</code>（既定）では<b>輪郭線がシーンの明るさ（メイン Directional Light の総量＋環境光、Light Min/Max Limit に追従）に均一に追従</b>します（Directional Light があれば明るく（白）、シーン全体が暗いときだけ灰色〜黒・線は均一で明暗の境界は出ません・真っ暗では Light Min Limit で止まり <code class="inl">0</code> で消灯）。<code class="inl">1</code> ではライティングを無視して<b>常時発光（従来のネオン）</b>になります。発光の強さは <b>Base Color (HDR) の明るさ</b>で調整してください。アニメーション可能です。<b>※この値が次の Intensity / Line Width の効き方（明るさの基準）を左右するため、先に決められるよう Base Color の直後に配置しています。</b></td></tr>
     <tr><td>Intensity（光の強さ）</td><td>線の発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
     <tr><td>Line Width（線の太さ）</td><td>輪郭線の太さ（メッシュの押し出し量）。スライダーは <code class="inl">0〜20</code>（<code class="inl">0.01</code> 刻み・小数第2位まで）で、<code class="inl">0</code> で線が消えます。細い線の微調整向けのレンジです（表示値は内部値の便宜的な倍率で、効果・保存値の意味は値の大小に依存しません）。</td></tr>
     <tr><td>Extrude Mode（押し出し方式）</td><td><code class="inl">Normal</code>＝法線方向（<b>ベベル付き文字・文字列など複数パーツのメッシュ・スムーズな一般モデル向け</b>）/ <code class="inl">PivotScale</code>＝ピボットから外向き（<b>キューブ等のハードエッジな単一凸形状向け</b>・角が割れません）。</td></tr>
+    <tr><td>Alpha Sync（本体の透明度に追従）</td><td>半透明プリセット（<code class="inl">Transparent</code> / <code class="inl">Fade</code> / <code class="inl">Additive</code>）で、輪郭線を<b>本体の透明度（Color の A × メインテクスチャの A）に追従</b>させます（既定 <b>ON</b>）。本体が透けるほど、本体越しに透けて見える輪郭色も一緒に薄くなり、完全透明の部分には線も出ません（深度も書きません）。<b>OFF で従来どおり透明度に関係なく常時表示</b>（内側に輪郭色が透ける従来の見た目）。不透明（<code class="inl">Opaque</code> / <code class="inl">Cutout</code>）プリセットでは本体が透けないため効果はありません。</td></tr>
     <tr><td>Use Outline Mask（マスクで部分的に消す）</td><td>輪郭線をテクスチャマスクで<b>部分的に消す</b>機能（既定 OFF）。目尻・口元など、線を出したくない箇所だけ消せます。ON にすると下記のマスク欄が表示されます。</td></tr>
     <tr><td>Outline Mask</td><td>グレースケールのマスク画像。<b>白＝線あり / 黒＝線なし</b>（中間はグラデーション）。<b>メインテクスチャと同じ UV</b>で参照します。マスクで消した部分は深度を書かないため、半透明時の裏側の透けも増えません。</td></tr>
   </tbody></table>

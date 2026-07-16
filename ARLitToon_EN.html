@@ -373,6 +373,27 @@ details .dbody li{margin-bottom:10px}
   </div>
   </div>
 
+  <!-- EN-DRAFT-REVIEW v36_GUIr0 (Transparency / Dither Fade section): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+  <div class="rv">
+  <h4><span class="hx">#</span> Dither Fade (dithered pseudo-transparency)</h4>
+  <p>While still rendering as Cutout / Opaque, this thins out pixels with a fine halftone (dither) pattern to create <b>pseudo-transparency</b> that follows the alpha value.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Dither Fade</td><td>Enable/disable the feature (default OFF). When ON, the alpha value of the texture or layer mask directly becomes the "proportion of pixels kept".</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 Main use — overlaying bangs over the face and seeing through them">
+    <p>Semi-transparent presets such as Fade <b>cannot receive cast shadows (Receive Shadow)</b> due to Unity's specification. For parts you want semi-transparent but still receiving shadows, such as bangs, using <b>the Cutout preset + Dither Fade ON</b> lets you see through them following the alpha while still receiving shadows.</p>
+  </div>
+  <div class="note info" data-label="NOTE — About parts where multiple layers overlap, such as hair">
+    <p>Bangs are many thin hair strands stacked in the depth direction, so with a simple halftone the near holes get blocked by the far strands when viewed head-on, making it hard to see through. This feature <b>shifts the halftone position according to depth</b> so each stacked layer opens holes at different positions and the transparency accumulates even from the front (when Dither Fade is ON this method is always used). As a trade-off, the halftone may appear to shimmer slightly as the camera or head moves (a property common to halftone methods).</p>
+  </div>
+  <div class="note info" data-label="NOTE — Specification">
+    <p>Because the halftone thins per pixel, a dotted pattern may be visible at very close range (it is less noticeable in environments where anti-aliasing (MSAA) is enabled). <b>Between the Scene view, the Game view, and VRChat itself, the resolution, anti-aliasing, and camera angle differ, so how the halftone looks (the degree of transparency) changes. Please check the final look in VRChat itself.</b> Alpha Cutoff can be used together; alpha below the Cutoff is fully clipped as before. Alpha from Distance Fade and from the texture layer's transparency mask is also reflected as the halftone. This feature is disabled on semi-transparent presets (Fade / Transparent / Additive) (normal alpha blending is used).</p>
+  </div>
+  <div class="note tip" data-label="💡 Combining with the Outline">
+    <p>When the Outline's <b>Alpha Sync is ON</b> (default), the outline follows the same halftone as the body (preventing the outline color from showing through the dither holes as a filled area and looking saturated). Turning Alpha Sync OFF makes the outline not follow the halftone and be shown constantly.</p>
+  </div>
+  </div>
+
   <div class="rv">
   <h4><span class="hx">#</span> Soft Particles</h4>
   <p>A feature that erases the unnatural boundary line where a semi-transparent object (Fade/Additive, etc.) intersects with an opaque object such as the ground or a wall, blending it smoothly.</p>
@@ -395,7 +416,8 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Fade Near</td><td>At or below this distance (from the camera), it becomes fully transparent.</td></tr>
     <tr><td>Fade Far</td><td>At or above this distance, it becomes fully opaque (normal display).</td></tr>
   </tbody></table>
-  <p><b>Specification note:</b> Since this manipulates alpha, it assumes use with a semi-transparent preset (<b>Fade / Additive / Transparent</b>). Setting <code class="inl">Fade Near</code> to a value larger than <code class="inl">Fade Far</code> reverses the behavior, making it "more transparent the farther away". <code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> can also be animated.</p>
+  <!-- EN-DRAFT-REVIEW v36_GUIr0 (Distance Fade note: Dither Fade addition): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+  <p><b>Specification note:</b> Since this manipulates alpha, it assumes use with a semi-transparent preset (<b>Fade / Additive / Transparent</b>). <b>It can also be used on Cutout / Opaque if Dither Fade is turned ON</b> (alpha is reflected as the halftone density). Setting <code class="inl">Fade Near</code> to a value larger than <code class="inl">Fade Far</code> reverses the behavior, making it "more transparent the farther away". <code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> can also be animated.</p>
   </div>
 </section>
 
@@ -460,7 +482,16 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Shadow Color / Intensity</td><td>Adjusts the shadow color and the depth (darkness) of shadows.</td></tr>
     <tr><td>Shadow Border</td><td>Adjusts the position of the boundary line between light and shadow. Important when creating an anime-style (toon) look.</td></tr>
     <tr><td>Shadow Blur</td><td>Adjusts the softness (smoothness) of the shadow edge. If shadows on spheres etc. look jagged, or to blend cast shadows nicely, raise the value a little.</td></tr>
+    <!-- EN-DRAFT-REVIEW v35_GUIr0 (Lighting / Receive Shadow): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+    <tr><td>Receive Shadow</td><td>Receives shadows cast by the world's directional light (cast shadows from trees or buildings, the shadow of your own bangs, etc.) as the toon shadow above (Shadow Color / Border / Blur) (<b>default ON</b>). In worlds where shadow banding or roughness stands out, turn it OFF or raise Shadow Blur to blend it in.</td></tr>
   </tbody></table>
+  <!-- EN-DRAFT-REVIEW v35_GUIr0 (Receive Shadow notes): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+  <div class="note info" data-label="NOTE — When Receive Shadow appears">
+    <p>Shadows are received only when the world has a real-time directional light, that light's shadows are enabled, and you are within the shadow drawing distance. In worlds that do not meet these conditions the display is the same as before (the same look as OFF). The avatar's ability to <b>cast</b> shadows has always been active; this setting only concerns the <b>receiving</b> side.</p>
+  </div>
+  <div class="note warn" data-label="⚠ Only Opaque / Cutout can receive shadows (Unity's specification)">
+    <p>Semi-transparent presets such as Fade / Transparent / Additive cannot receive directional-light shadows due to a constraint of the Unity Built-in pipeline (turning it ON does not add shadows). For parts you want to be semi-transparent but still receive shadows, such as bangs, use <b>the Cutout preset + Dither Fade (dithered pseudo-transparency)</b> (see the Transparency / Rendering section).</p>
+  </div>
   </div>
   <div class="rv">
   <h4><span class="hx">#</span> Light Limit (ambient clamp / prevents blow-out &amp; crushed blacks)</h4>
@@ -604,11 +635,14 @@ details .dbody li{margin-bottom:10px}
   <p>A base feature that draws the mesh outline. It handles everything from a toon-style edge to a glowing outline like a neon tube via HDR color + Bloom. It <b>supports any 3D mesh — spheres, cubes, text, costumes, props, and more</b> — and on skinned meshes it also follows animation. The basic outline can be drawn without a texture or UV unwrap (a <b>mask is optional</b>: use a mask image only when you want to erase the line partially, such as around the corners of the eyes).</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Use Outline</td><td>Enable/disable the feature.</td></tr>
-    <tr><td>Base Color (HDR)</td><td>The outline color. Being HDR-capable, raising Intensity makes Bloom (the light bleed) work nicely.</td></tr>
+    <!-- EN-DRAFT-REVIEW v34_GUIr0 (Base Color alpha note): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+    <tr><td>Base Color (HDR)</td><td>The outline color. Being HDR-capable, raising Intensity makes Bloom (the light bleed) work nicely. <b>The A (alpha) is the opacity of the outline itself</b> (effective since <code class="inl">v34</code>; default <code class="inl">1</code> = opaque).</td></tr>
     <tr><td>Self-Illuminate</td><td>The degree to which the outline self-illuminates, ignoring the world lighting (<code class="inl">0</code>–<code class="inl">1</code>; <b>default 0</b>). At <code class="inl">0</code> (default), <b>the outline uniformly follows the scene brightness (total of the main Directional Light + ambient light, following Light Min/Max Limit)</b> (bright (white) when a Directional Light is present; gray to black only when the whole scene is dark; the line is uniform and shows no light/dark boundary; in full darkness it stops at Light Min Limit and turns off at <code class="inl">0</code>). At <code class="inl">1</code> it ignores lighting and <b>emits constantly (classic neon)</b>. Adjust the glow strength with the <b>brightness of Base Color (HDR)</b>. Animatable. <b>※ This value governs how the following Intensity / Line Width take effect (the brightness baseline), so it is placed right after Base Color so you can decide it first.</b></td></tr>
     <tr><td>Intensity</td><td>The strength of the line's emission (<code class="inl">0</code>–<code class="inl">16</code>).</td></tr>
     <tr><td>Line Width</td><td>The thickness of the outline (the mesh extrusion amount). The slider is <code class="inl">0–20</code> (in <code class="inl">0.01</code> steps, to two decimal places); <code class="inl">0</code> makes the line disappear. This range is intended for fine-tuning thin lines. (The displayed value is a convenient multiplier of the internal value; the effect and the meaning of the saved value do not depend on the magnitude of the display.)</td></tr>
     <tr><td>Extrude Mode</td><td><code class="inl">Normal</code> = along the normal direction (<b>for beveled text / multi-part meshes such as text strings / smooth general models</b>) / <code class="inl">PivotScale</code> = outward from the pivot (<b>for hard-edged single convex shapes such as cubes</b>; corners do not split).</td></tr>
+    <!-- EN-DRAFT-REVIEW v34_GUIr0 (Outline / Alpha Sync): Claude 生成の英訳ドラフト。レビュー後 --approve-en-drafts で確定（この行を除去）。 -->
+    <tr><td>Alpha Sync (follow the body’s transparency)</td><td>On semi-transparent presets (<code class="inl">Transparent</code> / <code class="inl">Fade</code> / <code class="inl">Additive</code>), makes the outline <b>follow the body’s transparency (Color’s A × the main texture’s A)</b> (default <b>ON</b>). The more the body is see-through, the fainter the outline color seen through the body becomes as well, and no line appears on fully transparent parts (no depth is written either). <b>OFF keeps it always shown regardless of transparency</b> (the previous look, with the outline color showing through the inside). On opaque presets (<code class="inl">Opaque</code> / <code class="inl">Cutout</code>) the body is not see-through, so it has no effect.</td></tr>
     <tr><td>Use Outline Mask (erase partially with a mask)</td><td>A feature to <b>erase the outline partially</b> with a texture mask (default OFF). You can erase only the places where you do not want a line, such as the corners of the eyes or the mouth. Turning it ON reveals the mask field below.</td></tr>
     <tr><td>Outline Mask</td><td>A grayscale mask image. <b>White = line / black = no line</b> (midtones are a gradient). Sampled with the <b>same UV as the main texture</b>. Areas erased by the mask do not write depth, so see-through of the back side when semi-transparent does not increase.</td></tr>
   </tbody></table>

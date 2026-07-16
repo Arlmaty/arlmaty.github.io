@@ -365,6 +365,26 @@ details .dbody li{margin-bottom:10px}
   </div>
 
   <div class="rv">
+  <h4><span class="hx">#</span> Dither Fade（ディザ擬似半透明）</h4>
+  <p>Cutout / Opaque の描画のまま、細かい網点（ディザ）パターンでピクセルを間引き、アルファ値どおりの<b>擬似半透明</b>を作る機能です。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Dither Fade</td><td>機能の有効/無効（既定 OFF）。ON にするとテクスチャやレイヤーマスクのアルファ値がそのまま「残すピクセルの割合」になります。</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 主な用途 — 前髪を表情に重ねて透かす">
+    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 髪など複数レイヤーが重なる部分について">
+    <p>前髪は薄い毛束が奥行き方向に何枚も重なっているため、単純な網点だと正面から見たとき手前の穴を奥の毛束が塞いでしまい、透けにくくなります。本機能は<b>奥行きに応じて網点の位置をずらす</b>ことで、重なった各層が別々の位置に穴を開け、正面からでも透過が積み重なるようにしています（Dither Fade ON 時は常時この方式です）。そのぶんカメラや頭が動くと網点がわずかに揺らいで見えることがあります（網点方式共通の性質です）。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。</p>
+  </div>
+  <div class="note tip" data-label="💡 輪郭線（Outline）との併用">
+    <p>Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
+  </div>
+  </div>
+
+  <div class="rv">
   <h4><span class="hx">#</span> Soft Particles（ソフトパーティクル）</h4>
   <p>半透明（Fade/Additive等）のオブジェクトが、地面や壁などの不透明オブジェクトにめり込む際の不自然な境界線を消し、滑らかに溶け込ませる機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -386,7 +406,7 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Fade Near</td><td>この距離（カメラからの距離）以下で完全に透明になります。</td></tr>
     <tr><td>Fade Far</td><td>この距離以上で完全に不透明（通常表示）になります。</td></tr>
   </tbody></table>
-  <p><b>仕様上の注意:</b> アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
+  <p><b>仕様上の注意:</b> アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<b>Cutout / Opaque でも Dither Fade を ON にすれば使用できます</b>（アルファが網点の密度として反映されます）。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
   </div>
 </section>
 
@@ -451,7 +471,14 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Shadow Color / Intensity</td><td>影の色と、影の濃さ（暗さ）を調整します。</td></tr>
     <tr><td>Shadow Border</td><td>光と影の境界線の位置を調整します。アニメ調（トゥーン）の表現を作る際に重要です。</td></tr>
     <tr><td>Shadow Blur</td><td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td></tr>
+    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 ON</b>）。影の縞や粗さが目立つワールドでは OFF にするか、Shadow Blur を上げて馴染ませてください。</td></tr>
   </tbody></table>
+  <div class="note info" data-label="NOTE — Receive Shadow の発現条件">
+    <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
+  </div>
+  <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
+    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Transparency / Rendering の項を参照）。</p>
+  </div>
   </div>
   <div class="rv">
   <h4><span class="hx">#</span> Light Limit（環境光クランプ・白飛び/黒つぶれ防止）</h4>
@@ -595,11 +622,12 @@ details .dbody li{margin-bottom:10px}
   <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<b>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</b>し、スキンメッシュではアニメーションにも追従します。基本の輪郭線はテクスチャ・UV展開なしで描けます（<b>マスクは任意</b>：目尻など部分的に線を消したいときだけマスク画像を使えます）。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Outline</td><td>機能の有効/無効。</td></tr>
-    <tr><td>Base Color (HDR)</td><td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。</td></tr>
+    <tr><td>Base Color (HDR)</td><td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。<b>A（アルファ）は輪郭線自体の不透明度</b>です（<code class="inl">v34</code> から有効・既定 <code class="inl">1</code>＝不透明）。</td></tr>
     <tr><td>Self-Illuminate（自己発光）</td><td>輪郭線がワールドのライティングを無視して自己発光する度合い（<code class="inl">0</code>〜<code class="inl">1</code>・<b>既定 0</b>）。<code class="inl">0</code>（既定）では<b>輪郭線がシーンの明るさ（メイン Directional Light の総量＋環境光、Light Min/Max Limit に追従）に均一に追従</b>します（Directional Light があれば明るく（白）、シーン全体が暗いときだけ灰色〜黒・線は均一で明暗の境界は出ません・真っ暗では Light Min Limit で止まり <code class="inl">0</code> で消灯）。<code class="inl">1</code> ではライティングを無視して<b>常時発光（従来のネオン）</b>になります。発光の強さは <b>Base Color (HDR) の明るさ</b>で調整してください。アニメーション可能です。<b>※この値が次の Intensity / Line Width の効き方（明るさの基準）を左右するため、先に決められるよう Base Color の直後に配置しています。</b></td></tr>
     <tr><td>Intensity（光の強さ）</td><td>線の発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
     <tr><td>Line Width（線の太さ）</td><td>輪郭線の太さ（メッシュの押し出し量）。スライダーは <code class="inl">0〜20</code>（<code class="inl">0.01</code> 刻み・小数第2位まで）で、<code class="inl">0</code> で線が消えます。細い線の微調整向けのレンジです（表示値は内部値の便宜的な倍率で、効果・保存値の意味は値の大小に依存しません）。</td></tr>
     <tr><td>Extrude Mode（押し出し方式）</td><td><code class="inl">Normal</code>＝法線方向（<b>ベベル付き文字・文字列など複数パーツのメッシュ・スムーズな一般モデル向け</b>）/ <code class="inl">PivotScale</code>＝ピボットから外向き（<b>キューブ等のハードエッジな単一凸形状向け</b>・角が割れません）。</td></tr>
+    <tr><td>Alpha Sync（本体の透明度に追従）</td><td>半透明プリセット（<code class="inl">Transparent</code> / <code class="inl">Fade</code> / <code class="inl">Additive</code>）で、輪郭線を<b>本体の透明度（Color の A × メインテクスチャの A）に追従</b>させます（既定 <b>ON</b>）。本体が透けるほど、本体越しに透けて見える輪郭色も一緒に薄くなり、完全透明の部分には線も出ません（深度も書きません）。<b>OFF で従来どおり透明度に関係なく常時表示</b>（内側に輪郭色が透ける従来の見た目）。不透明（<code class="inl">Opaque</code> / <code class="inl">Cutout</code>）プリセットでは本体が透けないため効果はありません。</td></tr>
     <tr><td>Use Outline Mask（マスクで部分的に消す）</td><td>輪郭線をテクスチャマスクで<b>部分的に消す</b>機能（既定 OFF）。目尻・口元など、線を出したくない箇所だけ消せます。ON にすると下記のマスク欄が表示されます。</td></tr>
     <tr><td>Outline Mask</td><td>グレースケールのマスク画像。<b>白＝線あり / 黒＝線なし</b>（中間はグラデーション）。<b>メインテクスチャと同じ UV</b>で参照します。マスクで消した部分は深度を書かないため、半透明時の裏側の透けも増えません。</td></tr>
   </tbody></table>

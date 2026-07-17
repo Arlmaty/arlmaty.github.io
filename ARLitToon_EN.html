@@ -379,9 +379,6 @@ details .dbody li{margin-bottom:10px}
   <div class="note tip" data-label="💡 Main use — overlaying bangs over the face and seeing through them">
     <p>Semi-transparent presets such as Fade <b>cannot receive cast shadows (Receive Shadow)</b> due to Unity's specification. For parts you want semi-transparent but still receiving shadows, such as bangs, using <b>the Cutout preset + Dither Fade ON</b> lets you see through them following the alpha while still receiving shadows.</p>
   </div>
-  <div class="note info" data-label="NOTE — About parts where multiple layers overlap, such as hair">
-    <p>Bangs are many thin hair strands stacked in the depth direction, so with a simple halftone the near holes get blocked by the far strands when viewed head-on, making it hard to see through. This feature <b>shifts the halftone position according to depth</b> so each stacked layer opens holes at different positions and the transparency accumulates even from the front (when Dither Fade is ON this method is always used). As a trade-off, the halftone may appear to shimmer slightly as the camera or head moves (a property common to halftone methods).</p>
-  </div>
   <div class="note info" data-label="NOTE — Specification">
     <p>Because the halftone thins per pixel, a dotted pattern may be visible at very close range (it is less noticeable in environments where anti-aliasing (MSAA) is enabled). <b>Between the Scene view, the Game view, and VRChat itself, the resolution, anti-aliasing, and camera angle differ, so how the halftone looks (the degree of transparency) changes. Please check the final look in VRChat itself.</b> Alpha Cutoff can be used together; alpha below the Cutoff is fully clipped as before. Alpha from Distance Fade and from the texture layer's transparency mask is also reflected as the halftone. This feature is disabled on semi-transparent presets (Fade / Transparent / Additive) (normal alpha blending is used).</p>
   </div>

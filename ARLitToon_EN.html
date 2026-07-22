@@ -207,9 +207,9 @@ details .dbody li{margin-bottom:10px}
       </div>
     </div>
     <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — SETUP &amp; USAGE GUIDE</div>
-    <p class="hero-sub">ARLitToon is a <b>lightweight, full-featured anime / toon-style custom shader</b> for VRChat avatars and particle effects. Optimized for illustration-like and cel-shaded expression, it is a <b>general-purpose toon shader specialized for character avatars, avatar accessories, and effect creation</b>.</p>
+    <p class="hero-sub">ARLitToon is a <b>lightweight, full-featured anime / toon-style custom shader</b> for VRChat avatars and particle effects. Optimized for illustration-like and cel-shaded expression, it is a <b>general-purpose toon shader specialized for character avatars, avatar accessories, and effect creation</b>.<br><br><b style="color:var(--ac)">BOOTH -ALTIMA-</b>　<a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer" style="color:var(--ac)">https://altima.booth.pm/</a></p>
     <div class="hero-chips">
-      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span>
+      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
     </div>
   </div>
   <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
@@ -819,7 +819,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 <script>
 // ticker
 (function(){
-  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
   var half=items.map(function(t){return t+"<b>///</b>"}).join("");
   document.getElementById("ticker").innerHTML=half+half;
 })();

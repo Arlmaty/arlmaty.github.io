@@ -161,7 +161,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v36_GUIr0 / PC ONLY</span>
+    <span class="ver">v39_GUIr1 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -207,7 +207,7 @@ details .dbody li{margin-bottom:10px}
       </div>
     </div>
     <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — 導入・使用ガイド</div>
-    <p class="hero-sub">ARLitToon（エーアールリット・トゥーン）は、VRChat のアバター装飾品やパーティクルエフェクトのための<b>軽量・高機能なアニメ・トゥーン調カスタムシェーダー</b>。イラスト風・セル画風の表現に最適化された、<b>エフェクト制作に特化した汎用トゥーンシェーダー</b>です。</p>
+    <p class="hero-sub">ARLitToon（エーアールリット・トゥーン）は、VRChat のアバターやパーティクルエフェクトのための<b>軽量・高機能なアニメ・トゥーン調カスタムシェーダー</b>。イラスト風・セル画風の表現に最適化された、<b>キャラクターアバター・アバター装飾品とエフェクト制作に特化した汎用トゥーンシェーダー</b>です。</p>
     <div class="hero-chips">
       <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span>
     </div>
@@ -231,13 +231,17 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v36_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v36_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v36_GUIr0</span> <b>Dither Fade（ディザ擬似半透明）</b> を追加しました。Cutout / Opaque の描画のまま、網点（ディザ）でアルファ値どおりの擬似半透明を作ります。Fade などの半透明プリセットは Unity の仕様で落ち影（Receive Shadow）を受けられないため、<b>「前髪を表情に重ねて透かしつつ、影も受けたい」場合は Cutout＋Dither Fade</b> を使ってください（Transparency / Rendering の項を参照）。既定 OFF・既存マテリアルの見た目は従来と完全に同じです。あわせて同梱修正として、<b>Dither Fade 使用時に輪郭線（Outline）の色が網点の穴から面状に透けて飽和して見える問題</b>を修正しました（Alpha Sync が ON のとき輪郭線も本体と同じ網点で追従します）。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v39_GUIr1</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v39_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v39_GUIr1</span> GUI の各項目のヘルプボックス（説明文）を整理し、簡潔にしました（GUI のみ）。冗長だった説明を要点に絞り、「詳細は README 参照」の案内は各ヘルプボックスの最後に一度だけ表示するようにしました。<b>表示テキストのみの変更で、機能・保存値・見た目は従来と完全に同じ</b>です。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v39_GUIr0</span> <b>Back Light（逆光ライト）</b> を追加しました。<b>メインの平行光（Directional Light）がキャラクターの背後にあるときだけ</b>、輪郭の広い範囲を発光させるイラスト調の逆光表現です。Rim Light が「見る角度で常に縁が光る」のに対し、Back Light は「光が背後にある時だけ光る」ことに加え、<b>影（シャドウ）で光が遮られている部分（上着の内側など）は光りません</b>。<b>Width</b> を小さくすると光る範囲が広がり、<b>Directivity</b> を上げると光が真後ろに近いときだけ光ります。発光は透明度に追従し、裏面での無効化もできます。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Back Light の項を参照）。</li>
+      <li><span class="vtag">v38_GUIr0</span> <b>Distance Darken（カメラ距離で減光）</b> を追加しました。カメラからの距離に応じて本体の色を<b>減光色（既定は黒）へ近づけます</b>。アルファ（透明度）ではなく色を変えるため、<b>不透明（Opaque）のマテリアルでも作用</b>します。「近づくと暗くなる」「なでなで時に手元を暗くする」といった演出に使えます。既存の <b>Distance Fade（アルファのフェード）とは独立した機能</b>で、併用もできます。<b>Darken Near</b> で最も暗くなり、<b>Darken Far</b> で元の色に戻ります（Near > Far にすると反転して「遠いほど暗い」になります）。発光（Emission）は減光されません。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Transparency / Rendering の項を参照）。</li>
+      <li><span class="vtag">v37_GUIr4</span> <b>環境光の立体化</b> を追加しました（<b>常時有効・設定不要</b>）。環境光（ライトプローブ）が主体のワールドや逆光の場面で、環境光に含まれる方向情報から光側/陰側を自動的に復元し、本体が一律の明るさで平面的に沈んで見えるのを軽減します（Lighting & Shadow の項を参照。平行光が強いワールドでは変化はわずかです）。⚠️ <b>常時有効な改良のため、環境光主体・逆光のワールドでは既存マテリアルも見た目が変わります</b>。あわせて GUI に <b>セクション設定のコピー/ペースト</b> を追加しました：<b>各セクションの折り畳み見出しを右クリック</b>すると「コピー」「ペースト」が選べ、そのセクションの<b>数値設定をひとまとめ</b>に別のマテリアルへ移せます（カラーとテクスチャは含みません＝マテリアルごとの色・画像はそのまま保てます。Lighting & Shadow は Shadow Intensity / Border / Blur の3項目です）。</li>
+      <li><span class="vtag">v36_GUIr0</span> <b>Dither Fade（ディザ擬似半透明）</b> を追加しました。Cutout / Opaque の描画のまま、網点（ディザ）でアルファ値どおりの擬似半透明を作ります。Fade などの半透明プリセットは Unity の仕様で落ち影（Receive Shadow）を受けられないため、<b>「前髪を表情に重ねて透かしつつ、影も受けたい」場合は Cutout＋Dither Fade</b> を使ってください（Transparency / Rendering の項を参照）。既定 OFF・既存マテリアルの見た目は従来と完全に同じです。あわせて同梱修正として、<b>Dither Fade 使用時に輪郭線（Outline）の色が網点の穴から面状に透けて飽和して見える問題</b>を修正しました（Alpha Sync が ON のとき輪郭線も本体と同じ網点で追従します）。</li>
       <li><span class="vtag">v35_GUIr0</span> <b>Receive Shadow（落ち影を受ける）</b> を追加しました。ワールドの平行光が落とす影（木々や建物の落ち影、自分の前髪の影など）を、トゥーンの影色（Shadow Color / Border / Blur の設定）として受け取ります。<b>既定 ON</b> です。ワールド側のライトに影の設定があるときのみ発現し、影のないワールドでは従来と同じ表示です。影の縞や粗さが目立つ場合は OFF にするか、Shadow Blur を上げて馴染ませてください（Lighting & Shadow の項を参照）。</li>
       <li><span class="vtag">v34_GUIr0</span> Outline に <b>Alpha Sync（本体の透明度に追従）</b> を追加しました（既定 ON）。半透明プリセット（<code class="inl">Transparent</code> / <code class="inl">Fade</code> / <code class="inl">Additive</code>）で本体が透けるとき、輪郭線（と本体越しに透けて見える輪郭色）が<b>本体の透明度（Color の A × メインテクスチャの A）に追従して一緒に薄くなります</b>。従来の「透明度に関係なく常時表示」に戻したい場合は OFF にしてください。不透明（<code class="inl">Opaque</code> / <code class="inl">Cutout</code>）プリセットの見た目は変わりません。あわせて、<b>Base Color (HDR) の A（アルファ）が輪郭線自体の不透明度として効く</b>ようになりました（従来は無視されていました。A=1 なら従来どおり。⚠️ 保存済みマテリアルで Base Color の A を 1 未満にしていた場合、v34 から線が薄くなります＝A を 1 に戻してください）。さらに、<b>Sweep の筋が輪郭線を飽和（白飛び）させる問題を修正</b>しました：筋の明るさの上限が Sweep OFF のソリッド線と同じになり、どの設定でも Sweep で輪郭線が飽和しません（従来は筋の部分だけ最大2倍の明るさになっていました）。⚠️ このため <b>Base Glow <code class="inl">1</code>（旧既定）では管と筋が同じ明るさになり筋が見えません</b>＝Sweep を使っている保存済みマテリアルは <b>Base Glow を下げてください</b>（例: 新既定の <code class="inl">0.3</code>。GUI で Sweep を OFF→再 ON しても自動補正されます）。</li>
       <li><span class="vtag">v33_GUIr0</span> <b>Distance Fade（カメラ距離フェード）が輪郭線（Outline）にも効く</b>ようになりました。従来は本体だけがフェードし、輪郭線が距離に関係なく残っていた不具合の修正です。輪郭線は本体と同じ距離設定・同じ濃さでフェードします。<b>Distance Fade を使っていないマテリアルの見た目は従来と完全に同じ</b>です。</li>

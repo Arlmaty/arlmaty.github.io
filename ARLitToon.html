@@ -161,7 +161,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v39_GUIr1 / PC ONLY</span>
+    <span class="ver">v39_GUIr3 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -231,13 +231,15 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v39_GUIr1</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v39_GUIr1" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v39_GUIr1</span> GUI の各項目のヘルプボックス（説明文）を整理し、簡潔にしました（GUI のみ）。冗長だった説明を要点に絞り、「詳細は README 参照」の案内は各ヘルプボックスの最後に一度だけ表示するようにしました。<b>表示テキストのみの変更で、機能・保存値・見た目は従来と完全に同じ</b>です。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v39_GUIr3</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v39_GUIr3" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v39_GUIr3</span> Lighting & Shadow の <b>Receive Shadow</b> を、Light Limit と同じ「太字の小見出し＋直下にチェックボックス」の表示形式にし、上部の余白も広げました（GUI のみ）。同セクション内で視認性を上げるための表示調整で、<b>機能・保存値・見た目（発現条件）は従来と完全に同じ</b>です。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v39_GUIr2</span> <b>Dither Fade（ディザ擬似半透明）の設定位置を Transparency / Rendering から Texture Layer（透明マスクの下）へ移動</b>しました（GUI のみ）。透明マスクと同じ「アルファで抜く」系の機能のため隣接配置にまとめました。<b>表示位置のみの変更で、表示条件（半透明プリセットでは非表示）・機能・保存値・見た目は従来と完全に同じ</b>です。</li>
+      <li><span class="vtag">v39_GUIr1</span> GUI の各項目のヘルプボックス（説明文）を整理し、簡潔にしました（GUI のみ）。冗長だった説明を要点に絞り、「詳細は README 参照」の案内は各ヘルプボックスの最後に一度だけ表示するようにしました。<b>表示テキストのみの変更で、機能・保存値・見た目は従来と完全に同じ</b>です。</li>
       <li><span class="vtag">v39_GUIr0</span> <b>Back Light（逆光ライト）</b> を追加しました。<b>メインの平行光（Directional Light）がキャラクターの背後にあるときだけ</b>、輪郭の広い範囲を発光させるイラスト調の逆光表現です。Rim Light が「見る角度で常に縁が光る」のに対し、Back Light は「光が背後にある時だけ光る」ことに加え、<b>影（シャドウ）で光が遮られている部分（上着の内側など）は光りません</b>。<b>Width</b> を小さくすると光る範囲が広がり、<b>Directivity</b> を上げると光が真後ろに近いときだけ光ります。発光は透明度に追従し、裏面での無効化もできます。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Back Light の項を参照）。</li>
       <li><span class="vtag">v38_GUIr0</span> <b>Distance Darken（カメラ距離で減光）</b> を追加しました。カメラからの距離に応じて本体の色を<b>減光色（既定は黒）へ近づけます</b>。アルファ（透明度）ではなく色を変えるため、<b>不透明（Opaque）のマテリアルでも作用</b>します。「近づくと暗くなる」「なでなで時に手元を暗くする」といった演出に使えます。既存の <b>Distance Fade（アルファのフェード）とは独立した機能</b>で、併用もできます。<b>Darken Near</b> で最も暗くなり、<b>Darken Far</b> で元の色に戻ります（Near > Far にすると反転して「遠いほど暗い」になります）。発光（Emission）は減光されません。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Transparency / Rendering の項を参照）。</li>
       <li><span class="vtag">v37_GUIr4</span> <b>環境光の立体化</b> を追加しました（<b>常時有効・設定不要</b>）。環境光（ライトプローブ）が主体のワールドや逆光の場面で、環境光に含まれる方向情報から光側/陰側を自動的に復元し、本体が一律の明るさで平面的に沈んで見えるのを軽減します（Lighting & Shadow の項を参照。平行光が強いワールドでは変化はわずかです）。⚠️ <b>常時有効な改良のため、環境光主体・逆光のワールドでは既存マテリアルも見た目が変わります</b>。あわせて GUI に <b>セクション設定のコピー/ペースト</b> を追加しました：<b>各セクションの折り畳み見出しを右クリック</b>すると「コピー」「ペースト」が選べ、そのセクションの<b>数値設定をひとまとめ</b>に別のマテリアルへ移せます（カラーとテクスチャは含みません＝マテリアルごとの色・画像はそのまま保てます。Lighting & Shadow は Shadow Intensity / Border / Blur の3項目です）。</li>
@@ -369,23 +371,6 @@ details .dbody li{margin-bottom:10px}
   </div>
 
   <div class="rv">
-  <h4><span class="hx">#</span> Dither Fade（ディザ擬似半透明）</h4>
-  <p>Cutout / Opaque の描画のまま、細かい網点（ディザ）パターンでピクセルを間引き、アルファ値どおりの<b>擬似半透明</b>を作る機能です。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Dither Fade</td><td>機能の有効/無効（既定 OFF）。ON にするとテクスチャやレイヤーマスクのアルファ値がそのまま「残すピクセルの割合」になります。</td></tr>
-  </tbody></table>
-  <div class="note tip" data-label="💡 主な用途 — 前髪を表情に重ねて透かす">
-    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 仕様上の注意">
-    <p>網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。</p>
-  </div>
-  <div class="note tip" data-label="💡 輪郭線（Outline）との併用">
-    <p>Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
-  </div>
-  </div>
-
-  <div class="rv">
   <h4><span class="hx">#</span> Soft Particles（ソフトパーティクル）</h4>
   <p>半透明（Fade/Additive等）のオブジェクトが、地面や壁などの不透明オブジェクトにめり込む際の不自然な境界線を消し、滑らかに溶け込ませる機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -461,6 +446,23 @@ details .dbody li{margin-bottom:10px}
     <p>色オーバーレイの重ね合わせはオブジェクトの<b>色（見た目）にのみ</b>作用し、不透明度は変更しません。色相シフト（Hue Shift）はベース色のみに作用し、このレイヤー画像には影響しません（ロゴ等の色を保つため）。無効時はほぼ負荷ゼロです。</p>
   </div>
   </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> Dither Fade（ディザ擬似半透明）</h4>
+  <p>Cutout / Opaque の描画のまま、細かい網点（ディザ）パターンでピクセルを間引き、アルファ値どおりの<b>擬似半透明</b>を作る機能です。上の透明マスクと同じ「アルファで抜く」系の機能のため、本セクションに配置しています。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Dither Fade</td><td>機能の有効/無効（既定 OFF）。ON にするとテクスチャやレイヤーマスクのアルファ値がそのまま「残すピクセルの割合」になります。</td></tr>
+  </tbody></table>
+  <div class="note tip" data-label="💡 主な用途 — 前髪を表情に重ねて透かす">
+    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。</p>
+  </div>
+  <div class="note tip" data-label="💡 輪郭線（Outline）との併用">
+    <p>Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
+  </div>
+  </div>
 </section>
 
 <!-- ============ LIGHTING ============ -->
@@ -478,7 +480,7 @@ details .dbody li{margin-bottom:10px}
     <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
   </div>
   <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
-    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Transparency / Rendering の項を参照）。</p>
+    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Texture Layer の項を参照）。</p>
   </div>
   </div>
   <div class="rv">

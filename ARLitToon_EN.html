@@ -182,8 +182,11 @@ details .dbody li{margin-bottom:10px}
     <a href="#matcap">Matcap</a>
   </div>
   <div class="navgrp"><div class="glabel">Visual Effects</div>
-    <a href="#emission">Emission &amp; AudioLink</a>
-    <a href="#dissolve">Dissolve &amp; Rim Light</a>
+    <a href="#emission">Emission</a>
+    <a href="#audiolink">AudioLink</a>
+    <a href="#glitter">Glitter / Sparkle</a>
+    <a href="#dissolve">Dissolve</a>
+    <a href="#rimlight">Rim Light</a>
     <a href="#outline">Outline &amp; Sweep</a>
   </div>
   <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
@@ -561,9 +564,8 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission, AudioLink &amp; Glitter/Sparkle</h2><div class="sub">// HDR-capable emission / music-reactive glow / procedural glitter</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission (HDR-capable)</h2><div class="sub">// HDR-capable emission</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Emission (HDR-capable)</h4>
   <p>Makes a material that self-illuminates even in darkness.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Emission Color HDR / Intensity</td><td>Adjusts the emission color and strength. Raising Intensity makes Unity's Bloom (the light-overflow effect) work nicely.</td></tr>
@@ -573,8 +575,12 @@ details .dbody li{margin-bottom:10px}
   </tbody></table>
   <p><b>Note:</b> Emission also fades in/out following the particle color's alpha (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade). It disappears naturally along with the emission via Color over Lifetime.</p>
   </div>
+</section>
+
+<!-- ============ AUDIOLINK ============ -->
+<section id="audiolink">
+  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>AudioLink (music-reactive emission)</h2><div class="sub">// music-reactive glow</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> AudioLink (music-reactive emission)</h4>
   <p>A feature that emits in sync with the music playing in the world. A staple feature in VRChat club worlds and live performances.</p>
   <p>This shader's AudioLink works as a <b>"sound-reactive emission layer" independent of the regular Emission (constant emission)</b>. Because it adds emission toward the base (color × Intensity) according to the loudness, <b>even with regular Emission OFF, you can make it emit in sync with sound using AudioLink alone</b>. Conversely, if you turn regular Emission ON, the sound-reactive emission layers on top of the constant emission (the two do not cancel each other).</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -593,8 +599,12 @@ details .dbody li{margin-bottom:10px}
     <p>AudioLink works only when the <b>AudioLink system is installed</b> on the VRChat world side (the world must provide the global audio data texture). In worlds without AudioLink support, this feature is automatically disabled (no breakdown occurs). Like soft particles, this is a specification-level constraint that depends on the world environment.</p>
   </div>
   </div>
+</section>
+
+<!-- ============ GLITTER ============ -->
+<section id="glitter">
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle (procedural glitter)</h2><div class="sub">// procedural glitter</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Glitter / Sparkle (procedural glitter)</h4>
   <p>A decorative emission layer that scatters fine sparkling grains (glitter/sparkle) across the surface, without using any texture. The grains are generated procedurally inside the shader, so no dedicated noise image is needed. <b>The grains sparkle as you move your view</b> (a shimmering look like metallic glitter or flakes, glinting at different viewing angles). Because it works as an additive layer independent of regular Emission (constant glow), <b>you can get glow from Glitter alone even with Emission turned OFF</b>.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Use Glitter</td><td>Enable/disable the feature. Turning it ON automatically sets Intensity to <code class="inl">1</code> (existing non-zero values are preserved).</td></tr>
@@ -617,11 +627,10 @@ details .dbody li{margin-bottom:10px}
   </div>
 </section>
 
-<!-- ============ DISSOLVE / RIM ============ -->
+<!-- ============ DISSOLVE ============ -->
 <section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Dissolve &amp; Rim Light</h2><div class="sub">// disappear effect &amp; edge light / backlight expression</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Dissolve (disappear effect)</h2><div class="sub">// disappear effect</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Dissolve (disappear effect)</h4>
   <p>A feature that makes objects disappear/appear as if melting along a noise pattern.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Dissolve Texture</td><td>Set the noise image that serves as the basis for how it melts.</td></tr>
@@ -631,8 +640,12 @@ details .dbody li{margin-bottom:10px}
   </tbody></table>
   <p><b>Note:</b> The glow of the melting edge fades in/out following the particle color's alpha (opacity) (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade). Even in the staging where a Transparent glass material is erased with Dissolve, it disappears naturally along with the edge glow.</p>
   </div>
+</section>
+
+<!-- ============ RIM LIGHT ============ -->
+<section id="rimlight">
+  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Rim Light (edge light / backlight expression)</h2><div class="sub">// edge light / backlight expression</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Rim Light (edge light / backlight expression)</h4>
   <p>A feature that emphasizes the model's outline (edges). With Blend Mode you can switch between "making it glow" and "darkening it down".</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Rim Color HDR / Intensity</td><td>The color and strength of the edge. With <code class="inl">Add</code>, lift the character off the background or express a magic aura; with <code class="inl">Multiply</code>, express a dark edge outline.</td></tr>
@@ -648,7 +661,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Outline</h4>
   <p>A base feature that draws the mesh outline. It handles everything from a toon-style edge to a glowing outline like a neon tube via HDR color + Bloom. It <b>supports any 3D mesh — spheres, cubes, text, costumes, props, and more</b> — and on skinned meshes it also follows animation. The basic outline can be drawn without a texture or UV unwrap (a <b>mask is optional</b>: use a mask image only when you want to erase the line partially, such as around the corners of the eyes).</p>
@@ -710,7 +723,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PARTICLE / ANIM ============ -->
 <section id="particle">
-  <div class="sec-head rv"><div class="num">SEC. 11 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 14 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color (integration with particles)</h4>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -769,7 +782,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 
 <!-- ============ LICENSE ============ -->
 <section id="license">
-  <div class="sec-head rv"><div class="num">SEC. 12 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 15 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
   <div class="rv">
   <h3>Performance &amp; Optimization</h3>
   <p>This shader is maximally optimized for lightweight operation and compile speed in the VRChat environment.</p>

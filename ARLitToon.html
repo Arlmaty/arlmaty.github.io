@@ -236,7 +236,7 @@ details .dbody li{margin-bottom:10px}
   <h3>バージョン（更新履歴 / Changelog）</h3>
   <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v40_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
   <div class="note tip" data-label="最新版 — v40_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v40_GUIr0</span> <b>Glitter / Sparkle（手続きラメ・スパークル）</b> を追加しました。テクスチャを使わずに細かな輝きの粒を生成する装飾用の発光レイヤーです。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような表現）。形状は <b>Point（丸点）/ Star（先端の尖った十字）/ Diamond（菱形）/ Fine Dust（微細ラメ）</b> の4種から選べ、粒の座標系は <b>UV / Object（三面投影で全面均一）</b> を切り替えられます。粒の輪郭はどのサイズでもシャープに保たれ、両面表示メッシュの背面でも正しく光ります。<b>スクロール</b>（流れる粒）、<b>HDR 発光</b>（Bloom 連動）、<b>AudioLink 連動</b>（音に合わせた明滅）に対応します。通常 Emission とは独立した加算レイヤーのため、<b>Emission を OFF にしても単体で発光</b>します。発光は透明度に追従します。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Glitter / Sparkle の項を参照）。</p>
+    <p style="margin:0"><span class="vtag">v40_GUIr0</span> <b>Glitter / Sparkle（プロシージャルラメ・スパークル）</b> を追加しました。テクスチャを使わずに細かな輝きの粒を生成する装飾用の発光レイヤーです。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような表現）。形状は <b>Point（丸点）/ Star（先端の尖った十字）/ Diamond（菱形）/ Fine Dust（微細ラメ）</b> の4種から選べ、粒の座標系は <b>UV / Object（三面投影で全面均一）</b> を切り替えられます。粒の輪郭はどのサイズでもシャープに保たれ、両面表示メッシュの背面でも正しく光ります。<b>スクロール</b>（流れる粒）、<b>HDR 発光</b>（Bloom 連動）、<b>AudioLink 連動</b>（音に合わせた明滅）に対応します。通常 Emission とは独立した加算レイヤーのため、<b>Emission を OFF にしても単体で発光</b>します。発光は透明度に追従します。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Glitter / Sparkle の項を参照）。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
@@ -597,7 +597,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ GLITTER ============ -->
 <section id="glitter">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle（手続きラメ・スパークル）</h2><div class="sub">// 手続きラメ・スパークル</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle（プロシージャルラメ・スパークル）</h2><div class="sub">// プロシージャルラメ・スパークル</div></div>
   <div class="rv">
   <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内で手続き的に生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>

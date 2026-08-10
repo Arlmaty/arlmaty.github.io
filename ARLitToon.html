@@ -209,7 +209,7 @@ details .dbody li{margin-bottom:10px}
     <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — 導入・使用ガイド</div>
     <p class="hero-sub">ARLitToon（エーアールリット・トゥーン）は、VRChat のアバターやパーティクルエフェクトのための<b>軽量・高機能なアニメ・トゥーン調カスタムシェーダー</b>。イラスト風・セル画風の表現に最適化された、<b>キャラクターアバター・アバター装飾品とエフェクト制作に特化した汎用トゥーンシェーダー</b>です。<br><br><b style="color:var(--ac)">BOOTH -ALTIMA-</b>　<a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer" style="color:var(--ac)">https://altima.booth.pm/</a></p>
     <div class="hero-chips">
-      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
+      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>GLITTER / SPARKLE</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
     </div>
   </div>
   <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
@@ -555,7 +555,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission &amp; AudioLink</h2><div class="sub">// 発光・HDR対応 / 音楽連動・発光リアクション</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission, AudioLink &amp; Glitter/Sparkle</h2><div class="sub">// 発光・HDR対応 / 音楽連動・発光リアクション / 手続きラメ・スパークル</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Emission（発光・HDR対応）</h4>
   <p>暗闇でも自己発光するマテリアルを作ります。</p>
@@ -586,6 +586,28 @@ details .dbody li{margin-bottom:10px}
   <div class="note warn" data-label="⚠ ワールド環境依存の機能です">
     <p>AudioLink は、VRChat ワールド側に <b>AudioLink システムが導入されている</b>場合にのみ動作します（ワールドがグローバルな音響データテクスチャを提供している必要があります）。AudioLink 非対応ワールドでは、本機能は自動的に無効化されます（破綻は発生しません）。これはソフトパーティクルと同様、ワールド側の環境に依存する仕様上の制約です。</p>
   </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Glitter / Sparkle（手続きラメ・スパークル）</h4>
+  <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内で手続き的に生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Use Glitter</td><td>機能の有効/無効。ON にすると Intensity が自動で <code class="inl">1</code> に設定されます（既に値がある場合は維持）。</td></tr>
+    <tr><td>Glitter Color (HDR)</td><td>ラメの発光色（HDR）。Intensity を上げると Bloom に影響します。</td></tr>
+    <tr><td>Intensity</td><td>発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
+    <tr><td>Shape（形状）</td><td>粒の形を <code class="inl">Point</code>（丸点）/ <code class="inl">Star</code>（<b>先端の尖った十字のきらめき</b>）/ <code class="inl">Diamond</code>（菱形）/ <code class="inl">Fine Dust</code>（高密度の微細ラメ）から選びます。輪郭は<b>どのサイズでもシャープ</b>に保たれます（拡大してもぼやけません）。</td></tr>
+    <tr><td>Space（座標系）</td><td>粒の基準座標を <code class="inl">UV</code>（メッシュの UV に沿う・スクロールが自然・平面/パーティクル向き）/ <code class="inl">Object</code>（オブジェクト空間・三面投影〔Triplanar〕で Cube の側面や球の極でも引き延ばしなく均一）/ <b><code class="inl">View</code>（ワールド座標を基準に、粒が常にカメラを向く「ビルボード」表現。メッシュの UV 展開にも面の裏表にも一切影響されません）</b> から選びます。</td></tr>
+    <tr><td>Grain Scale（粒の大きさ）</td><td>1 粒の大きさ。<b>値を大きくするほど粒が大きく</b>、小さくするほど細かくなります（既定 <code class="inl">181</code>）。<b>粒を小さくするほど自動的に粒の数が増える</b>ため、細かいラメでも密度が不足しません。大きなラメにしたいときは値を上げてください（<code class="inl">290</code> 前後で粗めのラメになります）。</td></tr>
+    <tr><td>Coverage（被覆率）</td><td>実際に光る粒の割合。<code class="inl">0</code> に近いほどまばらに、<code class="inl">1</code> に近いほど密に光ります（既定 <code class="inl">0.6</code>）。</td></tr>
+    <tr><td>Size（粒サイズ）</td><td>1粒の<b>充填率</b>（セル内でどれだけ大きく描くか・既定 <code class="inl">0.7</code>）。密度と独立しているため、<b>粒を大きくしたまま密度を上げても欠けません</b>（粒の絶対サイズは Density で調整します）。</td></tr>
+    <tr><td>View Sharpness（視線シャープさ）</td><td>視線に対するきらめきの鋭さ。値が大きいほど、特定の角度で鋭く一瞬光ります。</td></tr>
+    <tr><td>Flicker Speed（明滅速度）</td><td>明滅の速さ（<code class="inl">0</code> で明滅なし）。<b>明滅は粒ごとにランダム</b>で、速さ・タイミングが 1 粒ずつ違います。さらに<b>周期の異なる 2 つの波を重ねている</b>ため、同じ場所で同じ点滅が繰り返されるパターンは実質知覚できません。</td></tr>
+    <tr><td>Scroll (X,Y)</td><td>粒を流れるように動かす速度（UV／Object それぞれの座標を平行移動）。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
+    <tr><td>AudioLink 連動</td><td>ON にすると、ラメの明滅を音（AudioLink）に合わせて駆動します。<code class="inl">Band</code>（反応させる音域）と <code class="inl">Sound Strength</code>（音の掛かり具合）で調整します。</td></tr>
+    <tr><td>Emission Map で局在化</td><td>ON にすると、Emission Map の輝度でラメの出る範囲を絞ります（白＝出る／黒＝出ない）。マップは Emission と共用です（未設定なら全面）。</td></tr>
+  </tbody></table>
+  <p><b>仕組み:</b> ラメは <code class="inl">Glitter Color × Intensity ×（形状 × 視線グリント × 明滅 ×（AudioLink）× マスク）</code> で計算される<b>加算発光レイヤー</b>です。テクスチャを使わない手続き生成のため、サンプラー・キーワードを増やしません（アップロード時のコンパイル負荷は据え置き）。発光は透明度に追従し、パーティクルの寿命フェードや半透明にも自然に馴染みます。<code class="inl">Glitter Color</code> / <code class="inl">Intensity</code> / <code class="inl">Flicker Speed</code> などはアニメーションも可能です。</p>
+  <p><b>補足:</b> <code class="inl">AudioLink 連動</code> は、他の音連動機能と同様、VRChat ワールド側に AudioLink システムが導入されている場合にのみ動作します（非対応ワールドでは明滅の音連動のみ自動で無効化され、ラメ自体は通常どおり表示されます）。<code class="inl">Object</code> 座標系はオブジェクト空間基準のため、アバターが移動・回転しても粒が表面に固定されて追従します（<code class="inl">UV</code> はメッシュの UV 展開に依存するため、UV が引き延ばされた箇所では粒も伸びます）。両面表示（Cull Off）のメッシュでは背面の粒も正しく光ります。</p>
+  <p><b><code class="inl">View</code> 座標系について:</b> 粒がワールド座標に紐づいたまま<b>常にカメラを向く</b>ため、メッシュの UV 展開・面の向き・裏表を一切考慮しません。<code class="inl">Object</code> と同じく<b>三面投影（Triplanar）で合成</b>しているため、<b>斜めから見た面でも粒が引き延ばされません</b>。UV が用意されていないメッシュや、UV が大きく歪んだ箇所、両面ポリゴンでも粒の形と大きさが均一になります。オブジェクトのスケールにも左右されないため、<b>複数のメッシュにまたがっても粒の大きさが揃います</b>。VR でも左右の目で粒がずれません。なお、カメラを回すと粒の並びが入れ替わります（常に正面を向く表現のための仕様です）。</p>
   </div>
 </section>
 
@@ -812,7 +834,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 <script>
 // ticker
 (function(){
-  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
   var half=items.map(function(t){return t+"<b>///</b>"}).join("");
   document.getElementById("ticker").innerHTML=half+half;
 })();

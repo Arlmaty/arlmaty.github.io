@@ -209,7 +209,7 @@ details .dbody li{margin-bottom:10px}
     <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — SETUP &amp; USAGE GUIDE</div>
     <p class="hero-sub">ARLitToon is a <b>lightweight, full-featured anime / toon-style custom shader</b> for VRChat avatars and particle effects. Optimized for illustration-like and cel-shaded expression, it is a <b>general-purpose toon shader specialized for character avatars, avatar accessories, and effect creation</b>.<br><br><b style="color:var(--ac)">BOOTH -ALTIMA-</b>　<a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer" style="color:var(--ac)">https://altima.booth.pm/</a></p>
     <div class="hero-chips">
-      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
+      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>GLITTER / SPARKLE</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
     </div>
   </div>
   <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
@@ -561,7 +561,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission &amp; AudioLink</h2><div class="sub">// HDR-capable emission / music-reactive glow</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission, AudioLink &amp; Glitter/Sparkle</h2><div class="sub">// HDR-capable emission / music-reactive glow / procedural glitter</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Emission (HDR-capable)</h4>
   <p>Makes a material that self-illuminates even in darkness.</p>
@@ -592,6 +592,28 @@ details .dbody li{margin-bottom:10px}
   <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
     <p>AudioLink works only when the <b>AudioLink system is installed</b> on the VRChat world side (the world must provide the global audio data texture). In worlds without AudioLink support, this feature is automatically disabled (no breakdown occurs). Like soft particles, this is a specification-level constraint that depends on the world environment.</p>
   </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Glitter / Sparkle (procedural glitter)</h4>
+  <p>A decorative emission layer that scatters fine sparkling grains (glitter/sparkle) across the surface, without using any texture. The grains are generated procedurally inside the shader, so no dedicated noise image is needed. <b>The grains sparkle as you move your view</b> (a shimmering look like metallic glitter or flakes, glinting at different viewing angles). Because it works as an additive layer independent of regular Emission (constant glow), <b>you can get glow from Glitter alone even with Emission turned OFF</b>.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Glitter</td><td>Enable/disable the feature. Turning it ON automatically sets Intensity to <code class="inl">1</code> (existing non-zero values are preserved).</td></tr>
+    <tr><td>Glitter Color (HDR)</td><td>The glitter's emission color (HDR). Raising Intensity affects Bloom.</td></tr>
+    <tr><td>Intensity</td><td>Glow strength (<code class="inl">0</code>–<code class="inl">16</code>).</td></tr>
+    <tr><td>Shape</td><td>Choose the grain shape from <code class="inl">Point</code> (round dot) / <code class="inl">Star</code> (<b>a sharp-tipped, cross-shaped sparkle</b>) / <code class="inl">Diamond</code> / <code class="inl">Fine Dust</code> (high-density, very fine glitter). The outline stays <b>sharp at any size</b> (no blurring even when enlarged).</td></tr>
+    <tr><td>Space</td><td>Choose the grain's reference coordinate space: <code class="inl">UV</code> (follows the mesh's UVs — natural scrolling, good for flat surfaces/particles) / <code class="inl">Object</code> (object space, via triplanar projection — uniform without stretching even on cube faces or sphere poles) / <b><code class="inl">View</code> (a "billboard"-style look where grains always face the camera, based on world-space coordinates — completely unaffected by the mesh's UV layout or face orientation)</b>.</td></tr>
+    <tr><td>Grain Scale</td><td>The size of a single grain. <b>Larger values make grains bigger</b>, smaller values make them finer (default <code class="inl">181</code>). <b>Making grains smaller automatically increases their count</b>, so density doesn't run out even with fine glitter. Raise the value for chunkier glitter (around <code class="inl">290</code> gives coarse glitter).</td></tr>
+    <tr><td>Coverage</td><td>The proportion of grains that actually glow. Closer to <code class="inl">0</code> is sparser, closer to <code class="inl">1</code> is denser (default <code class="inl">0.6</code>).</td></tr>
+    <tr><td>Size</td><td>The <b>fill ratio</b> of a single grain (how large it's drawn within its cell — default <code class="inl">0.7</code>). Independent from density, so <b>increasing density while keeping grains large doesn't cause clipping</b> (adjust the grains' absolute size via Grain Scale).</td></tr>
+    <tr><td>View Sharpness</td><td>Sharpness of the view-dependent glint. Higher values produce a sharper, more momentary flash at specific angles.</td></tr>
+    <tr><td>Flicker Speed</td><td>Flicker speed (<code class="inl">0</code> = no flicker). <b>Flicker is randomized per grain</b> — each grain has its own speed and timing. It further layers <b>two waves of differing period</b>, so a repeating flicker pattern at the same spot is effectively imperceptible.</td></tr>
+    <tr><td>Scroll (X,Y)</td><td>Speed at which grains flow (translates the UV/Object coordinates). <b>Only X/Y fields are exposed</b> (Z/W are unused).</td></tr>
+    <tr><td>AudioLink</td><td>When ON, drives the glitter's flicker in sync with audio (AudioLink). Adjust with <code class="inl">Band</code> (which audio range to react to) and <code class="inl">Sound Strength</code> (how strongly the audio affects it).</td></tr>
+    <tr><td>Mask with Emission Map</td><td>When ON, restricts where glitter appears using the Emission Map's brightness (white = appears / black = doesn't). The map is shared with Emission (whole surface if unset).</td></tr>
+  </tbody></table>
+  <p><b>How it works:</b> Glitter is an <b>additive glow layer</b> computed as <code class="inl">Glitter Color × Intensity × (shape × view glint × flicker × (AudioLink) × mask)</code>. Because it's procedurally generated without a texture, it adds no samplers or keywords (upload-time compile cost is unaffected). The glow follows transparency and blends naturally with particle lifetime fades and semi-transparency. <code class="inl">Glitter Color</code> / <code class="inl">Intensity</code> / <code class="inl">Flicker Speed</code>, etc., can also be animated.</p>
+  <p><b>Note:</b> As with other audio-reactive features, <code class="inl">AudioLink</code> only works when the VRChat world has the AudioLink system installed (in unsupported worlds only the audio-driven flicker is automatically disabled — the glitter itself still displays normally). Because the <code class="inl">Object</code> coordinate space is object-space based, the grains stay fixed to the surface as the avatar moves/rotates (<code class="inl">UV</code>, being dependent on the mesh's UV layout, will stretch the grains wherever the UVs are stretched). On double-sided (Cull Off) meshes, grains on the back faces also glow correctly.</p>
+  <p><b>About the <code class="inl">View</code> coordinate space:</b> Because the grains stay tied to world-space coordinates while <b>always facing the camera</b>, they completely disregard the mesh's UV layout, face direction, or front/back sidedness. Like <code class="inl">Object</code>, it's composited via <b>triplanar projection</b>, so <b>grains don't stretch even on obliquely viewed surfaces</b>. Grain shape and size stay uniform even on meshes without UVs, on heavily UV-distorted areas, or on double-sided polygons. It's also unaffected by object scale, so <b>grain size stays consistent across multiple meshes</b>. It also matches between your left and right eyes in VR. Note that rotating the camera reshuffles the arrangement of grains (this is inherent to always facing the viewer).</p>
   </div>
 </section>
 
@@ -822,7 +844,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 <script>
 // ticker
 (function(){
-  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
   var half=items.map(function(t){return t+"<b>///</b>"}).join("");
   document.getElementById("ticker").innerHTML=half+half;
 })();

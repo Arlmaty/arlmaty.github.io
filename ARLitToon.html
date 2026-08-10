@@ -182,8 +182,11 @@ details .dbody li{margin-bottom:10px}
     <a href="#matcap">Matcap</a>
   </div>
   <div class="navgrp"><div class="glabel">Visual Effects</div>
-    <a href="#emission">Emission &amp; AudioLink</a>
-    <a href="#dissolve">Dissolve &amp; Rim Light</a>
+    <a href="#emission">Emission</a>
+    <a href="#audiolink">AudioLink</a>
+    <a href="#glitter">Glitter / Sparkle</a>
+    <a href="#dissolve">Dissolve</a>
+    <a href="#rimlight">Rim Light</a>
     <a href="#outline">Outline &amp; Sweep</a>
   </div>
   <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
@@ -555,9 +558,8 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission, AudioLink &amp; Glitter/Sparkle</h2><div class="sub">// 発光・HDR対応 / 音楽連動・発光リアクション / 手続きラメ・スパークル</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission（発光・HDR対応）</h2><div class="sub">// 発光・HDR対応</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Emission（発光・HDR対応）</h4>
   <p>暗闇でも自己発光するマテリアルを作ります。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Emission Color HDR / Intensity</td><td>発光色と強さを調整します。Intensity を上げると Unity の Bloom（光があふれる効果）が綺麗に効きます。</td></tr>
@@ -567,8 +569,12 @@ details .dbody li{margin-bottom:10px}
   </tbody></table>
   <p><b>補足:</b> 発光（Emission）も、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Color over Lifetime で発光ごと自然に消えます。</p>
   </div>
+</section>
+
+<!-- ============ AUDIOLINK ============ -->
+<section id="audiolink">
+  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>AudioLink（音楽連動・発光リアクション）</h2><div class="sub">// 音楽連動・発光リアクション</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> AudioLink（音楽連動・発光リアクション）</h4>
   <p>ワールドで再生されている音楽に合わせて発光させる機能です。VRChat のクラブワールドやライブ演出で定番の機能です。</p>
   <p>本シェーダーの AudioLink は、通常の <b>Emission（恒常発光）とは独立した「音反応専用の発光レイヤー」</b>として動作します。音の大きさに応じて発光を base（色×Intensity）に向けて加算するため、<b>通常 Emission を OFF にしても、AudioLink だけで音に合わせて発光させられます</b>。逆に通常 Emission を ON にすれば、恒常発光の上に音反応発光が重なります（両者は打ち消し合いません）。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -587,8 +593,12 @@ details .dbody li{margin-bottom:10px}
     <p>AudioLink は、VRChat ワールド側に <b>AudioLink システムが導入されている</b>場合にのみ動作します（ワールドがグローバルな音響データテクスチャを提供している必要があります）。AudioLink 非対応ワールドでは、本機能は自動的に無効化されます（破綻は発生しません）。これはソフトパーティクルと同様、ワールド側の環境に依存する仕様上の制約です。</p>
   </div>
   </div>
+</section>
+
+<!-- ============ GLITTER ============ -->
+<section id="glitter">
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle（手続きラメ・スパークル）</h2><div class="sub">// 手続きラメ・スパークル</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Glitter / Sparkle（手続きラメ・スパークル）</h4>
   <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内で手続き的に生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Glitter</td><td>機能の有効/無効。ON にすると Intensity が自動で <code class="inl">1</code> に設定されます（既に値がある場合は維持）。</td></tr>
@@ -611,11 +621,10 @@ details .dbody li{margin-bottom:10px}
   </div>
 </section>
 
-<!-- ============ DISSOLVE / RIM ============ -->
+<!-- ============ DISSOLVE ============ -->
 <section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Dissolve &amp; Rim Light</h2><div class="sub">// 消失エフェクト ＆ 輪郭の光・逆光表現</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Dissolve（ディゾルブ / 消失エフェクト）</h2><div class="sub">// 消失エフェクト</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Dissolve（ディゾルブ / 消失エフェクト）</h4>
   <p>オブジェクトをノイズ模様に合わせて溶かすように消滅・出現させる機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Dissolve Texture</td><td>溶け方の基準となるノイズ画像を設定します。</td></tr>
@@ -625,8 +634,12 @@ details .dbody li{margin-bottom:10px}
   </tbody></table>
   <p><b>補足:</b> 溶け際（エッジ）の発光は、パーティクルカラーのアルファ（不透明度）に追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Transparent のガラスマテリアルを Dissolve で消す演出でも、エッジ発光ごと自然に消えます。</p>
   </div>
+</section>
+
+<!-- ============ RIM LIGHT ============ -->
+<section id="rimlight">
+  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Rim Light（輪郭の光・逆光表現）</h2><div class="sub">// 輪郭の光・逆光表現</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Rim Light（輪郭の光・逆光表現）</h4>
   <p>モデルの輪郭（エッジ）部分を強調する機能です。Blend Mode で「光らせる」か「暗く落とす」かを切り替えられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Rim Color HDR / Intensity</td><td>輪郭の色と強さです。<code class="inl">Add</code> ではキャラクターを浮き上がらせたり魔法のオーラを、<code class="inl">Multiply</code> では縁を暗く落とす縁取りを表現します。</td></tr>
@@ -642,7 +655,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Outline（アウトライン / 輪郭線）</h4>
   <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<b>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</b>し、スキンメッシュではアニメーションにも追従します。基本の輪郭線はテクスチャ・UV展開なしで描けます（<b>マスクは任意</b>：目尻など部分的に線を消したいときだけマスク画像を使えます）。</p>
@@ -704,7 +717,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PARTICLE / ANIM ============ -->
 <section id="particle">
-  <div class="sec-head rv"><div class="num">SEC. 11 — ADVANCED</div><h2>アニメ・パーティクル連携</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 14 — ADVANCED</div><h2>アニメ・パーティクル連携</h2><div class="sub">// animation properties &amp; particle system</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color（パーティクルとの連携）</h4>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -763,7 +776,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 
 <!-- ============ LICENSE ============ -->
 <section id="license">
-  <div class="sec-head rv"><div class="num">SEC. 12 — MISC</div><h2>パフォーマンス・利用規約</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 15 — MISC</div><h2>パフォーマンス・利用規約</h2><div class="sub">// performance, fallback, license, changelog</div></div>
   <div class="rv">
   <h3>パフォーマンスと最適化</h3>
   <p>本シェーダーは、VRChat環境での軽量動作とコンパイル速度のために最大限の最適化を行っています。</p>

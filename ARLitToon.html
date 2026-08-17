@@ -99,6 +99,7 @@ h4 .hx{color:var(--ac)}
 p{margin:0 0 14px;color:var(--ink2)}
 p b,li b{color:var(--ink)}
 section ul{margin:0 0 16px 22px;color:var(--ink2)}
+section ol{margin:0 0 16px 22px;color:var(--ink2)}
 section li{margin-bottom:6px}
 
 /* ===== reveal ===== */
@@ -161,7 +162,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v40_GUIr0 / PC ONLY</span>
+    <span class="ver">v42_GUIr0 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -175,6 +176,7 @@ details .dbody li{margin-bottom:10px}
     <a href="#rendering">Transparency / Rendering</a>
     <a href="#base">Base（基本の見た目）</a>
     <a href="#layer">Texture Layer（重ね合わせ）</a>
+    <a href="#bake">Bake to Base（焼きこみ）</a>
   </div>
   <div class="navgrp"><div class="glabel">Lighting &amp; Shading</div>
     <a href="#lighting">Lighting &amp; Shadow</a>
@@ -187,6 +189,7 @@ details .dbody li{margin-bottom:10px}
     <a href="#glitter">Glitter / Sparkle</a>
     <a href="#dissolve">Dissolve</a>
     <a href="#rimlight">Rim Light</a>
+    <a href="#backlight">Back Light（逆光ライト）</a>
     <a href="#outline">Outline &amp; Sweep</a>
   </div>
   <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
@@ -234,13 +237,17 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v40_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v40_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v40_GUIr0</span> <b>Glitter / Sparkle（プロシージャルラメ・スパークル）</b> を追加しました。テクスチャを使わずに細かな輝きの粒を生成する装飾用の発光レイヤーです。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような表現）。形状は <b>Point（丸点）/ Star（先端の尖った十字）/ Diamond（菱形）/ Fine Dust（微細ラメ）</b> の4種から選べ、粒の座標系は <b>UV / Object（三面投影で全面均一）</b> を切り替えられます。粒の輪郭はどのサイズでもシャープに保たれ、両面表示メッシュの背面でも正しく光ります。<b>スクロール</b>（流れる粒）、<b>HDR 発光</b>（Bloom 連動）、<b>AudioLink 連動</b>（音に合わせた明滅）に対応します。通常 Emission とは独立した加算レイヤーのため、<b>Emission を OFF にしても単体で発光</b>します。発光は透明度に追従します。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Glitter / Sparkle の項を参照）。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v42_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v42_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p style="margin:0"><span class="vtag">v42_GUIr0</span> <b>Back Light（逆光ライト）にも 環境順応（Env Adapt）／環境色になじませる（Env Tint）を追加</b>しました。逆光は「光が背後にあるかどうか」と「影で遮られているか」だけで判定していたため、<b>ライトを弱めても逆光の明るさは変わらず</b>、暗いワールドでは逆光だけが強く残って浮いて見えることがありました。環境順応を上げると、<b>周囲の明るさ（環境光＋メインのライト）に合わせて逆光が自動的に弱まります</b>。<b>明るい場所での見え方は変わりません</b>（暗い側にだけ効きます）。環境色になじませるを上げると、周囲の光の色みが逆光の色に乗ります（明るさは変えません）。<b>Rim Light の同名の項目とまったく同じ仕組み・同じ操作感</b>なので、両方を使う場合も設定の勘所は共通です。暗いワールドで弱まりすぎる場合は <b>暗所の下限</b> を上げてください（Back Light の項を参照）。</p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v41_GUIr0</span> Rim Light に <b>環境順応（Env Adapt）</b> を追加しました。これまでリムの発光は周囲の明るさに関係なく一定だったため、<b>暗いワールドではリムだけが強く浮いて見える</b>ことがありました。環境順応を上げると、<b>周囲の明るさに合わせてリムが自動的に減光</b>され、暗い場所でも風景に馴染みます。<b>明るい場所での見た目は変わりません</b>（暗い側にだけ効く一方向の調整のため、これまでの見え方が明るくなることはありません）。<b>暗所の下限</b> を上げると真っ暗な場所でもうっすら輪郭が残ります。あわせて <b>環境色になじませる（Env Tint）</b> を上げると、<b>周囲の光の色みがリムの色に乗ります</b>（寒色の場所では青寄り、暖色の場所では暖色寄り）。色みだけを寄せて明るさは変えないため、環境順応と組み合わせても二重に暗くなることはありません。どちらも Blend Mode の <code class="inl">Add</code> / <code class="inl">Multiply</code>、および Unlit に同じように効きます。<b>環境順応は既定 ON（= 1）</b>ですが、<b>明るい場所での見え方は従来と変わりません</b>（暗い側にだけ効くため）。従来どおり明るさが一定のリムにしたい場合は環境順応を <code class="inl">0</code> にしてください（Rim Light の項を参照）。</li>
+      <li><span class="vtag">v40_GUIr2</span> <b>Bake to Base（テクスチャ焼きこみ）</b> を追加しました。複数のレイヤー画像（デカール・ロゴ・模様・メイクなど）とカラー調整（Hue / Saturation / Brightness）を、<b>ベーステクスチャへ焼きこんで1枚の画像にまとめる Unity エディタ用のツール</b>です。実行時に重ねられるテクスチャレイヤーは1枚までですが、焼きこみなら<b>枚数に制限がなく</b>、焼いた後もテクスチャは1枚のままなので<b>実行時の負荷もテクスチャメモリも増えません</b>。マテリアル Inspector の <b>Texture Layer の下</b>に追加された <code class="inl">Bake to Base</code> から操作します。<b>上の Texture Layer に設定した画像をそのまま焼きこめる</b>ので、「Texture Layer で位置や合成方法を決める → 焼く → 空いたスロットに次のデカールを置く」を繰り返せば何枚でも重ねられます（焼きこみ後は同じ絵が二重に乗らないよう <b>Texture Layer が自動で OFF</b> になり、焼いた設定はレシピに取り込まれるので<b>前に焼いた分が消えることはありません</b>）。カラー調整も同様に<b>焼き重ね</b>ができます。焼く前に<b>実際のモデル上で焼き上がりを確認できるプレビュー</b>があり、<b>プレビュー中に設定を動かせばリアルタイムでモデルに反映されます</b>。プレビューと最終出力は同じ処理で作られるため見え方が一致します。焼きこみ結果は<b>新しい PNG として保存</b>され、元のテクスチャは変更しません。設定（レシピ）は保存されるので、いつでも1クリックで焼き直せます。<b>シェーダー本体は変更していないため、既存マテリアルの見た目・実行時の負荷は完全に従来どおり</b>です（Bake to Base の項を参照）。</li>
+      <li><span class="vtag">v40_GUIr1</span> Lighting & Shadow の <b>Receive Shadow（落ち影を受ける）</b> に、<b>半透明プリセットでは効かないことをその場で示す表示</b>を追加しました（GUI のみ）。Blend Preset が <b>Transparent / Fade / Additive</b> のときにチェックが ON になっていると、チェックボックスの右に <b>「（現在の Preset では無効）」</b> と表示し、下の説明も原因と対処（<b>Cutout プリセット＋Dither Fade</b>）を案内する警告表示に切り替わります。半透明のマテリアルは Unity の仕様で落ち影を受けられないため、「チェックを入れているのに影が乗らない」という誤解を防ぐための表示です。<b>表示のみの変更で、機能・保存値・見た目は従来と完全に同じ</b>です（チェックボックスは従来どおり操作でき、Opaque / Cutout に戻せばそのまま効きます）。</li>
+      <li><span class="vtag">v40_GUIr0</span> <b>Glitter / Sparkle（手続きラメ・スパークル）</b> を追加しました。テクスチャを使わずに細かな輝きの粒を生成する装飾用の発光レイヤーです。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような表現）。形状は <b>Point（丸点）/ Star（先端の尖った十字）/ Diamond（菱形）/ Fine Dust（微細ラメ）</b> の4種から選べ、粒の座標系は <b>UV / Object（三面投影で全面均一）</b> を切り替えられます。粒の輪郭はどのサイズでもシャープに保たれ、両面表示メッシュの背面でも正しく光ります。<b>スクロール</b>（流れる粒）、<b>HDR 発光</b>（Bloom 連動）、<b>AudioLink 連動</b>（音に合わせた明滅）に対応します。通常 Emission とは独立した加算レイヤーのため、<b>Emission を OFF にしても単体で発光</b>します。発光は透明度に追従します。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Glitter / Sparkle の項を参照）。</li>
       <li><span class="vtag">v39_GUIr3</span> Lighting & Shadow の <b>Receive Shadow</b> を、Light Limit と同じ「太字の小見出し＋直下にチェックボックス」の表示形式にし、上部の余白も広げました（GUI のみ）。同セクション内で視認性を上げるための表示調整で、<b>機能・保存値・見た目（発現条件）は従来と完全に同じ</b>です。</li>
       <li><span class="vtag">v39_GUIr2</span> <b>Dither Fade（ディザ擬似半透明）の設定位置を Transparency / Rendering から Texture Layer（透明マスクの下）へ移動</b>しました（GUI のみ）。透明マスクと同じ「アルファで抜く」系の機能のため隣接配置にまとめました。<b>表示位置のみの変更で、表示条件（半透明プリセットでは非表示）・機能・保存値・見た目は従来と完全に同じ</b>です。</li>
       <li><span class="vtag">v39_GUIr1</span> GUI の各項目のヘルプボックス（説明文）を整理し、簡潔にしました（GUI のみ）。冗長だった説明を要点に絞り、「詳細は README 参照」の案内は各ヘルプボックスの最後に一度だけ表示するようにしました。<b>表示テキストのみの変更で、機能・保存値・見た目は従来と完全に同じ</b>です。</li>
@@ -301,7 +308,8 @@ details .dbody li{margin-bottom:10px}
     │   ├── Shaders/
     │   │   └── <span class="ac">ARLitToon.shader</span>    <span class="cm">← シェーダー本体</span>
     │   ├── Editor/
-    │   │   └── <span class="ac">ARLitToonGUI.cs</span>     <span class="cm">← マテリアル Inspector GUI</span>
+    │   │   ├── <span class="ac">ARLitToonGUI.cs</span>     <span class="cm">← マテリアル Inspector GUI</span>
+    │   │   └── <span class="ac">ARLitToonBaker.cs</span>   <span class="cm">← テクスチャ焼きこみツール（無くてもシェーダーは動作します）</span>
     │   └── README.md               <span class="cm">← 本ガイド</span>
     └── (アバターアイテム各種)       <span class="cm">← アイテムは ALTIMA 直下に併存</span></div>
   <div class="note tip" data-label="POINT — 配置のポイント">
@@ -469,9 +477,70 @@ details .dbody li{margin-bottom:10px}
   </div>
 </section>
 
+<!-- ============ BAKE TO BASE ============ -->
+<section id="bake">
+  <div class="sec-head rv"><div class="num">SEC. 05 — CORE</div><h2>Bake to Base（テクスチャ焼きこみ）</h2><div class="sub">// レイヤーとカラー調整をベーステクスチャへ焼きこむ</div></div>
+  <div class="rv">
+  <p>複数のレイヤー画像（デカール・ロゴ・模様・メイクなど）とカラー調整を、<b>ベーステクスチャへ焼きこんで1枚の画像にまとめる Unity エディタ用のツール</b>です。上の Texture Layer が「実行時に1枚だけ重ねる」機能なのに対し、こちらは<b>あらかじめ1枚に焼いてしまう</b>ため、<b>重ねる枚数に制限がなく、実行時の負荷もテクスチャメモリも増えません</b>（焼いた後はテクスチャ1枚のままです）。</p>
+  <div class="note tip" data-label="💡 提供ファイルについて">
+    <p><b>この機能は追加ファイル <code class="inl">Editor/ARLitToonBaker.cs</code> で提供されます。</b>配布パッケージには常に含まれています。このファイルが無い場合、マテリアル Inspector に <code class="inl">Bake to Base</code> の項目が表示されないだけで、シェーダーの他の機能はすべて通常どおり動作します。</p>
+  </div>
+  <table><thead><tr><th>項目</th><th>説明</th></tr></thead><tbody>
+    <tr><td>焼きこみレシピを作成</td><td>このマテリアル用の設定ファイル（レシピ）を作ります。マテリアルと同じフォルダに <code class="inl">&lt;マテリアル名&gt;_BakeRecipe.asset</code> として保存され、レイヤー構成が記録されます。</td></tr>
+    <tr><td>焼き元テクスチャ (Base)</td><td>焼きこみの土台になる画像です。レシピを作った時点の Albedo テクスチャが自動で入ります。<b>焼いた後もこの項目は変わりません</b>（何度でもここから焼き直せます）。<b>焼いたテクスチャはこの画像と同じフォルダに保存されます</b>（直下の <code class="inl">出力フォルダ</code> に表示されます）。</td></tr>
+    <tr><td>出力解像度</td><td>既定は「焼き元と同じ」です。変更する場合は焼き元の縦横比を保ったまま拡大縮小されます。</td></tr>
+    <tr><td>基本色の調整（プレビューで表示）</td><td><b>焼き元テクスチャにだけ</b>掛かる Hue / Saturation / Brightness です。<b>この調整はマテリアルには直接反映されず、プレビューまたは焼きこみで初めて見えます。レイヤーには作用しません</b>。1つの値としてだけ持つので、何度焼き直しても調整が積み重なることはありません。</td></tr>
+    <tr><td>マテリアルの カラー調整 (HSV) も取り込む</td><td>マテリアル側の Hue / Saturation / Brightness を焼きこみに含め、焼いた後は <b>基本色の調整</b> へまとめて、マテリアル側は初期値（0 / 1 / 1）へ戻します（既定 ON）。<b>チェックボックスのみで、値の編集は上の Base セクションで行います</b>（プレビュー中は取り込む値が数値で表示されます）。<b>Color と Color Intensity は焼きこみません</b>（色変えギミック等でアニメーションさせるために残します）。</td></tr>
+    <tr><td>Texture Layer も焼きこむ</td><td>上の <b>Texture Layer</b> に設定したレイヤーを、<b>最下層（いちばん奥）</b>に重ねて焼きこみます（既定 ON）。テクスチャ・Color Tint・Blend Mode・Opacity・Tiling / Offset・透明マスクの設定がそのまま反映されます。<b>焼きこみ後は Texture Layer が自動的に OFF</b> になり、その設定は下のレイヤー一覧の<b>先頭</b>へ取り込まれます（重ね順は取り込み後に <code class="inl">▲▼</code> で入れ替えられます）（同じ絵が二重に乗るのを防ぎ、かつ焼き直しても同じ結果になるようにするためです）。スロットが空くので、次のデカールに使えます。</td></tr>
+    <tr><td>レイヤー</td><td>焼きこむ画像が <b>上から順に重なります</b>（一覧の上にあるものほど奥、下にあるものほど手前）。<code class="inl">▲▼</code> で順番の入れ替え、<code class="inl">✕</code> で削除、左のチェックで一時的な無効化ができ、値も後から編集できます。焼きこみは毎回この一覧どおりに焼き元テクスチャから作り直すため、<b>後から直して焼き直せます</b>。焼きこんだ Texture Layer は <code class="inl">（Texture Layer から取り込み）</code> と表示されます。</td></tr>
+    <tr><td>レイヤーの調整（このレイヤーのみ）</td><td><b>そのレイヤーの画像にだけ</b>掛かる Hue / Saturation / Brightness です。<b>基本色にも他のレイヤーにも一切作用しません。</b>デカールの色だけを変えたいときはここを使ってください。</td></tr>
+    <tr><td>レイヤーを追加</td><td>Texture Layer とは別に、画像を<b>何枚でも</b>ここへ足して一度に焼きこめます（実行時には存在しないレイヤーです）。1枚ごとに <b>テクスチャ / Color Tint (HDR) / Blend Mode / Opacity / Tiling / Offset</b> と上記の調整を指定できます。Blend Mode と Opacity の意味は Texture Layer と同じです。</td></tr>
+    <tr><td>輝度でベースをくり抜く</td><td>そのレイヤー画像の明るさを透明マスクとして使い、ベースの不透明度をくり抜きます（黒=透明 / 白=不透明）。Texture Layer の「透明マスク」と同じ計算です。</td></tr>
+  </tbody></table>
+  </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> 使い方の流れ</h4>
+  <ol>
+    <li>上の <b>Texture Layer</b> に重ねたい画像を設定し、位置（Tiling / Offset）や合成方法（Blend Mode）を実際の見た目で決めます。</li>
+    <li><code class="inl">Bake to Base</code> を開き、<code class="inl">焼きこみレシピを作成</code> を押します。さらに何枚も一度に重ねたい場合は <code class="inl">レイヤーを追加</code> で登録します。</li>
+    <li><code class="inl">プレビュー（仮ベイク）</code> を押すと、<b>実際のモデル上で焼き上がりを確認</b>できます。<b>プレビュー中は焼きこみの設定（基本色の調整、各レイヤーの調整・Opacity / Tiling / Offset など）を動かすと、その場でリアルタイムにモデルへ反映されます。</b>上の Texture Layer の設定を変えた場合も同じです。<code class="inl">Ctrl+Z</code>（元に戻す）にも追従します。元の状態に戻すときは <code class="inl">プレビュー終了</code> を押してください。</li>
+    <li>問題なければ <code class="inl">焼きこみ実行</code> を押します。結果が <b>新しい PNG（<code class="inl">&lt;マテリアル名&gt;_Baked.png</code>）として保存</b>され、Albedo テクスチャがそれに差し替わります。<b>焼きこみのたびに新しいファイルが作られる</b>ので（<code class="inl">_Baked 1.png</code> → <code class="inl">_Baked 2.png</code> …）、以前に焼いたテクスチャが上書きされることはありません。<b>保存先は「焼き元テクスチャと同じフォルダ」</b>です（<code class="inl">Bake to Base</code> の <code class="inl">出力フォルダ</code> に焼く前から表示されます）。完了すると<b>テクスチャ名と保存先パスを表示するウィンドウ</b>が開きます（文字を選択してコピーでき、<code class="inl">Project で表示</code> で該当アセットに移動できます）。<b>焼きこんだ Texture Layer は自動的に OFF になり、取り込んだカラー調整は <code class="inl">基本色の調整</code> へまとめられてマテリアル側は初期値に戻ります</b>（二重に掛からないようにするため）。</li>
+    <li>さらに重ねたい場合は、空いた <b>Texture Layer</b> に次の画像を設定して 3〜4 を繰り返します。</li>
+    <li>やり直したいときは <code class="inl">焼き元テクスチャへ戻す</code> で、<b>一度も焼いていない状態</b>（焼き元テクスチャ・HSV・Texture Layer の ON/OFF）に戻ります。このとき、焼きこみが自動で足したステップ（カラー調整と取り込まれた Texture Layer）もまとめて取り消されます（自分で追加したレイヤーは残ります）。</li>
+  </ol>
+  <div class="note tip" data-label="💡 何度でも焼き重ねられます">
+    <p>焼きこみは毎回「焼き元テクスチャ ＋ 焼きこみステップ」から作り直しますが、<b>焼いた内容はステップとして残る</b>ので、2回目以降も前に焼いた分は消えません。毎回元から作り直すため、<b>何度焼き重ねても画質が劣化しません</b>。</p>
+  </div>
+  <div class="note info" data-label="NOTE — カラー調整は「基本色」と「各レイヤー」で独立しています">
+    <p>基本色の調整は焼き元テクスチャだけに、レイヤーの調整はそのレイヤーだけに掛かり、<b>互いに影響しません</b>。デカールの色だけを変えたいときはそのレイヤーの調整を、下地だけを変えたいときは基本色の調整を動かしてください。どちらも<b>積み重なりません</b>（何度焼き直しても二重に掛かることはありません）。</p>
+    <p>なお <code class="inl">マテリアルの カラー調整 (HSV) も取り込む</code> で取り込まれる調整は <b>基本色にだけ</b>掛かります。すでにレイヤーがある状態でマテリアル側のスライダーを動かすと、画面では全体の色が変わって見えるのに焼き結果はベースだけが変わる、という差が出るため、その場合は Inspector に注意が表示されます（レイヤーの色も変えたいときは各レイヤーの調整を使ってください）。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 焼きこんだ結果が反映されているか確かめるには">
+    <p><code class="inl">Bake to Base</code> の下部に出る <b><code class="inl">直近の結果</code></b> を見てください（例：<code class="inl">焼きこみ: 基本色の調整 あり / レイヤー 2 枚（うち調整あり 1 枚）（うち Texture Layer 1 枚）</code>）。ここが <code class="inl">レイヤー 0 枚</code> なら、その回は画像が焼かれていません（Texture Layer が OFF／テクスチャ未設定などが原因です）。</p>
+  </div>
+  <div class="note tip" data-label="💡 元の画像も、以前に焼いた画像も上書きされません">
+    <p>焼きこみ結果は毎回<b>新しいファイル</b>として保存されます（不要になった古い焼き結果は Project ウィンドウから削除してください）。また、カラー調整（HSV）を焼きこんだときは、<b>同じ調整が二重に掛からないよう Hue / Saturation / Brightness が自動で初期値（0 / 1 / 1）に戻ります</b>。これらの操作は Unity の Undo（<code class="inl">Ctrl+Z</code>）で取り消せます。</p>
+  </div>
+  <div class="note info" data-label="NOTE — プレビューと最終結果は同じ処理で作られます">
+    <p>そのため「プレビューでは合っていたのに焼いたら違う」ということは起きません。ただし、プレビューは無圧縮・保存後は圧縮設定が効くため、色にごくわずかな差が出ることがあります。<b>最終確認は保存後</b>に行ってください。</p>
+  </div>
+  <div class="note tip" data-label="💡 プレビュー中に Ctrl+S（保存）を押しても大丈夫です">
+    <p>保存の直後に自動でプレビューが焼き直され、表示と設定値が一致した状態に戻ります。</p>
+  </div>
+  <div class="note tip" data-label="💡 プレビュー中のカラー調整について">
+    <p><b>プレビュー中のカラー調整は <code class="inl">基本色の調整</code> と各レイヤーの <code class="inl">レイヤーの調整</code> で行います。</b> プレビューを開始すると、マテリアル側の Hue / Saturation / Brightness は（焼きこみに含まれるため）いったん初期値に戻ります。<b>色を詰めたいときはこの2つのスライダーを動かしてください</b>（リアルタイムに反映され、その値のまま焼きこまれます）。</p>
+  </div>
+  <div class="note warn" data-label="⚠ 仕様上の注意 — 焼けるもの・焼けないもの">
+    <p>焼きこみは UV 空間の操作です。<b>時間で動く要素は焼けません</b>（Texture Layer の Scroll など）。Scroll が 0 以外のときは注意が表示され、<b>停止状態（開始位置）の絵</b>が焼かれます。位置は Scroll を 0 にして Tiling / Offset で合わせてください。また、<b>焼いた後はレイヤーを個別にアニメーションできません</b>（スクロール・フェード・色変え）。動かしたい画像が1枚あるなら Texture Layer（実行時合成）、動かさない意匠は焼きこみ、という使い分けになります。</p>
+    <p>なお、<b>Color に色を付けた状態でカラー調整（HSV）を焼きこむと、焼く前後で色がわずかに変わる</b>ことがあります（実行時は Color を掛けてから HSV、焼きこみは画像に HSV を掛けてから Color の順になるためです）。この条件に当てはまるときは Inspector に注意が表示されます。プレビューで確認するか、Color を白にしてから焼いてください。</p>
+  </div>
+  </div>
+</section>
+
 <!-- ============ LIGHTING ============ -->
 <section id="lighting">
-  <div class="sec-head rv"><div class="num">SEC. 05 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// 光と影・トゥーン調整</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// 光と影・トゥーン調整</div></div>
   <div class="rv">
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Unlit モード</td><td>光源を完全に無視して常に100%の明るさで表示します。パーティクルや発光エフェクト向けです。</td></tr>
@@ -485,6 +554,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
     <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Texture Layer の項を参照）。</p>
+    <p><b>GUI の表示（v40_GUIr1〜）:</b> 半透明プリセットでチェックが ON になっているときは、チェックボックスの右に <b>「（現在の Preset では無効）」</b> と表示され、下の説明も対処を案内する警告表示に切り替わります（表示のみで、設定値は変わりません）。チェックはそのまま操作できるので、<b>Opaque / Cutout に戻せば設定した内容がそのまま効きます</b>。</p>
   </div>
   </div>
   <div class="rv">
@@ -502,7 +572,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PBR ============ -->
 <section id="pbr">
-  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// 質感・環境反射・ガラス/金属の映り込み</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// 質感・環境反射・ガラス/金属の映り込み</div></div>
   <div class="rv">
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Metallic / Smoothness</td><td>金属っぽさと表面の滑らかさを調整します。周囲の景色を反射するツヤっとした金属質にしたい時に数値を上げます。</td></tr>
@@ -532,7 +602,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ MATCAP ============ -->
 <section id="matcap">
-  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>Matcap</h2><div class="sub">// 擬似的な光沢・環境反射</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — LIGHTING</div><h2>Matcap</h2><div class="sub">// 擬似的な光沢・環境反射</div></div>
   <div class="rv">
   <p>常に一定の美しい光沢や環境の映り込みを「擬似的」に表現します。非常に処理が軽いため VRChat で重宝します。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -558,7 +628,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission（発光・HDR対応）</h2><div class="sub">// 発光・HDR対応</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Emission（発光・HDR対応）</h2><div class="sub">// 発光・HDR対応</div></div>
   <div class="rv">
   <p>暗闇でも自己発光するマテリアルを作ります。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -573,7 +643,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ AUDIOLINK ============ -->
 <section id="audiolink">
-  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>AudioLink（音楽連動・発光リアクション）</h2><div class="sub">// 音楽連動・発光リアクション</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>AudioLink（音楽連動・発光リアクション）</h2><div class="sub">// 音楽連動・発光リアクション</div></div>
   <div class="rv">
   <p>ワールドで再生されている音楽に合わせて発光させる機能です。VRChat のクラブワールドやライブ演出で定番の機能です。</p>
   <p>本シェーダーの AudioLink は、通常の <b>Emission（恒常発光）とは独立した「音反応専用の発光レイヤー」</b>として動作します。音の大きさに応じて発光を base（色×Intensity）に向けて加算するため、<b>通常 Emission を OFF にしても、AudioLink だけで音に合わせて発光させられます</b>。逆に通常 Emission を ON にすれば、恒常発光の上に音反応発光が重なります（両者は打ち消し合いません）。</p>
@@ -597,7 +667,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ GLITTER ============ -->
 <section id="glitter">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle（プロシージャルラメ・スパークル）</h2><div class="sub">// プロシージャルラメ・スパークル</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Glitter / Sparkle（プロシージャルラメ・スパークル）</h2><div class="sub">// プロシージャルラメ・スパークル</div></div>
   <div class="rv">
   <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内で手続き的に生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -623,7 +693,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ DISSOLVE ============ -->
 <section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Dissolve（ディゾルブ / 消失エフェクト）</h2><div class="sub">// 消失エフェクト</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Dissolve（ディゾルブ / 消失エフェクト）</h2><div class="sub">// 消失エフェクト</div></div>
   <div class="rv">
   <p>オブジェクトをノイズ模様に合わせて溶かすように消滅・出現させる機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -638,7 +708,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ RIM LIGHT ============ -->
 <section id="rimlight">
-  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Rim Light（輪郭の光・逆光表現）</h2><div class="sub">// 輪郭の光・逆光表現</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Rim Light（輪郭の光・逆光表現）</h2><div class="sub">// 輪郭の光・逆光表現</div></div>
   <div class="rv">
   <p>モデルの輪郭（エッジ）部分を強調する機能です。Blend Mode で「光らせる」か「暗く落とす」かを切り替えられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -646,16 +716,50 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Rim Power</td><td>効果の太さを調整します。大きくするほど太く柔らかく、小さくするほど細く鋭いエッジになります。</td></tr>
     <tr><td>Blend Mode</td><td><code class="inl">Add</code>（既定）は縁を<b>加算で発光</b>させます（逆光・オーラ）。<code class="inl">Multiply</code> は縁を<b>暗色化</b>します。Rim Color を黒系にすると縁を暗く落とす縁取り（黒いリム）になります。</td></tr>
     <tr><td>裏面で無効化</td><td>両面描画（Cull = Off）のとき、<b>裏面のメッシュにリムを出しません</b>（Add/Multiply 両モードに作用）。服の袖裏・コートの裏側などを暗く落ち着かせたいときに使います。既定は OFF。</td></tr>
+    <tr><td>環境順応 (Env Adapt)</td><td><b>周囲の明るさ（環境光＋メインのライト）に合わせてリムを減光</b>します。暗いワールドでリムだけが浮いて見えるのを防ぎます。値は「<b>環境の影響をどれだけ受けるか</b>」の度合いで、<code class="inl">1</code>（<b>既定</b>）で完全に追従、<code class="inl">0</code> で従来どおり明るさが一定のリムになります。<b>白でしっかり照らされている明るさ以上の場所では従来と同じ見た目</b>になり、そこから暗くなるほど減光します（＝暗い側にだけ効きます）。Add / Multiply 両モード、および Unlit にも作用します。</td></tr>
+    <tr><td>暗所の下限 (Dark Floor)</td><td>真っ暗な場所でリムをどこまで残すかの下限です。<code class="inl">0</code>（既定）は完全に消灯、<code class="inl">0.2</code> 程度にすると<b>暗闇でもうっすら輪郭が残ります</b>。暗いワールドで減光しすぎると感じたときの調整はこの値で行います。環境順応が <code class="inl">0</code> より大きいときだけ表示されます。</td></tr>
+    <tr><td>環境色になじませる (Env Tint)</td><td><b>周囲の環境光の色みをリムの色に乗せます</b>。寒色のワールドでは青寄りに、夕焼けなど暖色のワールドでは暖色寄りにリムが転びます。<code class="inl">0</code>（既定）で色は変わりません。<b>明るさは変えず色みだけを寄せる</b>ため、環境順応と併用しても二重に暗くなりません。環境順応とは独立しているので、<b>明るさは一定のまま色だけ馴染ませる</b>（環境順応 <code class="inl">0</code> ＋ 環境色になじませる <code class="inl">1</code>）といった使い方もできます。効果は<b>リム色に含まれる成分を環境光の色みの分だけ抑える</b>形で出るため、<b>白や淡色のリムほど変化がはっきり</b>します。</td></tr>
   </tbody></table>
   <p><b>黒いリム（縁を暗くする）にするには:</b> Blend Mode を <code class="inl">Multiply</code> にし、Rim Color を黒〜暗色に設定してください。Intensity で暗くする強さ、Rim Power で縁取りの太さを調整します。</p>
   <p><b>「裏面で無効化」について:</b> このオプションは描画設定の <b>Cull が Off（両面描画）</b>のときに効果を持ちます。Cull が <b>Back（裏面を描画しない・既定）</b>の場合は裏面そのものが表示されないため、ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります（Matcap の同名オプションと同じ考え方です）。</p>
+  <p><b>環境順応の使いどころ:</b> リムの発光は本来「光の当たり方に関係なく一定」の演出であるため、<b>暗いワールドではリムだけが明るく残って浮いて見える</b>ことがあります。環境順応（既定 <code class="inl">1</code>）が周囲の明るさに追従して自動的に暗くしてくれるので、そのままで多くのワールドに馴染みます。<b>明るいワールドでの見え方は変わらない</b>ため、調整が要るのは暗所だけです。暗所で消えすぎる場合は <b>暗所の下限</b> を上げる（または <b>環境順応</b> を少し下げる）のが目安です。逆に、アバターの見せ場としてリムを常に一定の明るさで光らせたい場合は、環境順応を <code class="inl">0</code> にすれば従来どおりの一定発光になります。</p>
+  <div class="note tip" data-label="💡 効き方を確認するときのコツ">
+    <p>環境順応は「<b>白でしっかり照らされている明るさより暗い側にだけ</b>」効きます。明るいワールドでライトを少し動かしても変化が出ないのは仕様です（明るい場所は従来と同じ見た目に保つため）。効き方を確かめたいときは、<b>Directional Light の Intensity を 0 に近づける</b>か、<b>暗い Skybox に変える</b>と変化がはっきり見えます。</p>
+  </div>
+  <p><b>環境色になじませる（Env Tint）について:</b> こちらは<b>明るさではなく色み</b>を環境に寄せる調整で、環境順応とは独立して使えます。周囲の光の色を取り出して<b>色相だけ</b>をリム色に乗せるため、明るさが二重に落ちることはありません。既定は <code class="inl">0</code>（色を変えない）です。<b>白〜淡色のリム</b>ほど効果がはっきり出ます（もともと濃い色のリムでは変化が分かりにくい場合があります）。ワールドを渡り歩く用途で「どこでも浮かない」ことを狙うなら環境順応と併用、キャラクターの色を守りたい場合は <code class="inl">0</code> のままが無難です。</p>
   <p><b>補足:</b> <code class="inl">Multiply</code> は Lit（Unlit OFF）でのみ効果が出ます（Unlit モードは光に応答しないため）。<code class="inl">Add</code> のリムライト発光は、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。</p>
+  </div>
+</section>
+
+<!-- ============ BACK LIGHT ============ -->
+<section id="backlight">
+  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Back Light（逆光ライト）</h2><div class="sub">// 光が背後にあるときだけ光る逆光表現</div></div>
+  <div class="rv">
+  <p><b>メインの平行光（Directional Light）がキャラクターの背後にあるときだけ</b>、輪郭の広い範囲を発光させるイラスト調の逆光表現です。Rim Light が「見る角度で常に縁が光る」のに対し、Back Light は「光が背後にある時だけ光る」ことに加え、<b>影（シャドウ）で光が遮られている部分は光りません</b>（上着の内側・襟元など、体に遮られて逆光が届かない場所は発光しない）。シーンのライトの向きと遮蔽に反応する自然な逆光になります。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Use Back Light</td><td>機能の有効/無効。</td></tr>
+    <tr><td>Back Light Color (HDR) / Intensity</td><td>逆光の色と強さです。HDR カラーなので Bloom と組み合わせると強く発光します。</td></tr>
+    <tr><td>Width</td><td>光る範囲の広さです。<b>小さいほど広い範囲</b>が光り、大きいほど輪郭近くの細い範囲だけになります。</td></tr>
+    <tr><td>Directivity</td><td>「光が背後にある」と判定する指向性です。大きいほど<b>光がほぼ真後ろにあるときだけ</b>光り、小さいほど斜め後ろでも反応します。</td></tr>
+    <tr><td>環境順応 (Env Adapt)</td><td><b>周囲の明るさ（環境光＋メインのライト）に合わせて逆光を弱めます</b>。暗いワールドで逆光だけが浮いて見えるのを防ぎます。値は「<b>環境の影響をどれだけ受けるか</b>」の度合いで、<code class="inl">1</code>（<b>既定</b>）で完全に追従、<code class="inl">0</code> で従来どおり一定の明るさになります。<b>白でしっかり照らされている明るさ以上の場所では従来と同じ見た目</b>になり、そこから暗くなるほど弱まります。<b>Rim Light の同名の項目と同じ仕組み</b>です。</td></tr>
+    <tr><td>暗所の下限 (Dark Floor)</td><td>真っ暗な場所で逆光をどこまで残すかの下限です。<code class="inl">0</code>（既定）は完全に消灯、<code class="inl">0.2</code> 程度にすると暗闇でもうっすら残ります。暗いワールドで弱まりすぎると感じたときの調整はこの値で行います。環境順応が <code class="inl">0</code> より大きいときだけ表示されます。</td></tr>
+    <tr><td>環境色になじませる (Env Tint)</td><td><b>周囲の環境光の色みを逆光の色に乗せます</b>。寒色のワールドでは青寄りに、暖色のワールドでは暖色寄りに転びます。<code class="inl">0</code>（既定）で色は変わりません。<b>明るさは変えず色みだけを寄せる</b>ため、環境順応と併用しても二重に暗くなりません。</td></tr>
+    <tr><td>裏面で無効化</td><td>両面描画（Cull = Off）のとき、裏面のメッシュに逆光を出しません。既定は OFF。</td></tr>
+  </tbody></table>
+  <p><b>Rim Light との違い:</b> Rim Light は光源の向きに関係なく「視線に対して縁」が光ります。Back Light は<b>シーンのメイン平行光の向き</b>を見て光が被写体の背後にある時だけ光り、さらに<b>影で遮られた部分は光りません</b>。両方を同時に使うこともできます。</p>
+  <div class="note info" data-label="NOTE — 仕様上の注意（遮蔽について）">
+    <p>光の遮蔽判定には<b>ワールドの影（シャドウ）</b>を利用します。<b>影の無いワールド</b>（シャドウが無効な環境）では遮蔽が働かず、光の向きだけで判定されるため、上着の内側などにも光が出ることがあります。また <b>Unlit モードでは無効</b>です（光に応答しないため。Rim の Multiply と同じ扱い）。</p>
+  </div>
+  <div class="note tip" data-label="💡 環境順応について">
+    <p>逆光は「光が背後にあるか」と「影で遮られているか」だけで判定していたため、<b>ライトの強さを弱めても逆光の明るさは変わりません</b>でした。環境順応（既定 <code class="inl">1</code>）を使うと周囲の明るさに合わせて自動的に弱まり、暗いワールドでも風景に馴染みます。<b>明るいワールドでの見え方は変わらない</b>ため、調整が要るのは暗所だけです。効き方を確かめたいときは、<b>Directional Light の Intensity を 0 に近づける</b>か、<b>暗い Skybox に変える</b>と変化がはっきり見えます。Rim Light の同名の項目とまったく同じ仕組みなので、両方使う場合も設定の勘所は共通です。</p>
+  </div>
+  <p><b>補足:</b> 発光は透明度（hlFade）に追従してフェードします。効果はメインの Directional Light を基準にするため、ワールドに Directional Light が無い場合は光りません。「裏面で無効化」は Cull = Off（両面描画）のときのみ意味を持ちます（Rim / Matcap の同名オプションと同じ考え方です）。</p>
   </div>
 </section>
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Outline（アウトライン / 輪郭線）</h4>
   <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<b>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</b>し、スキンメッシュではアニメーションにも追従します。基本の輪郭線はテクスチャ・UV展開なしで描けます（<b>マスクは任意</b>：目尻など部分的に線を消したいときだけマスク画像を使えます）。</p>
@@ -717,7 +821,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PARTICLE / ANIM ============ -->
 <section id="particle">
-  <div class="sec-head rv"><div class="num">SEC. 14 — ADVANCED</div><h2>アニメ・パーティクル連携</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 16 — ADVANCED</div><h2>アニメ・パーティクル連携</h2><div class="sub">// animation properties &amp; particle system</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color（パーティクルとの連携）</h4>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -776,7 +880,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 
 <!-- ============ LICENSE ============ -->
 <section id="license">
-  <div class="sec-head rv"><div class="num">SEC. 15 — MISC</div><h2>パフォーマンス・利用規約</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 17 — MISC</div><h2>パフォーマンス・利用規約</h2><div class="sub">// performance, fallback, license, changelog</div></div>
   <div class="rv">
   <h3>パフォーマンスと最適化</h3>
   <p>本シェーダーは、VRChat環境での軽量動作とコンパイル速度のために最大限の最適化を行っています。</p>
@@ -822,6 +926,13 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
       <li><code class="inl">README.md</code>（本ガイド）</li>
     </ul>
     <p>※ <code class="inl">ARLitToonGUI.cs</code> が欠けると Inspector のカスタム GUI が表示されず、マテリアルを正しく設定できません。<code class="inl">README.md</code> は使用方法と本利用規約を受け取り手に伝えるために同梱してください。</p>
+  </div>
+  <div class="note tip" data-label="【同梱を推奨するファイル】">
+    <ul style="margin:4px 0 8px 20px">
+      <li><code class="inl">ARLitToonBaker.cs</code>（テクスチャ焼きこみツール／<code class="inl">Editor</code> フォルダ内）</li>
+    </ul>
+    <p>※ こちらは<b>必須ではありませんが、同梱を推奨します</b>。同梱すると受け取り手も <code class="inl">Bake to Base</code>（焼きこみ）を使えます。同梱しなくてもシェーダーは完全に正常動作し、焼きこみの機能のみが使えなくなります。</p>
+    <p>※ 万一この 1 ファイルが原因で Unity のコンパイルが通らない場合（バージョン差や他アセットとの競合など）は、<b><code class="inl">ARLitToonBaker.cs</code> を削除すれば復旧します</b>。必須にしていないのはこのためです。</p>
   </div>
   <h4><span class="hx">#</span> 【禁止事項】</h4>
   <ul>

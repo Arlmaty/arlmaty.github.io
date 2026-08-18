@@ -532,10 +532,7 @@ details .dbody li{margin-bottom:10px}
     <p>The bake result is saved as a <b>new file</b> every time (delete old baked results you no longer need from the Project window). Also, when you bake the color adjustment (HSV), <b>Hue / Saturation / Brightness are automatically reset to their initial values (0 / 1 / 1) so the same adjustment is not applied twice</b>. These operations can be undone with Unity's Undo (<code class="inl">Ctrl+Z</code>).</p>
   </div>
   <div class="note info" data-label="NOTE — Preview and final result are produced by the same processing">
-    <p>Because of this, "it looked right in the preview but came out different when baked" does not happen. However, the preview is uncompressed while compression settings apply after saving, so there can be a very slight difference in color. <b>Do your final check after saving</b>.</p>
-  </div>
-  <div class="note tip" data-label="💡 It is safe to press Ctrl+S (save) during preview">
-    <p>Right after saving, the preview is re-baked automatically and returns to a state where the display and the setting values match.</p>
+    <p>However, the preview is uncompressed while compression settings apply after saving, so there can be a very slight difference in color. <b>Do your final check after saving</b>.</p>
   </div>
   <div class="note tip" data-label="💡 About color adjustment during preview">
     <p><b>Adjust colors during preview with <code class="inl">Base color adjustment</code> and each layer's <code class="inl">Layer adjustment</code>.</b> When the preview starts, the material's Hue / Saturation / Brightness return to their initial values once (because they are included in the bake). <b>Use these two sliders when you want to fine-tune the color</b> (they are reflected in real time and are baked with exactly those values).</p>

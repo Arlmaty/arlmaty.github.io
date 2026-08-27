@@ -99,6 +99,7 @@ h4 .hx{color:var(--ac)}
 p{margin:0 0 14px;color:var(--ink2)}
 p b,li b{color:var(--ink)}
 section ul{margin:0 0 16px 22px;color:var(--ink2)}
+section ol{margin:0 0 16px 22px;color:var(--ink2)}
 section li{margin-bottom:6px}
 
 /* ===== reveal ===== */
@@ -161,7 +162,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v40_GUIr0 (EN) / PC ONLY</span>
+    <span class="ver">v42_GUIr0 (EN) / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="ARLitToon.html">日本語</a>
@@ -175,6 +176,7 @@ details .dbody li{margin-bottom:10px}
     <a href="#rendering">Transparency / Rendering</a>
     <a href="#base">Base</a>
     <a href="#layer">Texture Layer</a>
+    <a href="#bake">Bake to Base</a>
   </div>
   <div class="navgrp"><div class="glabel">Lighting &amp; Shading</div>
     <a href="#lighting">Lighting &amp; Shadow</a>
@@ -187,6 +189,7 @@ details .dbody li{margin-bottom:10px}
     <a href="#glitter">Glitter / Sparkle</a>
     <a href="#dissolve">Dissolve</a>
     <a href="#rimlight">Rim Light</a>
+    <a href="#backlight">Back Light</a>
     <a href="#outline">Outline &amp; Sweep</a>
   </div>
   <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
@@ -221,7 +224,7 @@ details .dbody li{margin-bottom:10px}
 
 <div class="wrap">
   <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin:0 0 40px;max-width:640px">
-    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v40_GUIr0</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
+    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v42_GUIr0</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
   </div>
 </div>
 
@@ -240,13 +243,17 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>Version (Changelog)</h3>
-  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v40_GUIr0</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
-  <div class="note tip" data-label="LATEST — v40_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p style="margin:0"><span class="vtag">v40_GUIr0</span> Added <b>Glitter / Sparkle</b> (procedural glitter/sparkle). This is a decorative emission layer that generates fine sparkling grains without using any texture. <b>The grains sparkle as you move your view</b> (a metallic glitter/flake-like look). Choose from four shapes: <b>Point (round dot) / Star (sharp-tipped cross) / Diamond / Fine Dust (very fine glitter)</b>, and switch the grain coordinate space between <b>UV / Object (uniform on all faces via triplanar projection)</b>. The grain outlines stay sharp at any size, and they light up correctly even on the back faces of double-sided meshes. It supports <b>scrolling</b> (flowing grains), <b>HDR emission</b> (works with Bloom), and <b>AudioLink</b> (flickering in sync with sound). Because it's an additive layer independent of the regular Emission, <b>it emits light on its own even with Emission turned OFF</b>. The emission follows transparency. <b>Default is OFF, so the appearance of existing materials is completely unchanged</b> (see the Glitter / Sparkle section for details).</p>
+  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v42_GUIr0</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
+  <div class="note tip" data-label="LATEST — v42_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p><span class="vtag">v42_GUIr0</span> Added <b>Environment Adapt</b> and <b>Environment Tint</b> to <b>Back Light</b> as well. Back Light used to decide its brightness only from "is the light behind the character" and "is it blocked by a shadow", so <b>weakening the light did not change how bright the backlight was</b>, and in dark worlds the backlight alone stayed strong and looked out of place. Raising Environment Adapt makes <b>the backlight fade automatically to match the surrounding brightness (ambient light + the main light)</b>. <b>The look in bright places does not change</b> (it only takes effect on the darker side). Raising Environment Tint blends the hue of the surrounding light into the backlight color (brightness is left as it is). <b>The mechanism and the feel of the controls are exactly the same as the identically named items in Rim Light</b>, so the same tuning sense applies when you use both. If it fades too much in dark worlds, raise <b>Dark Floor</b> (see the Back Light section for details).</p>
+    <p><span class="vtag">v41_GUIr0</span> Added <b>Environment Adapt</b> to Rim Light. Until now the rim glow stayed at a constant brightness regardless of the surrounding brightness, so <b>in dark worlds the rim alone could look strongly out of place</b>. Raising Environment Adapt makes <b>the rim dim automatically to match the surrounding brightness</b>, so it blends into the scenery even in dark places. <b>The look in bright places does not change</b> (it is a one-way adjustment that only takes effect on the darker side, so nothing that looked a certain way before becomes brighter). Raising <b>Dark Floor</b> keeps a faint edge visible even in pitch-dark places. In addition, raising <b>Environment Tint</b> makes <b>the hue of the surrounding light blend into the rim color</b> (bluish in cool-lit places, warmer in warm-lit places). Because it shifts only the hue and leaves brightness alone, combining it with Environment Adapt will not darken things twice. Both work the same way with Blend Mode <code class="inl">Add</code> / <code class="inl">Multiply</code> and with Unlit. <b>Environment Adapt is ON by default (= 1)</b>, but <b>the look in bright places is unchanged from before</b> (because it only takes effect on the darker side). If you want a rim with constant brightness as before, set Environment Adapt to <code class="inl">0</code> (see the Rim Light section for details).</p>
+    <p><span class="vtag">v40_GUIr2</span> Added <b>Bake to Base</b> (texture baking). This is a Unity editor tool that bakes several layer images (decals, logos, patterns, makeup and so on) and color adjustments (Hue / Saturation / Brightness) <b>into the base texture, combining them into a single image</b>. At runtime only one texture layer can be stacked, but with baking there is <b>no limit on the number of images</b>, and since the result is still a single texture, <b>neither runtime cost nor texture memory increases</b>. You operate it from <code class="inl">Bake to Base</code>, added <b>below Texture Layer</b> in the material Inspector. <b>You can bake the image you set in the Texture Layer above exactly as it is</b>, so by repeating "decide the position and blend mode in Texture Layer → bake → put the next decal in the freed slot" you can stack as many as you like (after baking, <b>Texture Layer is turned OFF automatically</b> so the same artwork is not applied twice, and the baked settings are taken into the recipe, so <b>what you baked before is never lost</b>). Color adjustments can be baked repeatedly in the same way. There is a <b>preview that shows the baked result on the actual model</b> before you bake, and <b>moving any setting during preview updates the model in real time</b>. The preview and the final output are produced by the same processing, so they look the same. The baked result is <b>saved as a new PNG</b> and the original texture is left untouched. The settings (recipe) are saved, so you can re-bake at any time with one click. <b>The shader itself is unchanged, so the appearance and runtime cost of existing materials are exactly as before</b> (see the Bake to Base section for details).</p>
+    <p><span class="vtag">v40_GUIr1</span> Added a display to <b>Receive Shadow</b> in Lighting &amp; Shadow that <b>shows on the spot that it has no effect with translucent presets</b> (GUI only). When Blend Preset is <b>Transparent / Fade / Additive</b> and the checkbox is ON, <b>"(no effect in the current Preset)"</b> is shown to the right of the checkbox, and the description below switches to a warning that explains the cause and the workaround (<b>the Cutout preset + Dither Fade</b>). Translucent materials cannot receive cast shadows because of how Unity works, so this display prevents the misunderstanding of "the box is checked but no shadow appears". <b>This is a display-only change; functionality, saved values, and appearance are exactly the same as before</b> (the checkbox still works as it did, and switching back to Opaque / Cutout makes the setting take effect again).</p>
   </div>
   <details>
     <summary>Open past changelog (click to expand)</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v40_GUIr0</span> Added <b>Glitter / Sparkle</b> (procedural glitter/sparkle). This is a decorative emission layer that generates fine sparkling grains without using any texture. <b>The grains sparkle as you move your view</b> (a metallic glitter/flake-like look). Choose from four shapes: <b>Point (round dot) / Star (sharp-tipped cross) / Diamond / Fine Dust (very fine glitter)</b>, and switch the grain coordinate space between <b>UV / Object (uniform on all faces via triplanar projection)</b>. The grain outlines stay sharp at any size, and they light up correctly even on the back faces of double-sided meshes. It supports <b>scrolling</b> (flowing grains), <b>HDR emission</b> (works with Bloom), and <b>AudioLink</b> (flickering in sync with sound). Because it's an additive layer independent of the regular Emission, <b>it emits light on its own even with Emission turned OFF</b>. The emission follows transparency. <b>Default is OFF, so the appearance of existing materials is completely unchanged</b> (see the Glitter / Sparkle section for details).</li>
       <li><span class="vtag">v39_GUIr3</span> Changed <b>Receive Shadow</b> in Lighting &amp; Shadow to the same "bold sub-heading + checkbox below it" display used by Light Limit, and increased the space above it (GUI only). A display tweak to improve visibility within the section; <b>functionality, saved values, and appearance (when it takes effect) are exactly the same as before</b>.</li>
       <li><span class="vtag">v39_GUIr2</span> <b>Moved the Dither Fade (dithered pseudo-transparency) setting from Transparency / Rendering to Texture Layer</b> (below the alpha mask) (GUI only). Grouped it next to the alpha mask since both are "cut out by alpha" style features. <b>Only the display location changed — the display condition (hidden with semi-transparent presets), functionality, saved values, and appearance are exactly the same as before.</b></li>
       <li><span class="vtag">v39_GUIr1</span> Cleaned up and shortened the help-box text for each GUI item (GUI only). Trimmed redundant explanations down to the essentials, and moved the "see the README for details" note to appear only once at the end of each help box. <b>Text-only change — functionality, saved values, and appearance are exactly the same as before.</b></li>
@@ -307,7 +314,8 @@ details .dbody li{margin-bottom:10px}
     │   ├── Shaders/
     │   │   └── <span class="ac">ARLitToon.shader</span>    <span class="cm">← the shader itself</span>
     │   ├── Editor/
-    │   │   └── <span class="ac">ARLitToonGUI.cs</span>     <span class="cm">← material Inspector GUI</span>
+    │   │   ├── <span class="ac">ARLitToonGUI.cs</span>     <span class="cm">← material Inspector GUI</span>
+    │   │   └── <span class="ac">ARLitToonBaker.cs</span>   <span class="cm">← texture baking tool (the shader works without it)</span>
     │   └── README.md               <span class="cm">← this guide</span>
     └── (various avatar items)      <span class="cm">← items live alongside, directly under ALTIMA</span></div>
   <div class="note tip" data-label="POINT — PLACEMENT NOTE">
@@ -475,9 +483,67 @@ details .dbody li{margin-bottom:10px}
   </div>
 </section>
 
+<!-- ============ BAKE TO BASE ============ -->
+<section id="bake">
+  <div class="sec-head rv"><div class="num">SEC. 05 — CORE</div><h2>Bake to Base (texture baking)</h2><div class="sub">// bake layers &amp; color adjustments into the base texture</div></div>
+  <div class="rv">
+  <p>A Unity editor tool that bakes several layer images (decals, logos, patterns, makeup and so on) and color adjustments <b>into the base texture, combining them into a single image</b>. Whereas the Texture Layer above stacks only one image at runtime, this one <b>bakes everything into a single image in advance</b>, so <b>there is no limit on how many images you stack, and neither runtime cost nor texture memory increases</b> (after baking it is still a single texture).</p>
+  <div class="note tip" data-label="💡 About the file that provides this feature">
+    <p><b>This feature is provided by the additional file <code class="inl">Editor/ARLitToonBaker.cs</code>.</b> It is always included in the distribution package. If this file is missing, the only difference is that <code class="inl">Bake to Base</code> does not appear in the material Inspector; every other feature of the shader works normally.</p>
+  </div>
+  <table><thead><tr><th>Item</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Create Bake Recipe</td><td>Creates a settings file (recipe) for this material. It is saved in the same folder as the material as <code class="inl">&lt;material name&gt;_BakeRecipe.asset</code>, and records the layer configuration.</td></tr>
+    <tr><td>Source Texture (Base)</td><td>The image that serves as the foundation for baking. The Albedo texture at the time the recipe was created is filled in automatically. <b>This item does not change even after baking</b> (you can re-bake from here any number of times). <b>Baked textures are saved in the same folder as this image</b> (shown in <code class="inl">Output folder</code> just below).</td></tr>
+    <tr><td>Output Resolution</td><td>The default is "same as source". If you change it, the image is scaled while preserving the source's aspect ratio.</td></tr>
+    <tr><td>Base Color Adjust (shown in Preview)</td><td>Hue / Saturation / Brightness applied <b>only to the source texture</b>. <b>This adjustment is not reflected on the material directly; you first see it in the preview or in the bake. It does not act on the layers</b>. It is held as a single value, so the adjustment never accumulates no matter how many times you re-bake.</td></tr>
+    <tr><td>Also take the material's Color Adjust (HSV)</td><td>Includes the material's Hue / Saturation / Brightness in the bake; after baking they are consolidated into <b>Base Color Adjust</b> and the material side is reset to its initial values (0 / 1 / 1) (default ON). <b>This is a checkbox only — edit the values in the Base section above</b> (during preview, the values being taken in are displayed numerically). <b>Color and Color Intensity are not baked</b> (they are left so you can animate them for color-change gimmicks and the like).</td></tr>
+    <tr><td>Also bake Texture Layer</td><td>Bakes the layer set in the <b>Texture Layer</b> above, stacked at the <b>bottom (furthest back)</b> (default ON). The texture, Color Tint, Blend Mode, Opacity, Tiling / Offset and alpha mask settings are all reflected as they are. <b>After baking, Texture Layer is turned OFF automatically</b> and its settings are taken into the <b>top</b> of the layer list below (you can reorder with <code class="inl">▲▼</code> after it is taken in). This prevents the same artwork from being applied twice and keeps re-bakes producing the same result. Since the slot is freed, you can use it for the next decal.</td></tr>
+    <tr><td>Layers</td><td>The images to bake are <b>stacked in order from the top</b> (the higher in the list, the further back; the lower, the further front). Use <code class="inl">▲▼</code> to reorder, <code class="inl">✕</code> to delete, and the checkbox on the left to disable temporarily; values can be edited later as well. Baking always rebuilds from the source texture following this list, so <b>you can fix things later and re-bake</b>. A baked Texture Layer is shown as <code class="inl">(captured from Texture Layer)</code>.</td></tr>
+    <tr><td>Layer Adjust (this layer only)</td><td>Hue / Saturation / Brightness applied <b>only to that layer's image</b>. <b>It does not act on the base color or on any other layer at all.</b> Use this when you want to change only the color of a decal.</td></tr>
+    <tr><td>Add Layer</td><td>Separately from Texture Layer, you can add <b>any number of</b> images here and bake them all at once (these layers do not exist at runtime). For each one you can specify <b>Texture / Color Tint (HDR) / Blend Mode / Opacity / Tiling / Offset</b> plus the adjustment above. Blend Mode and Opacity mean the same as in Texture Layer.</td></tr>
+    <tr><td>Cut out the base by luminance</td><td>Uses the brightness of that layer image as an alpha mask and cuts out the base's opacity (black = transparent / white = opaque). This is the same calculation as Texture Layer's "alpha mask".</td></tr>
+  </tbody></table>
+  </div>
+
+  <div class="rv">
+  <h4><span class="hx">#</span> Typical workflow</h4>
+  <ol>
+    <li>Set the image you want to overlay in the <b>Texture Layer</b> above, and decide its position (Tiling / Offset) and blend method (Blend Mode) while looking at the actual result.</li>
+    <li>Open <code class="inl">Bake to Base</code> and press <code class="inl">Create Bake Recipe</code>. If you want to stack several more images at once, register them with <code class="inl">Add Layer</code>.</li>
+    <li>Press <code class="inl">Preview (temporary bake)</code> to <b>check the baked result on the actual model</b>. <b>During preview, moving any bake setting (base color adjustment, each layer's adjustment, Opacity / Tiling / Offset and so on) is reflected on the model in real time.</b> The same applies when you change the Texture Layer settings above. It also follows <code class="inl">Ctrl+Z</code> (undo). To return to the original state, press <code class="inl">End Preview</code>.</li>
+    <li>If everything looks right, press <code class="inl">Bake (create a new texture)</code>. The result is <b>saved as a new PNG (<code class="inl">&lt;material name&gt;_Baked.png</code>)</b> and the Albedo texture is replaced with it. <b>A new file is created on every bake</b> (<code class="inl">_Baked 1.png</code> → <code class="inl">_Baked 2.png</code> …), so previously baked textures are never overwritten. <b>The save location is "the same folder as the source texture"</b> (shown in <code class="inl">Output folder</code> in <code class="inl">Bake to Base</code> before you bake). When it finishes, <b>a window showing the texture name and the save path</b> opens (you can select and copy the text, and <code class="inl">Show in Project</code> takes you to the asset). <b>The baked Texture Layer is turned OFF automatically, and the color adjustments taken in are consolidated into <code class="inl">Base Color Adjust</code> while the material side returns to its initial values</b> (so they are not applied twice).</li>
+    <li>To stack more, set the next image in the freed <b>Texture Layer</b> and repeat 3–4.</li>
+    <li>To start over, <code class="inl">Revert to Source Texture</code> returns you to the <b>never-baked state</b> (source texture, HSV, and the Texture Layer ON/OFF). At the same time, the steps that baking added automatically (color adjustments and the taken-in Texture Layer) are undone together (layers you added yourself remain).</li>
+  </ol>
+  <div class="note tip" data-label="💡 You can bake repeatedly, as many times as you like">
+    <p>Each bake rebuilds from "source texture + bake steps", but <b>what you baked remains as steps</b>, so from the second time on, previously baked content is not lost. Because it is rebuilt from the original every time, <b>image quality does not degrade no matter how many times you bake</b>.</p>
+  </div>
+  <div class="note info" data-label="NOTE — Base and per-layer color adjustments are independent">
+    <p>The base color adjustment applies only to the source texture, and a layer's adjustment applies only to that layer; <b>they do not affect each other</b>. Use a layer's adjustment when you want to change only a decal's color, and the base color adjustment when you want to change only the underlying image. Neither <b>accumulates</b> (they are never applied twice no matter how many times you re-bake).</p>
+    <p>Note that the adjustment taken in by <code class="inl">Also take the material's Color Adjust (HSV)</code> applies <b>only to the base color</b>. If you move the material-side sliders while layers already exist, the whole color appears to change on screen while only the base changes in the baked result, so a caution is shown in the Inspector in that case (use each layer's adjustment when you want to change the layer colors too).</p>
+  </div>
+  <div class="note info" data-label="NOTE — How to confirm the bake was applied">
+    <p>Look at <b><code class="inl">Last result</code></b> shown at the bottom of <code class="inl">Bake to Base</code> (for example: <code class="inl">Baked: base adjust yes / layers 2 (1 adjusted) (incl. Texture Layer)</code>). If it says <code class="inl">layers 0</code>, no image was baked that time (typically because Texture Layer is OFF or no texture is set).</p>
+  </div>
+  <div class="note tip" data-label="💡 Neither the original nor previously baked images are overwritten">
+    <p>The bake result is saved as a <b>new file</b> every time (delete old baked results you no longer need from the Project window). Also, when you bake the color adjustment (HSV), <b>Hue / Saturation / Brightness are automatically reset to their initial values (0 / 1 / 1) so the same adjustment is not applied twice</b>. These operations can be undone with Unity's Undo (<code class="inl">Ctrl+Z</code>).</p>
+  </div>
+  <div class="note info" data-label="NOTE — Preview and final result are produced by the same processing">
+    <p>However, the preview is uncompressed while compression settings apply after saving, so there can be a very slight difference in color. <b>Do your final check after saving</b>.</p>
+  </div>
+  <div class="note tip" data-label="💡 About color adjustment during preview">
+    <p><b>Adjust colors during preview with <code class="inl">Base Color Adjust</code> and each layer's <code class="inl">Layer Adjust</code>.</b> When the preview starts, the material's Hue / Saturation / Brightness return to their initial values once (because they are included in the bake). <b>Use these two sliders when you want to fine-tune the color</b> (they are reflected in real time and are baked with exactly those values).</p>
+  </div>
+  <div class="note warn" data-label="⚠ Specification notes — what can and cannot be baked">
+    <p>Baking is an operation in UV space. <b>Elements that move over time cannot be baked</b> (such as Texture Layer's Scroll). When Scroll is non-zero a caution is shown and <b>the stopped (starting position) image</b> is baked. Set Scroll to 0 and match the position with Tiling / Offset. Also, <b>after baking you cannot animate layers individually</b> (scrolling, fading, color changes). If there is one image you want to animate, use Texture Layer (runtime compositing); bake the designs that do not move.</p>
+    <p>Note that <b>if you bake the color adjustment (HSV) while Color is tinted, the color can change slightly before and after baking</b> (at runtime, Color is multiplied first and then HSV; in baking, HSV is applied to the image first and then Color). A caution is shown in the Inspector when this condition applies. Check with the preview, or set Color to white before baking.</p>
+  </div>
+  </div>
+</section>
+
 <!-- ============ LIGHTING ============ -->
 <section id="lighting">
-  <div class="sec-head rv"><div class="num">SEC. 05 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// light, shadow &amp; toon adjustment</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// light, shadow &amp; toon adjustment</div></div>
   <div class="rv">
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Unlit Mode</td><td>Completely ignores light sources and always displays at 100% brightness. For particles and emission effects.</td></tr>
@@ -491,6 +557,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="note warn" data-label="⚠ Only Opaque / Cutout can receive shadows (Unity's specification)">
     <p>Semi-transparent presets such as Fade / Transparent / Additive cannot receive directional-light shadows due to a constraint of the Unity Built-in pipeline (turning it ON does not add shadows). For parts you want to be semi-transparent but still receive shadows, such as bangs, use <b>the Cutout preset + Dither Fade (dithered pseudo-transparency)</b> (see the Texture Layer section).</p>
+    <p><b>GUI display (v40_GUIr1 and later):</b> When the checkbox is ON with a translucent preset, <b>"(no effect in the current Preset)"</b> is shown to the right of the checkbox, and the description below switches to a warning that explains the workaround (display only; the saved value does not change). The checkbox still works as it did, so <b>switching back to Opaque / Cutout makes what you set take effect as-is</b>.</p>
   </div>
   </div>
   <div class="rv">
@@ -508,7 +575,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PBR ============ -->
 <section id="pbr">
-  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// texture, environment reflection, glass &amp; metal mirroring</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// texture, environment reflection, glass &amp; metal mirroring</div></div>
   <div class="rv">
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Metallic / Smoothness</td><td>Adjusts metallic-ness and surface smoothness. Raise the values when you want a glossy metallic look that reflects the surrounding scenery.</td></tr>
@@ -538,7 +605,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ MATCAP ============ -->
 <section id="matcap">
-  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>Matcap</h2><div class="sub">// pseudo gloss &amp; environment reflection</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 08 — LIGHTING</div><h2>Matcap</h2><div class="sub">// pseudo gloss &amp; environment reflection</div></div>
   <div class="rv">
   <p>Expresses a constant, beautiful gloss or environment mirroring "pseudo-style". It is very light to process, making it valuable in VRChat.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -564,7 +631,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 08 — VFX</div><h2>Emission (HDR-capable)</h2><div class="sub">// HDR-capable emission</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Emission (HDR-capable)</h2><div class="sub">// HDR-capable emission</div></div>
   <div class="rv">
   <p>Makes a material that self-illuminates even in darkness.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -579,7 +646,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ AUDIOLINK ============ -->
 <section id="audiolink">
-  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>AudioLink (music-reactive emission)</h2><div class="sub">// music-reactive glow</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>AudioLink (music-reactive emission)</h2><div class="sub">// music-reactive glow</div></div>
   <div class="rv">
   <p>A feature that emits in sync with the music playing in the world. A staple feature in VRChat club worlds and live performances.</p>
   <p>This shader's AudioLink works as a <b>"sound-reactive emission layer" independent of the regular Emission (constant emission)</b>. Because it adds emission toward the base (color × Intensity) according to the loudness, <b>even with regular Emission OFF, you can make it emit in sync with sound using AudioLink alone</b>. Conversely, if you turn regular Emission ON, the sound-reactive emission layers on top of the constant emission (the two do not cancel each other).</p>
@@ -603,7 +670,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ GLITTER ============ -->
 <section id="glitter">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>Glitter / Sparkle (procedural glitter)</h2><div class="sub">// procedural glitter</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Glitter / Sparkle (procedural glitter)</h2><div class="sub">// procedural glitter</div></div>
   <div class="rv">
   <p>A decorative emission layer that scatters fine sparkling grains (glitter/sparkle) across the surface, without using any texture. The grains are generated procedurally inside the shader, so no dedicated noise image is needed. <b>The grains sparkle as you move your view</b> (a shimmering look like metallic glitter or flakes, glinting at different viewing angles). Because it works as an additive layer independent of regular Emission (constant glow), <b>you can get glow from Glitter alone even with Emission turned OFF</b>.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -629,7 +696,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ DISSOLVE ============ -->
 <section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Dissolve (disappear effect)</h2><div class="sub">// disappear effect</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Dissolve (disappear effect)</h2><div class="sub">// disappear effect</div></div>
   <div class="rv">
   <p>A feature that makes objects disappear/appear as if melting along a noise pattern.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -644,7 +711,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ RIM LIGHT ============ -->
 <section id="rimlight">
-  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Rim Light (edge light / backlight expression)</h2><div class="sub">// edge light / backlight expression</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Rim Light (edge light / backlight expression)</h2><div class="sub">// edge light / backlight expression</div></div>
   <div class="rv">
   <p>A feature that emphasizes the model's outline (edges). With Blend Mode you can switch between "making it glow" and "darkening it down".</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -652,16 +719,50 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Rim Power</td><td>Adjusts the thickness of the effect. The larger it is, the thicker and softer; the smaller, the thinner and sharper the edge.</td></tr>
     <tr><td>Blend Mode</td><td><code class="inl">Add</code> (default) makes the edge <b>glow additively</b> (backlight / aura). <code class="inl">Multiply</code> <b>darkens</b> the edge. Setting Rim Color to a dark tone makes a dark-edged outline (black rim).</td></tr>
     <tr><td>Disable on Backface</td><td>With double-sided rendering (Cull = Off), <b>does not produce rim on backface meshes</b> (acts in both Add/Multiply modes). Use it when you want to keep sleeve linings, coat interiors, etc. dark and subdued. Default is OFF.</td></tr>
+    <tr><td>Environment Adapt</td><td><b>Dims the rim to match the surrounding brightness (ambient light + the main light)</b>. This keeps the rim from looking out of place in dark worlds. The value is the degree of "<b>how much it is affected by the environment</b>": <code class="inl">1</code> (<b>default</b>) follows it fully, <code class="inl">0</code> gives a rim of constant brightness as before. <b>In places at least as bright as being well lit by white light, the look is the same as before</b>, and it dims the darker it gets from there (i.e. it only takes effect on the darker side). It acts in both Add / Multiply modes and in Unlit as well.</td></tr>
+    <tr><td>Dark Floor</td><td>The lower limit of how much rim remains in pitch-dark places. <code class="inl">0</code> (default) turns it off completely; around <code class="inl">0.2</code> <b>keeps a faint edge visible even in darkness</b>. Use this value to adjust when you feel it dims too much in dark worlds. It is shown only when Environment Adapt is greater than <code class="inl">0</code>.</td></tr>
+    <tr><td>Environment Tint</td><td><b>Blends the hue of the surrounding ambient light into the rim color</b>. In cool-lit worlds the rim shifts bluish, and in warm-lit worlds such as a sunset it shifts warm. <code class="inl">0</code> (default) leaves the color unchanged. Because it <b>shifts only the hue without changing brightness</b>, it does not darken twice when combined with Environment Adapt. It is independent of Environment Adapt, so you can also use it as "keep brightness constant and only blend the color" (Environment Adapt <code class="inl">0</code> + Environment Tint <code class="inl">1</code>). The effect appears as <b>suppressing the components contained in the rim color by the amount of the ambient light's hue</b>, so <b>the whiter or paler the rim, the more clearly it changes</b>.</td></tr>
   </tbody></table>
   <p><b>To make a black rim (darkening the edge):</b> Set Blend Mode to <code class="inl">Multiply</code> and set Rim Color to black or a dark tone. Adjust the darkening strength with Intensity and the outline thickness with Rim Power.</p>
   <p><b>About "Disable on Backface":</b> This option takes effect when the drawing setting <b>Cull is Off (double-sided)</b>. When Cull is <b>Back (backfaces not drawn; default)</b>, backfaces are not displayed, so turning it on does not change the look. Cull is in the "Transparency / Rendering" detailed settings (the same idea as the option of the same name in Matcap).</p>
+  <p><b>Where Environment Adapt is useful:</b> The rim glow is by nature a "constant regardless of how light falls" effect, so <b>in dark worlds the rim alone can stay bright and look out of place</b>. Environment Adapt (default <code class="inl">1</code>) follows the surrounding brightness and darkens it automatically, so it blends into many worlds as-is. <b>The look in bright worlds does not change</b>, so the only place that needs adjusting is dark ones. If it disappears too much in the dark, raising <b>Dark Floor</b> (or lowering <b>Environment Adapt</b> slightly) is the guideline. Conversely, if you want the rim to glow at a constant brightness as a highlight of the avatar, set Environment Adapt to <code class="inl">0</code> for the constant emission as before.</p>
+  <div class="note tip" data-label="💡 A tip for checking how it works">
+    <p>Environment Adapt takes effect <b>only on the side darker than being well lit by white light</b>. It is by design that moving the light a little in a bright world produces no change (so bright places keep the same look as before). To see how it works, <b>bring the Directional Light's Intensity close to 0</b> or <b>switch to a dark Skybox</b>, and the change becomes clearly visible.</p>
+  </div>
+  <p><b>About Environment Tint:</b> This adjusts <b>hue rather than brightness</b> toward the environment, and can be used independently of Environment Adapt. It extracts the color of the surrounding light and applies <b>only the hue</b> to the rim color, so brightness never drops twice. The default is <code class="inl">0</code> (color unchanged). The effect is clearest with <b>white to pale rims</b> (with an already deep-colored rim the change can be hard to notice). If you are aiming for "never out of place anywhere" while travelling between worlds, use it together with Environment Adapt; if you want to protect the character's colors, leaving it at <code class="inl">0</code> is the safer choice.</p>
   <p><b>Note:</b> <code class="inl">Multiply</code> takes effect only in Lit (Unlit OFF) (because Unlit Mode does not respond to light). The <code class="inl">Add</code> rim-light emission fades in/out following the particle color's alpha (<code class="inl">Fade</code>/<code class="inl">Additive</code>, and during <code class="inl">Transparent</code> particle lifetime fade).</p>
+  </div>
+</section>
+
+<!-- ============ BACK LIGHT ============ -->
+<section id="backlight">
+  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Back Light</h2><div class="sub">// backlight that glows only when the light is behind</div></div>
+  <div class="rv">
+  <p>An illustration-style backlight expression that makes a wide area of the outline glow <b>only when the main directional light is behind the character</b>. Whereas Rim Light "always glows at the edge depending on the viewing angle", Back Light "glows only when the light is behind", and in addition <b>the parts where the light is blocked by shadow do not glow</b> (places the backlight cannot reach because the body blocks it, such as the inside of a jacket or the collar, do not emit). The result is a natural backlight that responds to the scene's light direction and occlusion.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Use Back Light</td><td>Enables/disables the feature.</td></tr>
+    <tr><td>Back Light Color (HDR) / Intensity</td><td>The color and strength of the backlight. Being an HDR color, it glows strongly when combined with Bloom.</td></tr>
+    <tr><td>Width</td><td>The extent of the glowing area. <b>The smaller it is, the wider the area</b> that glows; the larger, the narrower the band near the outline.</td></tr>
+    <tr><td>Directivity</td><td>The directivity used to decide that "the light is behind". The larger it is, the more it glows <b>only when the light is almost directly behind</b>; the smaller, the more it also responds to light coming from diagonally behind.</td></tr>
+    <tr><td>Environment Adapt</td><td><b>Weakens the backlight to match the surrounding brightness (ambient light + the main light)</b>. This keeps the backlight from looking out of place in dark worlds. The value is the degree of "<b>how much it is affected by the environment</b>": <code class="inl">1</code> (<b>default</b>) follows it fully, <code class="inl">0</code> gives constant brightness as before. <b>In places at least as bright as being well lit by white light, the look is the same as before</b>, and it weakens the darker it gets from there. <b>This is the same mechanism as the item of the same name in Rim Light</b>.</td></tr>
+    <tr><td>Dark Floor</td><td>The lower limit of how much backlight remains in pitch-dark places. <code class="inl">0</code> (default) turns it off completely; around <code class="inl">0.2</code> keeps a faint glow even in darkness. Use this value to adjust when you feel it weakens too much in dark worlds. It is shown only when Environment Adapt is greater than <code class="inl">0</code>.</td></tr>
+    <tr><td>Environment Tint</td><td><b>Blends the hue of the surrounding ambient light into the backlight color</b>. In cool-lit worlds it shifts bluish, and in warm-lit worlds it shifts warm. <code class="inl">0</code> (default) leaves the color unchanged. Because it <b>shifts only the hue without changing brightness</b>, it does not darken twice when combined with Environment Adapt.</td></tr>
+    <tr><td>Disable on Backface</td><td>With double-sided rendering (Cull = Off), does not produce backlight on backface meshes. Default is OFF.</td></tr>
+  </tbody></table>
+  <p><b>Difference from Rim Light:</b> Rim Light glows "at the edge relative to your view" regardless of the light direction. Back Light looks at <b>the direction of the scene's main directional light</b> and glows only when the light is behind the subject, and furthermore <b>the parts blocked by shadow do not glow</b>. You can also use both at the same time.</p>
+  <div class="note info" data-label="NOTE — Specification note (about occlusion)">
+    <p>The occlusion test for the light uses <b>the world's shadows</b>. In <b>worlds without shadows</b> (environments where shadows are disabled) occlusion does not work and the test uses only the light direction, so light can appear even on the inside of a jacket. It is also <b>disabled in Unlit Mode</b> (because it does not respond to light; the same treatment as Rim's Multiply).</p>
+  </div>
+  <div class="note tip" data-label="💡 About Environment Adapt">
+    <p>Back Light used to decide its result only from "is the light behind" and "is it blocked by shadow", so <b>weakening the light's strength did not change how bright the backlight was</b>. With Environment Adapt (default <code class="inl">1</code>) it weakens automatically to match the surrounding brightness and blends into the scenery even in dark worlds. <b>The look in bright worlds does not change</b>, so the only place that needs adjusting is dark ones. To see how it works, <b>bring the Directional Light's Intensity close to 0</b> or <b>switch to a dark Skybox</b>, and the change becomes clearly visible. It is exactly the same mechanism as the item of the same name in Rim Light, so the same tuning sense applies when you use both.</p>
+  </div>
+  <p><b>Note:</b> The emission fades following transparency (hlFade). Since the effect is based on the main Directional Light, it does not glow if the world has no Directional Light. "Disable on Backface" is meaningful only when Cull = Off (double-sided) (the same idea as the options of the same name in Rim / Matcap).</p>
   </div>
 </section>
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Outline</h4>
   <p>A base feature that draws the mesh outline. It handles everything from a toon-style edge to a glowing outline like a neon tube via HDR color + Bloom. It <b>supports any 3D mesh — spheres, cubes, text, costumes, props, and more</b> — and on skinned meshes it also follows animation. The basic outline can be drawn without a texture or UV unwrap (a <b>mask is optional</b>: use a mask image only when you want to erase the line partially, such as around the corners of the eyes).</p>
@@ -723,7 +824,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PARTICLE / ANIM ============ -->
 <section id="particle">
-  <div class="sec-head rv"><div class="num">SEC. 14 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 16 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color (integration with particles)</h4>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -782,7 +883,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 
 <!-- ============ LICENSE ============ -->
 <section id="license">
-  <div class="sec-head rv"><div class="num">SEC. 15 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 17 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
   <div class="rv">
   <h3>Performance &amp; Optimization</h3>
   <p>This shader is maximally optimized for lightweight operation and compile speed in the VRChat environment.</p>
@@ -832,6 +933,13 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
       <li><code class="inl">README.md</code> (this guide)</li>
     </ul>
     <p>※ If <code class="inl">ARLitToonGUI.cs</code> is missing, the custom Inspector GUI will not be displayed and the material cannot be configured correctly. Bundle <code class="inl">README.md</code> to convey the usage and these Terms of Use to the recipient.</p>
+  </div>
+  <div class="note tip" data-label="[Files recommended for bundling]">
+    <ul style="margin:4px 0 8px 20px">
+      <li><code class="inl">ARLitToonBaker.cs</code> (the texture baking tool / inside the <code class="inl">Editor</code> folder)</li>
+    </ul>
+    <p>※ This one is <b>not required, but bundling it is recommended</b>. If you bundle it, the recipient can use <code class="inl">Bake to Base</code> (baking) as well. Even without it the shader works perfectly normally; only the baking feature becomes unavailable.</p>
+    <p>※ In the unlikely event that this single file prevents Unity from compiling (version differences, conflicts with other assets, and so on), <b>deleting <code class="inl">ARLitToonBaker.cs</code> restores everything</b>. That is exactly why it is not required.</p>
   </div>
   <h4><span class="hx">#</span> [Prohibited]</h4>
   <ul>

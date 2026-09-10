@@ -162,7 +162,7 @@ details .dbody li{margin-bottom:10px}
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v42_GUIr0 (EN) / PC ONLY</span>
+    <span class="ver">v45_GUIr2 (EN) / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="ARLitToon.html">日本語</a>
@@ -182,6 +182,8 @@ details .dbody li{margin-bottom:10px}
     <a href="#lighting">Lighting &amp; Shadow</a>
     <a href="#pbr">PBR &amp; Specular</a>
     <a href="#matcap">Matcap</a>
+    <a href="#fakeshadowmesh">Fake Shadow Mesh</a>
+    <a href="#fakeshadowtex">Fake Shadow Texture</a>
   </div>
   <div class="navgrp"><div class="glabel">Visual Effects</div>
     <a href="#emission">Emission</a>
@@ -224,7 +226,7 @@ details .dbody li{margin-bottom:10px}
 
 <div class="wrap">
   <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin:0 0 40px;max-width:640px">
-    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v42_GUIr0</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
+    <p>This is the English edition of <code class="inl">README.md</code>, generated at release time by translating the Japanese <a href="ARLitToon.html" style="color:var(--ac)">README.md (the canonical source)</a> as of version <b>v45_GUIr2</b>. The Japanese README remains the authoritative document. For the License (Terms of Use) section in particular, the original Japanese text is provided alongside the English translation and <b>prevails in case of any discrepancy in interpretation</b>.</p>
   </div>
 </div>
 
@@ -243,16 +245,23 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>Version (Changelog)</h3>
-  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v42_GUIr0</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
-  <div class="note tip" data-label="LATEST — v42_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p><span class="vtag">v42_GUIr0</span> Added <b>Environment Adapt</b> and <b>Environment Tint</b> to <b>Back Light</b> as well. Back Light used to decide its brightness only from "is the light behind the character" and "is it blocked by a shadow", so <b>weakening the light did not change how bright the backlight was</b>, and in dark worlds the backlight alone stayed strong and looked out of place. Raising Environment Adapt makes <b>the backlight fade automatically to match the surrounding brightness (ambient light + the main light)</b>. <b>The look in bright places does not change</b> (it only takes effect on the darker side). Raising Environment Tint blends the hue of the surrounding light into the backlight color (brightness is left as it is). <b>The mechanism and the feel of the controls are exactly the same as the identically named items in Rim Light</b>, so the same tuning sense applies when you use both. If it fades too much in dark worlds, raise <b>Dark Floor</b> (see the Back Light section for details).</p>
-    <p><span class="vtag">v41_GUIr0</span> Added <b>Environment Adapt</b> to Rim Light. Until now the rim glow stayed at a constant brightness regardless of the surrounding brightness, so <b>in dark worlds the rim alone could look strongly out of place</b>. Raising Environment Adapt makes <b>the rim dim automatically to match the surrounding brightness</b>, so it blends into the scenery even in dark places. <b>The look in bright places does not change</b> (it is a one-way adjustment that only takes effect on the darker side, so nothing that looked a certain way before becomes brighter). Raising <b>Dark Floor</b> keeps a faint edge visible even in pitch-dark places. In addition, raising <b>Environment Tint</b> makes <b>the hue of the surrounding light blend into the rim color</b> (bluish in cool-lit places, warmer in warm-lit places). Because it shifts only the hue and leaves brightness alone, combining it with Environment Adapt will not darken things twice. Both work the same way with Blend Mode <code class="inl">Add</code> / <code class="inl">Multiply</code> and with Unlit. <b>Environment Adapt is ON by default (= 1)</b>, but <b>the look in bright places is unchanged from before</b> (because it only takes effect on the darker side). If you want a rim with constant brightness as before, set Environment Adapt to <code class="inl">0</code> (see the Rim Light section for details).</p>
-    <p><span class="vtag">v40_GUIr2</span> Added <b>Bake to Base</b> (texture baking). This is a Unity editor tool that bakes several layer images (decals, logos, patterns, makeup and so on) and color adjustments (Hue / Saturation / Brightness) <b>into the base texture, combining them into a single image</b>. At runtime only one texture layer can be stacked, but with baking there is <b>no limit on the number of images</b>, and since the result is still a single texture, <b>neither runtime cost nor texture memory increases</b>. You operate it from <code class="inl">Bake to Base</code>, added <b>below Texture Layer</b> in the material Inspector. <b>You can bake the image you set in the Texture Layer above exactly as it is</b>, so by repeating "decide the position and blend mode in Texture Layer → bake → put the next decal in the freed slot" you can stack as many as you like (after baking, <b>Texture Layer is turned OFF automatically</b> so the same artwork is not applied twice, and the baked settings are taken into the recipe, so <b>what you baked before is never lost</b>). Color adjustments can be baked repeatedly in the same way. There is a <b>preview that shows the baked result on the actual model</b> before you bake, and <b>moving any setting during preview updates the model in real time</b>. The preview and the final output are produced by the same processing, so they look the same. The baked result is <b>saved as a new PNG</b> and the original texture is left untouched. The settings (recipe) are saved, so you can re-bake at any time with one click. <b>The shader itself is unchanged, so the appearance and runtime cost of existing materials are exactly as before</b> (see the Bake to Base section for details).</p>
-    <p><span class="vtag">v40_GUIr1</span> Added a display to <b>Receive Shadow</b> in Lighting &amp; Shadow that <b>shows on the spot that it has no effect with translucent presets</b> (GUI only). When Blend Preset is <b>Transparent / Fade / Additive</b> and the checkbox is ON, <b>"(no effect in the current Preset)"</b> is shown to the right of the checkbox, and the description below switches to a warning that explains the cause and the workaround (<b>the Cutout preset + Dither Fade</b>). Translucent materials cannot receive cast shadows because of how Unity works, so this display prevents the misunderstanding of "the box is checked but no shadow appears". <b>This is a display-only change; functionality, saved values, and appearance are exactly the same as before</b> (the checkbox still works as it did, and switching back to Opaque / Cutout makes the setting take effect again).</p>
+  <p>Versions are written as integers without decimal points, as <code class="inl">v{shader version}_GUIr{GUI revision}</code>. The shader version (the number after <code class="inl">v</code>) is based on <code class="inl">_ShaderVersion</code> in the shader itself <code class="inl">ARLitToon.shader</code>, and the <code class="inl">GUIr</code> number is the revision of the GUI (<code class="inl">ARLitToonGUI.cs</code>). You can check the current version in the material Inspector header (<code class="inl">✦ ARLit Toon ✦ v45_GUIr2</code>). This history lists only the <b>changes</b> of each version. For how to use each feature and its setting values, see the sections above.</p>
+  <div class="note tip" data-label="LATEST — v45_GUIr2" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p><span class="vtag">v45_GUIr2</span> <b>Every PBR property is now hidden while Unlit Mode is on.</b></p>
+    <p><span class="vtag">v45_GUIr1</span> <b>The Inspector now warns when mirroring is left enabled on a material used for particles.</b></p>
+    <p><span class="vtag">v45_GUIr0</span> <b>Lighting is now PBR (physically based).</b></p>
+    <p><span class="vtag">v44_GUIr2</span> <b>Moved Soft Particles from Transparency / Rendering to Particle Color (integration with particles)</b> (GUI only). Because Soft Particles is a feature for particles, it is now grouped <b>below Vertex Color Blend Mode</b>, another particle-related setting. <b>The feature, its properties, saved values and look are exactly the same as before</b> (see the Particle Color section).</p>
+    <p><span class="vtag">v44_GUIr1</span> Added <b>"- shown in Preview"</b> to the <b>"Layers (stacked top to bottom)"</b> heading of Bake to Base (GUI only). It is a wording change that makes explicit that the order and adjustments in this list are reflected as-is in the preview; <b>the feature, saved values and look are exactly the same as before</b>.</p>
+    <p><span class="vtag">v44_GUIr0</span> Added <b>Fake Shadow Mesh (a shadow cast from the mesh)</b>. It <b>pushes the shape of a mesh such as front hair along the light direction and drops it onto the face as a shadow</b>. Whereas the existing <b>Fake Shadow Texture (the drawn shadow)</b> was a still image drawn in UV space, this one <b>follows the movement of the head and the direction of the light</b>. Because the depth the shadow reaches is limited, <b>the background and other avatars never darken</b>. In worlds with no light, it falls back to casting toward the direction you specify (slightly above and in front by default), switching over smoothly according to brightness. <b>To use it, set the Render Queue of the casting material (the front hair, etc.) to a larger value than the receiver's (the face, etc.)</b> (no shadow appears without it). <b>Default OFF; existing materials look exactly the same as before</b> (see the Fake Shadow Mesh section).</p>
+    <p><span class="vtag">v43_GUIr0</span> Added <b>Fake Shadow (a stylized cast shadow)</b>. It shows a shadow drawn by the author — like the shadow of front hair — on the face or body <b>always at the same position and the same density, regardless of the world's light sources</b>. The existing <b>Receive Shadow</b> only produces a shadow in worlds that have an actual light source and shadow settings, whereas Fake Shadow Texture <b>keeps the shading you intended even in worlds with no lighting or in dark worlds</b> (they are separate features and can be used together). The shape of the shadow is read from a specified channel of the new <b>shared mask (RGBA packed)</b>. <b>Tiling / Offset</b> adjust its position and repetition, so the shadow position can be fine-tuned with sliders without redrawing the texture. The color and density are adjustable as well, and <b>the shadow appears the same way in Unlit Mode</b>. Because it is a still image drawn in UV space, it does not follow the head or the direction of the light. <b>Default OFF; existing materials look exactly the same as before</b> (see the Fake Shadow Texture section).</p>
   </div>
   <details>
     <summary>Open past changelog (click to expand)</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v42_GUIr0</span> Added <b>Environment Adapt</b> and <b>Environment Tint</b> to <b>Back Light</b> as well. Back Light used to decide its brightness only from "is the light behind the character" and "is it blocked by a shadow", so <b>weakening the light did not change how bright the backlight was</b>, and in dark worlds the backlight alone stayed strong and looked out of place. Raising Environment Adapt makes <b>the backlight fade automatically to match the surrounding brightness (ambient light + the main light)</b>. <b>The look in bright places does not change</b> (it only takes effect on the darker side). Raising Environment Tint blends the hue of the surrounding light into the backlight color (brightness is left as it is). <b>The mechanism and the feel of the controls are exactly the same as the identically named items in Rim Light</b>, so the same tuning sense applies when you use both. If it fades too much in dark worlds, raise <b>Dark Floor</b> (see the Back Light section for details).</li>
+      <li><span class="vtag">v41_GUIr0</span> Added <b>Environment Adapt</b> to Rim Light. Until now the rim glow stayed at a constant brightness regardless of the surrounding brightness, so <b>in dark worlds the rim alone could look strongly out of place</b>. Raising Environment Adapt makes <b>the rim dim automatically to match the surrounding brightness</b>, so it blends into the scenery even in dark places. <b>The look in bright places does not change</b> (it is a one-way adjustment that only takes effect on the darker side, so nothing that looked a certain way before becomes brighter). Raising <b>Dark Floor</b> keeps a faint edge visible even in pitch-dark places. In addition, raising <b>Environment Tint</b> makes <b>the hue of the surrounding light blend into the rim color</b> (bluish in cool-lit places, warmer in warm-lit places). Because it shifts only the hue and leaves brightness alone, combining it with Environment Adapt will not darken things twice. Both work the same way with Blend Mode <code class="inl">Add</code> / <code class="inl">Multiply</code> and with Unlit. <b>Environment Adapt is ON by default (= 1)</b>, but <b>the look in bright places is unchanged from before</b> (because it only takes effect on the darker side). If you want a rim with constant brightness as before, set Environment Adapt to <code class="inl">0</code> (see the Rim Light section for details).</li>
+      <li><span class="vtag">v40_GUIr2</span> Added <b>Bake to Base</b> (texture baking). This is a Unity editor tool that bakes several layer images (decals, logos, patterns, makeup and so on) and color adjustments (Hue / Saturation / Brightness) <b>into the base texture, combining them into a single image</b>. At runtime only one texture layer can be stacked, but with baking there is <b>no limit on the number of images</b>, and since the result is still a single texture, <b>neither runtime cost nor texture memory increases</b>. You operate it from <code class="inl">Bake to Base</code>, added <b>below Texture Layer</b> in the material Inspector. <b>You can bake the image you set in the Texture Layer above exactly as it is</b>, so by repeating "decide the position and blend mode in Texture Layer → bake → put the next decal in the freed slot" you can stack as many as you like (after baking, <b>Texture Layer is turned OFF automatically</b> so the same artwork is not applied twice, and the baked settings are taken into the recipe, so <b>what you baked before is never lost</b>). Color adjustments can be baked repeatedly in the same way. There is a <b>preview that shows the baked result on the actual model</b> before you bake, and <b>moving any setting during preview updates the model in real time</b>. The preview and the final output are produced by the same processing, so they look the same. The baked result is <b>saved as a new PNG</b> and the original texture is left untouched. The settings (recipe) are saved, so you can re-bake at any time with one click. <b>The shader itself is unchanged, so the appearance and runtime cost of existing materials are exactly as before</b> (see the Bake to Base section for details).</li>
+      <li><span class="vtag">v40_GUIr1</span> Added a display to <b>Receive Shadow</b> in Lighting &amp; Shadow that <b>shows on the spot that it has no effect with translucent presets</b> (GUI only). When Blend Preset is <b>Transparent / Fade / Additive</b> and the checkbox is ON, <b>"(no effect in the current Preset)"</b> is shown to the right of the checkbox, and the description below switches to a warning that explains the cause and the workaround (<b>the Cutout preset + Dither Fade</b>). Translucent materials cannot receive cast shadows because of how Unity works, so this display prevents the misunderstanding of "the box is checked but no shadow appears". <b>This is a display-only change; functionality, saved values, and appearance are exactly the same as before</b> (the checkbox still works as it did, and switching back to Opaque / Cutout makes the setting take effect again).</li>
       <li><span class="vtag">v40_GUIr0</span> Added <b>Glitter / Sparkle</b> (procedural glitter/sparkle). This is a decorative emission layer that generates fine sparkling grains without using any texture. <b>The grains sparkle as you move your view</b> (a metallic glitter/flake-like look). Choose from four shapes: <b>Point (round dot) / Star (sharp-tipped cross) / Diamond / Fine Dust (very fine glitter)</b>, and switch the grain coordinate space between <b>UV / Object (uniform on all faces via triplanar projection)</b>. The grain outlines stay sharp at any size, and they light up correctly even on the back faces of double-sided meshes. It supports <b>scrolling</b> (flowing grains), <b>HDR emission</b> (works with Bloom), and <b>AudioLink</b> (flickering in sync with sound). Because it's an additive layer independent of the regular Emission, <b>it emits light on its own even with Emission turned OFF</b>. The emission follows transparency. <b>Default is OFF, so the appearance of existing materials is completely unchanged</b> (see the Glitter / Sparkle section for details).</li>
       <li><span class="vtag">v39_GUIr3</span> Changed <b>Receive Shadow</b> in Lighting &amp; Shadow to the same "bold sub-heading + checkbox below it" display used by Light Limit, and increased the space above it (GUI only). A display tweak to improve visibility within the section; <b>functionality, saved values, and appearance (when it takes effect) are exactly the same as before</b>.</li>
       <li><span class="vtag">v39_GUIr2</span> <b>Moved the Dither Fade (dithered pseudo-transparency) setting from Transparency / Rendering to Texture Layer</b> (below the alpha mask) (GUI only). Grouped it next to the alpha mask since both are "cut out by alpha" style features. <b>Only the display location changed — the display condition (hidden with semi-transparent presets), functionality, saved values, and appearance are exactly the same as before.</b></li>
@@ -385,20 +394,6 @@ details .dbody li{margin-bottom:10px}
   <div class="note tip" data-label="💡 TIP — DRAW-ORDER FIX (Z-SORT)">
     <p><code class="inl">Fade</code> / <code class="inl">Additive</code> default to <code class="inl">Render Queue</code> = <b>3001</b> (in front of glass etc. at <code class="inl">Transparent</code> = 3000). This is to avoid the phenomenon where, when the Render Queue is the same (both 3000), Unity reorders front/back by per-object distance and a semi-transparent effect appears to slip behind the glass.</p>
     <p>If a particle or effect is still hidden behind distant glass, you can draw it in front by raising the Inspector's Render Queue value further, to <b>3050</b> for example. If it comes too far forward, lower the value.</p>
-  </div>
-  </div>
-
-  <div class="rv">
-  <h4><span class="hx">#</span> Soft Particles</h4>
-  <p>A feature that erases the unnatural boundary line where a semi-transparent object (Fade/Additive, etc.) intersects with an opaque object such as the ground or a wall, blending it smoothly.</p>
-  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
-    <tr><td>Fade Distance</td><td>Adjusts the distance over which the boundary line fades out (becomes transparent).</td></tr>
-  </tbody></table>
-  <p><b>Specification note:</b> Works only when ZWrite is Off (i.e., a semi-transparent preset). Also, on VRChat thumbnail cameras and the like (orthographic cameras) it is automatically disabled to prevent glitches.</p>
-  <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
-    <p>Soft particles work only when the VRChat world's camera is generating a "depth texture". Specifically, it becomes active when the world uses <b>Deferred Rendering</b>, <b>uses post-processing</b>, or <b>uses another soft-particle shader</b>.</p>
-    <p>In a simple Forward Rendering world that does not meet the above conditions, the soft-particle feature is automatically disabled and displayed as ordinary semi-transparent rendering. This is a specification-level constraint that depends on the VRChat world's rendering settings and cannot be controlled from the avatar-side shader. Other VRChat shaders have the same constraint.</p>
-    <p><b>[Behavior in unsupported worlds]</b> It is drawn semi-transparently with the boundary line remaining, but the effect itself displays normally. No breakdown such as full transparency occurs.</p>
   </div>
   </div>
 
@@ -564,9 +559,12 @@ details .dbody li{margin-bottom:10px}
   <h4><span class="hx">#</span> Light Limit (ambient clamp / prevents blow-out &amp; crushed blacks)</h4>
   <p>When a world's ambient light is excessively bright or dark, this limits the amount of light the avatar receives to a fixed range, preventing blow-out and situations where everything is pitch black and invisible. It makes dark worlds darker, and in bright worlds leaves headroom for brightness within a range that does not blow out.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
-    <tr><td>Light Min Limit</td><td>The lower bound of brightness in dark places. The lower it is, the darker it gets in dark worlds (<code class="inl">0</code> = no lower bound = can go fully dark).</td></tr>
+    <tr><td>Light Min Limit (lower bound in dark areas)</td><td><b>The lower bound of the light a given area receives.</b> Whatever falls short of this bound inside shadows or in dark worlds is filled in as flat ambient light. <b>The higher it is, the more shadows are lifted and brightened</b>; the lower it is, the deeper shadows sink (<code class="inl">0</code> = no lower bound = shadows can go fully dark).</td></tr>
     <tr><td>Light Max Limit</td><td>The upper bound of brightness in bright places (prevents blow-out). The higher it is, the brighter it appears in bright worlds.</td></tr>
   </tbody></table>
+  <div class="note tip" data-label="💡 TIP — LIGHT MIN LIMIT ALSO WORKS AS A LOWER BOUND FOR SHADOW DENSITY">
+    <p>The bound acts on the <b>light received per pixel</b>, so it can <b>lift only the shadowed parts</b> while lit surfaces stay as they are. Raise it when facial shading is crushed and unreadable in a dark world, or when you want to keep shadows light. To change the shadow color itself, use <b>Shadow Color / Shadow Intensity</b> under Lighting &amp; Shadow instead (those specify the color and density of the shadow directly, not the amount of light).</p>
+  </div>
   <div class="note info" data-label="NOTE — SPECIFICATION">
     <p>This feature is <b>always enabled</b>. It acts only when Lit (Unlit OFF); <b>in Unlit Mode it does not respond to light, so this section itself is automatically hidden</b>. Emission and environment-reflection mirroring are not subject to the limit. <b>Additional realtime lights are also subjected, together with the main light and ambient light, to a single upper/lower-bound pass</b> (additional lights are treated per-vertex, up to 4 lights). <code class="inl">_LightMinLimit</code> / <code class="inl">_LightMaxLimit</code> can be animated.</p>
   </div>
@@ -575,27 +573,45 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PBR ============ -->
 <section id="pbr">
-  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// texture, environment reflection, glass &amp; metal mirroring</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// physically based texture, environment reflection, glass &amp; metal mirroring</div></div>
   <div class="rv">
+  <p>This shader's lighting is <b>physically based (PBR BRDF)</b>. Metallic expresses the distinction between metal and non-metal, and the calculation preserves the total amount of light. <b>Toon shading (shadow color, border and blur under Lighting &amp; Shadow) still rides on top of it</b>, so the cel-shaded look is preserved.</p>
+  <div class="note info" data-label="NOTE — THE PROPERTIES ARE HIDDEN IN UNLIT MODE">
+    <p><b>When Unlit Mode (ignore lighting) is ON, none of the properties in this section have any effect, so they are hidden from the Inspector</b> (your values are kept, and they come back unchanged when you turn it off). The section header remains, and a message explaining how to bring them back is shown instead.</p>
+  </div>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
-    <tr><td>Metallic / Smoothness</td><td>Adjusts metallic-ness and surface smoothness. Raise the values when you want a glossy metallic look that reflects the surrounding scenery.</td></tr>
+    <tr><td>Metallic</td><td><b>Whether the surface is metal.</b> The closer to <code class="inl">1</code>, the more <b>the diffuse color disappears while highlights and reflections take on the base color</b> (gold shines gold, copper shines coppery red). Metals such as gold, copper and brass are <code class="inl">1</code>; non-metals such as cloth, skin and plastic are <code class="inl">0</code>, and <b>intermediate values are basically not used</b>.</td></tr>
+    <tr><td>Smoothness</td><td>Surface smoothness. It decides both the spread of highlights and the blurriness of reflections at once (high = sharp, small highlight plus crisp reflections / low = broad, blurred reflections).</td></tr>
+    <tr><td>No shadow on metal (pure physical)</td><td>With <code class="inl">OFF</code> (default), toon shading also applies to reflections on metal, so <b>cast shadows and toon shadows appear on metal parts too</b>. Turning it <code class="inl">ON</code> removes that shading, giving <b>the physically correct behavior, the same way a mirror shows the same scene even inside a shadow</b>. In exchange, metal stops showing shadows, and shading becomes less visible the higher Smoothness is. <b>Surfaces with Metallic at <code class="inl">0</code> (glass, cloth, skin) are unaffected.</b></td></tr>
     <tr><td>Normal Map + Scale</td><td>Use this when you want to express fine bumps (clothing wrinkles, brick grooves, etc.) without increasing polygon count.</td></tr>
   </tbody></table>
+  <div class="note tip" data-label="💡 TIP — HOW TO MAKE METAL PARTS">
+    <p>On the material for fittings or ornaments, set <b>Metallic to <code class="inl">1</code></b> and <b>Smoothness to <code class="inl">0.7</code>–<code class="inl">0.9</code></b> (<b>Reflection Strength can stay at its default of <code class="inl">1</code></b>). <b>Because metal takes its color from the surrounding reflections, it goes dark if Reflection Strength is left at <code class="inl">0</code></b> (the Inspector shows a warning when Metallic is high while it is <code class="inl">0</code>). Toon shading, outlines, Matcap and rim light can all still be combined, so you can <b>make only the fittings and ornaments look metallic while keeping the cel-shaded look</b>.</p>
+    <p><b>Shadows on metal can also be adjusted under Lighting &amp; Shadow</b>: since toon shading applies to reflections as well, <b>Shadow Color / Shadow Border / Shadow Blur</b> work on metal parts too (raising Smoothness concentrates the light-source highlight into a small point, but the shadow does not disappear because the reflection side expresses it).</p>
+  </div>
+  <div class="note warn" data-label="⚠ KEEP METALLIC AT 0 ON NON-METAL PARTS">
+    <p>A surface with a raised Metallic <b>loses its diffuse (base) color</b>. This is exactly how metal behaves physically. If you raise Metallic on non-metal parts such as skin or cloth, the color drains away and they look dark. <b>If you only want stronger shine (highlights), use Specular Highlight instead of Metallic.</b></p>
+  </div>
+  <div class="note warn" data-label="⚠ EXISTING MATERIALS LOOK DIFFERENT FROM v45_GUIr0 (NO BACKWARD COMPATIBILITY)">
+    <p>The case that needs the most care is <b>materials that used Metallic as a "knob for more shine"</b>. In the old method Metallic only raised the brightness of the highlight, but from this version it <b>means metal</b>, so leaving the value high makes <b>the diffuse color disappear and the surface look dark</b>.</p>
+    <p><b>What to do:</b> set that material's <b>Metallic back to <code class="inl">0</code></b>, and add shine with <b>Specular Highlight</b> if you want it. For real metal parts, set <b>Metallic to <code class="inl">1</code></b> and <b>Reflection Strength to <code class="inl">1</code></b> (reflections are the main component of a metal's color, so it goes dark if left at <code class="inl">0</code>). The Inspector shows a warning when Metallic is high while Reflection Strength is <code class="inl">0</code>.</p>
+    <p>Note that <b>materials with Metallic at <code class="inl">0</code></b> (the default) become <b>slightly more subdued in brightness</b>, because the total amount of light is now preserved. <b>The default of Reflection Strength also changed from <code class="inl">0</code> to <code class="inl">1</code></b>, but <b>values already saved in existing materials do not change</b> (raise them by hand if needed).</p>
+  </div>
   </div>
   <div class="rv">
   <h4><span class="hx">#</span> Specular Reflection (environment reflection / glass &amp; metal mirroring)</h4>
   <p>A feature that mirrors the world's scenery (reflection probes / skybox) onto the surface. Used for glass, metal, wet surfaces, etc.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
-    <tr><td>Reflection Strength</td><td>The strength of the mirroring. <code class="inl">0</code> = disabled (default; zero load as before).</td></tr>
+    <tr><td>Reflection Strength (reflection influence)</td><td>How much the mirroring takes effect. <b>The default is <code class="inl">1</code> (mirroring on)</b>. At <code class="inl">0</code> no mirroring is calculated at all (zero load), but <b>at <code class="inl">0</code> the scenery is not mirrored even if you raise Metallic</b>. Since reflections are the main component of a metal's color, do not lower it too far. You can set it to <code class="inl">0</code> on particles and the like where you want the load switched off.</td></tr>
     <tr><td>Fresnel Power</td><td>The sharpness of edge reflection. The larger it is, the more only the grazing "edge" reflects strongly, becoming glass-like. Lower it and the whole face reflects uniformly (for mirrors/metal).</td></tr>
     <tr><td>Fresnel Min</td><td>The reflection amount of front-facing surfaces. Near <code class="inl">0</code> for glass; raise it for mirrors/metal.</td></tr>
-    <tr><td>Specular Highlight</td><td>Adds a light-source highlight (shine) independently of Metallic. For the sparkle of glass/plastic.</td></tr>
+    <tr><td>Specular Highlight</td><td><b>Extra shine</b> added on top of the highlight produced by the physical calculation (<code class="inl">0</code> = purely physical). <b>When you want stronger shine on a non-metal surface, use this rather than Metallic.</b></td></tr>
   </tbody></table>
   <p><b>Reflection sharpness is determined by Smoothness</b> (high = crisp like a mirror / low = blurry like frosted glass).</p>
   <div class="note tip" data-label="💡 TIP — HOW TO MAKE GLASS">
     <p>Set Blend Preset to <b>Transparent</b>, <b>Unlit OFF (Lit)</b>, raise <b>Reflection Strength</b>, and set <b>Fresnel Power</b> to about 4–6. As needed, add shine with <b>Specular Highlight</b> and a pseudo-gloss with Matcap. Because Transparent does not let the material transparency (<code class="inl">_Color.a</code>) make reflections, highlights, or Matcap transparent, the mirroring rides on solidly while the object is faintly see-through. (With Fade/Additive, reflections also follow the alpha and become transparent.)</p>
     <p>Note that if you <b>use Transparent glass on particles and fade it out via Color over Lifetime</b>, everything including environment reflection, Matcap, and emission disappears completely. Even in an effect that erases the glass with Dissolve, it naturally vanishes along with the reflections.</p>
-    <p><b>※ Because Unlit Mode does not respond to light, environment reflection, specular highlights, and Matcap are all not displayed. Always use glass in Lit (Unlit OFF).</b></p>
+    <p><b>※ Because Unlit Mode does not respond to light, environment reflection, specular highlights, and Matcap are all not displayed. Always use glass in Lit (Unlit OFF).</b> <b>In Unlit Mode the Specular Reflection properties themselves are hidden from the Inspector</b> (your values are kept, and they come back unchanged when you turn Unlit off). <b>The calculation is skipped as well, so there is no load.</b></p>
   </div>
   <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
     <p>What is mirrored depends on the VRChat world's reflection probes / skybox. In worlds without probes placed, reflections may appear dark (a specification-level constraint that depends on the world environment, the same as soft particles and AudioLink).</p>
@@ -617,7 +633,8 @@ details .dbody li{margin-bottom:10px}
     <tr><td>2nd Matcap (Mask Select)</td><td>In a single material, <b>switches between 2 kinds of Matcap per part</b>. It switches by the region mask (grayscale): <b>black = 1st / white = 2nd</b>. <b>The 1st and 2nd can each set Color Tint, Strength, and Blend independently</b> (e.g., bright metal for trim, subdued silk for cloth). Default is OFF.</td></tr>
   </tbody></table>
   <div class="note info" data-label="NOTE — 2ND MATCAP (PER-PART TEXTURE SWITCHING)">
-    <p>Turning on "Use 2nd Matcap" reveals <b>Matcap Texture 2</b>, <b>Matcap 2's Color Tint / Strength / Blend / Contrast / Highlight</b>, and the <b>region mask</b>. The grayscale of the mask switches the Matcap (black = 1st / white = 2nd / midtones interpolate), and the mask is sampled with the same UV as the main texture. Because the 1st and 2nd can each <b>set color, strength, blend mode, contrast, and highlight emphasis independently</b>, you can craft different textures per part. Backface disable and lifetime fade apply to both Matcaps. <b>When OFF, or when the 2nd is not assigned, it works as a single Matcap as before, with no change in load.</b></p>
+    <p>Turning on "Use 2nd Matcap (Mask Select)" reveals <b>Matcap Texture 2</b>, <b>Matcap 2's Color Tint / Strength / Blend / Contrast / Highlight</b>, <b>Shared Mask RGBA (shared with other features)</b>, and <b>Region Mask Channel (R/G/B/A)</b>. The specified channel of the shared mask (default <code class="inl">R</code>) switches the Matcap (black = 1st / white = 2nd / midtones interpolate), and the mask is sampled with the same UV as the main texture.</p>
+    <p><b>The shared mask is a slot shared with other mask features such as Fake Shadow Texture</b> (up to four masks can be packed into the R/G/B/A of a single image; see the <a href="#fakeshadowtex">Fake Shadow Texture</a> section for details). <b>The contents of R/G/B/A are shown side by side right below the channel selector, and you can switch by clicking them.</b> The default channels are <code class="inl">R</code> for Matcap and <code class="inl">B</code> for Fake Shadow Texture, so they do not collide as they are. <b>Materials that already had a region mask assigned look exactly the same as before</b> (the default is <code class="inl">R</code>, and a grayscale image has R=G=B so the value is identical). Because the 1st and 2nd can each <b>set color, strength, blend mode, contrast, and highlight emphasis independently</b>, you can craft different textures per part. Backface disable and lifetime fade apply to both Matcaps. <b>When OFF, or when the 2nd is not assigned, it works as a single Matcap as before, with no change in load.</b></p>
   </div>
   <div class="note info" data-label="NOTE — ABOUT &quot;DISABLE ON BACKFACE&quot;">
     <p>This option takes effect when the drawing setting <b>Cull is Off (double-sided)</b>. Turning off Matcap on backfaces means no highlight rides on those faces, so they naturally appear darker (recessed linings). When Cull is <b>Back (backfaces not drawn; default)</b>, backfaces are not displayed, so turning this on does not change the look. Cull is in the "Transparency / Rendering" detailed settings.</p>
@@ -629,9 +646,77 @@ details .dbody li{margin-bottom:10px}
   </div>
 </section>
 
+<!-- ============ FAKE SHADOW MESH ============ -->
+<section id="fakeshadowmesh">
+  <div class="sec-head rv"><div class="num">SEC. 09 — LIGHTING</div><h2>Fake Shadow Mesh (caster side)</h2><div class="sub">// a shadow cast from the mesh, following the light and the head</div></div>
+  <div class="rv">
+  <p>A feature that <b>pushes the shape of the mesh itself along the light direction</b> — front hair, for example — and drops it onto the face as a shadow. Whereas <a href="#fakeshadowtex">Fake Shadow Texture</a> below is a <b>still image</b> drawn in UV space, this shadow <b>follows the movement of the head and the direction of the light</b>.</p>
+  <p><b>Set this up on the material of the "casting side" (the front hair, etc.).</b> No setup is needed on the receiving side (the face, etc.).</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Enable Fake Shadow Mesh (cast a shadow from this mesh)</td><td>Enables/disables the feature (default OFF).</td></tr>
+    <tr><td>Shadow Overlap</td><td>Chooses how the parts where the shadow overlaps itself look (strands of hair crossing each other, etc.). <b>Multiply (overlaps get darker)</b> (default) darkens in proportion to the receiver's own shading, so overlapping parts get correspondingly denser. <b>Flat (constant density on overlaps)</b> keeps <b>the density constant even where it overlaps</b> (see the note below).</td></tr>
+    <tr><td>Shadow Color</td><td>The color of the cast shadow. The default is a slightly bluish gray (white = no shadow).</td></tr>
+    <tr><td>Shadow Strength</td><td>The strength of the shadow (<code class="inl">0</code> = off to <code class="inl">1</code> = maximum). Animatable.</td></tr>
+    <tr><td>Cast Distance (push along the light direction; typically 0.1-1.0)</td><td>How far the mesh is pushed along the light direction (default <code class="inl">0.6</code>). <b>Too small and the shadow is buried in the body; too large and it looks detached</b>. Adjust it to the gap between the face and the hair.</td></tr>
+    <tr><td>Receive Depth (nothing farther gets the shadow; typically 0.1-1.0)</td><td>The depth limit the shadow reaches (default <code class="inl">0.5</code>). <b>Nothing farther than this is darkened</b> — the background, distant walls and other avatars are unaffected. Raise it slightly if the shadow does not reach the face; lower it if the shadow leaks onto the surroundings.</td></tr>
+    <tr><td>Direction when the light is weak (XYZ, world space)</td><td><b>When the light direction is unreliable in a dark world</b>, the cast direction is biased toward the direction you specify. The default <code class="inl">(0, 0.7071, 0.7071)</code> assumes light coming from slightly above and in front (<b>it points toward the light</b>, and the shadow extends the opposite way).</td></tr>
+    <tr><td>Brightness where the direction above takes over (Light Intensity)</td><td>How dark it must get before the direction above starts to take over (default <code class="inl">0.1</code>). <b>It reads on the same scale as Light Intensity</b> (<code class="inl">0.1</code> = it starts taking over around the point where a Directional Light's Intensity drops below 0.1). <b>The changeover is interpolated smoothly</b>, so it never snaps over as the brightness changes.</td></tr>
+  </tbody></table>
+  <div class="note info" data-label="NOTE — RENDER QUEUE IS ADJUSTED AUTOMATICALLY">
+    <p>The shadow must be <b>drawn after the receiver (the face, etc.)</b>. Opaque rendering draws front to back, so the front hair is drawn before the face and <b>the shadow would be overwritten by the face and disappear</b>. Turning this feature <b>ON raises Render Queue by +1 automatically</b> (and likewise when you re-pick a Blend Preset), and <b>turning it OFF restores the original value</b>. It works the same way <b>on every preset</b> — Opaque, Cutout, Fade and so on.</p>
+    <p><b>However, if you have already changed Render Queue by hand, no automatic adjustment is made</b> (to respect your setting). In that case, use <b>Render Queue</b> in the Transparency / Rendering section to make <b>this (hair-side) material's value larger than the receiver's</b>. <b>The same value as the receiver produces no shadow</b> (<code class="inl">+1</code> is enough). <b>If no shadow appears at all, check here first.</b></p>
+  </div>
+  <div class="note warn" data-label="⚠ IT CANNOT BE DISPLAYED IN SOME WORLDS">
+    <p>This feature uses the world's rendering settings to judge how far the shadow reaches. <b>In worlds without those settings, no shadow appears.</b> No breakdown such as a darkened background occurs, though — <b>it simply does not appear</b>.</p>
+    <p><b>About the range where "Direction when the light is weak" applies:</b> this setting works in worlds that are <b>dark but still have light</b>. <b>In a world with no light at all, this shadow itself cannot be displayed</b> (the mechanism that judges how far the shadow reaches depends on the same light source, so both are lost together). So the "insurance for when there is no light" is handled by the auto fallback below; think of this setting as being there to <b>keep the shadow direction from wobbling when it is dim</b>.</p>
+  </div>
+  <div class="note tip" data-label="💡 TIP — HOW TO USE AUTO FALLBACK">
+    <p>So that the shadow never disappears even in the "worlds where it cannot appear" above, <b>Auto Fallback is ON by default in <a href="#fakeshadowtex">Fake Shadow Texture</a> on the receiver's material (the face, etc.)</b>. <b>In worlds where this feature can appear, the drawn shadow hides itself automatically; in worlds where it cannot, the drawn shadow appears instead.</b> The shadow is never doubled and never lost. Note that <b>if you use only the drawn shadow without Fake Shadow Mesh, turn Auto Fallback OFF</b> (= always show the drawn shadow).</p>
+    <p><b>Difference from Fake Shadow Texture (the drawn shadow):</b> the drawn shadow <b>always appears but does not follow</b>, while this one <b>follows but cannot appear in some worlds</b>. Neither replaces the other, so combine them with the auto fallback above.</p>
+  </div>
+  <div class="note info" data-label="NOTE — CHOOSING &quot;FLAT&quot;">
+    <p>Flat is a method that puts a ceiling on darkening — "no darker than this". That keeps <b>the density constant even where shadows overlap</b>, but in exchange <b>the receiver's own shading and texture contrast are lost inside the shadow</b>, and <b>areas already darker than the shadow color (a dark texture, for instance) receive no shadow</b>. Choose Flat if the density of overlaps bothers you, and Multiply if you want to keep the shading of skin and cloth inside the shadow.</p>
+    <p><b>The shadow does not disappear in dark worlds either.</b> The flat shadow color <b>follows the surrounding brightness automatically</b>. Without that, a ceiling-based method would make the receiver darker than the shadow color as the world gets darker, and <b>the shadow would vanish</b>. <b>The look in bright worlds is unchanged</b> (it only works on the dark side).</p>
+  </div>
+  <div class="note info" data-label="NOTE — SPECIFICATION">
+    <p>The shape of the shadow is <b>the shape of the mesh itself</b> (the silhouette of the hair becomes the shadow as it is). Because the receiver is a curved surface, the larger the cast distance, the more the shadow looks detached from it. <b>It looks different between the two eyes in VR</b>, so decide the distance while checking in VR. The shadow <b>does not darken emissive effects (Emission, Rim Light, Glitter, etc.)</b>. When disabled, no drawing happens at all, so the load is practically zero.</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============ FAKE SHADOW TEXTURE ============ -->
+<section id="fakeshadowtex">
+  <div class="sec-head rv"><div class="num">SEC. 10 — LIGHTING</div><h2>Fake Shadow Texture (receiver side)</h2><div class="sub">// stylized cast shadow / front-hair shadow</div></div>
+  <div class="rv">
+  <p>A feature that shows a shadow <b>drawn by the author</b> — like the shadow of front hair — on top of the object <b>always at the same position and the same density</b>, regardless of the world's light sources. Use it when you want the shading you intended as illustration to hold up in any world.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Enable Fake Shadow Texture (drawn shadow)</td><td>Enables/disables the feature (default OFF).</td></tr>
+    <tr><td>Shared Mask RGBA (shared with other features)</td><td>Set the image on which the shadow shape is drawn. It is <b>the same shared slot as Matcap's region mask</b> (see "How to use the shared mask" below).</td></tr>
+    <tr><td>Mask Channel (R/G/B/A)</td><td>Which channel of the shared mask is read as the shadow (default <code class="inl">B</code>). Matcap's region mask defaults to <code class="inl">R</code>, so they do not collide as they are. <b>The contents of R/G/B/A are shown side by side right below, and you can also switch by clicking them.</b></td></tr>
+    <tr><td>Invert Mask (black = shadow)</td><td>The default OFF means "<b>white = shadow / black = no shadow</b>". Turn it ON if you use a grayscale image on which <b>the shadow is painted black</b> (it becomes <code class="inl">black = shadow</code>).</td></tr>
+    <tr><td>Shadow Color (multiply)</td><td>The color multiplied onto the shadowed area. The default is a slightly bluish gray. The darker you want it, the deeper the color (white = no shadow).</td></tr>
+    <tr><td>Shadow Strength</td><td>The strength of the shadow (<code class="inl">0</code> = off to <code class="inl">1</code> = maximum). Animatable.</td></tr>
+    <tr><td>Tiling (X,Y = repeat) / Offset (X,Y = position)</td><td>The repetition and position of the shadow mask. <b>Shifting Offset fine-tunes the shadow position without redrawing the texture.</b> The reference UV is the same as the Albedo texture.</td></tr>
+    <tr><td>Auto Fallback (show only where Fake Shadow Mesh cannot appear)</td><td><b>ON by default.</b> Shows this drawn shadow <b>only in worlds where <a href="#fakeshadowmesh">Fake Shadow Mesh</a> (above) cannot be displayed</b>. It is <b>a setting meant to be used together with Fake Shadow Mesh</b>. <b>If you do not use Fake Shadow Mesh and want the drawn shadow to show at all times, turn it OFF.</b></td></tr>
+  </tbody></table>
+  <div class="note info" data-label="NOTE — DIFFERENCE FROM RECEIVE SHADOW (THEY CAN BE COMBINED)">
+    <p><b>Receive Shadow</b> under Lighting &amp; Shadow is a <b>physical cast shadow</b> that appears only when the world actually has a directional light and shadow settings. In worlds with no light, or dark worlds, no shadow appears. Fake Shadow Texture, on the other hand, is <b>a drawn shadow that always appears regardless of the lighting</b>. Their roles differ, so you can use both at once.</p>
+  </div>
+  <div class="note tip" data-label="💡 TIP — HOW TO USE THE SHARED MASK">
+    <p>The "shared mask" is a slot that can <b>pack up to four separate black-and-white masks into the R/G/B/A of a single image</b> (Fake Shadow Texture and Matcap's region mask share it). In an image editor, put <b>a different picture in each channel</b> — for example <b>Matcap's region mask in R and the front-hair shadow in B</b> — and specify which channel each feature reads.</p>
+    <p><b>You can check the contents of the channels in the Inspector.</b> The <b>four R/G/B/A images are shown side by side</b> right below the channel selector, and the channel currently being read is highlighted with a frame. <b>Clicking a thumbnail switches to that channel.</b> R/G/B are tinted red, green and blue respectively, so you can tell at a glance which picture is in which channel (alpha is shown in grayscale). You do not need to enable "Read/Write Enabled" on the texture.</p>
+    <p>A grayscale (black-and-white) image has R=G=B, so <b>if you use only one kind of mask, it just works by dropping it in without worrying about channels</b> (alpha is not needed). Conversely, <b>when several features use it, be sure to separate the channels</b> — a grayscale image puts the same picture in every channel, so as-is the shadow would have the same shape as Matcap's region mask.</p>
+    <p><b>It has nothing to do with Texture Layer.</b> Because Fake Shadow Texture uses this shared mask, <b>Texture Layer's color overlay and alpha mask remain freely available as before</b> (they can be used at the same time).</p>
+  </div>
+  <div class="note info" data-label="NOTE — SPECIFICATION">
+    <p>It is a <b>still image</b> drawn in UV space, not geometric self-occlusion. It therefore <b>does not follow the movement of the head or the direction of the light</b> (the point of the feature is to show the same design at all times). The shadow is multiplied onto the object's color, so <b>it appears the same way in Unlit Mode and in dark worlds</b>, but it <b>does not darken emissive effects</b> such as Emission, Rim Light and Glitter (the shadow is hard to see on emissive areas). Scrolling (flowing motion) does not apply. When disabled, the load is practically zero.</p>
+  </div>
+  </div>
+</section>
+
 <!-- ============ EMISSION ============ -->
 <section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 09 — VFX</div><h2>Emission (HDR-capable)</h2><div class="sub">// HDR-capable emission</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Emission (HDR-capable)</h2><div class="sub">// HDR-capable emission</div></div>
   <div class="rv">
   <p>Makes a material that self-illuminates even in darkness.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -646,7 +731,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ AUDIOLINK ============ -->
 <section id="audiolink">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VFX</div><h2>AudioLink (music-reactive emission)</h2><div class="sub">// music-reactive glow</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>AudioLink (music-reactive emission)</h2><div class="sub">// music-reactive glow</div></div>
   <div class="rv">
   <p>A feature that emits in sync with the music playing in the world. A staple feature in VRChat club worlds and live performances.</p>
   <p>This shader's AudioLink works as a <b>"sound-reactive emission layer" independent of the regular Emission (constant emission)</b>. Because it adds emission toward the base (color × Intensity) according to the loudness, <b>even with regular Emission OFF, you can make it emit in sync with sound using AudioLink alone</b>. Conversely, if you turn regular Emission ON, the sound-reactive emission layers on top of the constant emission (the two do not cancel each other).</p>
@@ -670,7 +755,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ GLITTER ============ -->
 <section id="glitter">
-  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Glitter / Sparkle (procedural glitter)</h2><div class="sub">// procedural glitter</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Glitter / Sparkle (procedural glitter)</h2><div class="sub">// procedural glitter</div></div>
   <div class="rv">
   <p>A decorative emission layer that scatters fine sparkling grains (glitter/sparkle) across the surface, without using any texture. The grains are generated procedurally inside the shader, so no dedicated noise image is needed. <b>The grains sparkle as you move your view</b> (a shimmering look like metallic glitter or flakes, glinting at different viewing angles). Because it works as an additive layer independent of regular Emission (constant glow), <b>you can get glow from Glitter alone even with Emission turned OFF</b>.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -696,7 +781,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ DISSOLVE ============ -->
 <section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>Dissolve (disappear effect)</h2><div class="sub">// disappear effect</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Dissolve (disappear effect)</h2><div class="sub">// disappear effect</div></div>
   <div class="rv">
   <p>A feature that makes objects disappear/appear as if melting along a noise pattern.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -711,7 +796,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ RIM LIGHT ============ -->
 <section id="rimlight">
-  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Rim Light (edge light / backlight expression)</h2><div class="sub">// edge light / backlight expression</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Rim Light (edge light / backlight expression)</h2><div class="sub">// edge light / backlight expression</div></div>
   <div class="rv">
   <p>A feature that emphasizes the model's outline (edges). With Blend Mode you can switch between "making it glow" and "darkening it down".</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -736,7 +821,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ BACK LIGHT ============ -->
 <section id="backlight">
-  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Back Light</h2><div class="sub">// backlight that glows only when the light is behind</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 16 — VFX</div><h2>Back Light</h2><div class="sub">// backlight that glows only when the light is behind</div></div>
   <div class="rv">
   <p>An illustration-style backlight expression that makes a wide area of the outline glow <b>only when the main directional light is behind the character</b>. Whereas Rim Light "always glows at the edge depending on the viewing angle", Back Light "glows only when the light is behind", and in addition <b>the parts where the light is blocked by shadow do not glow</b> (places the backlight cannot reach because the body blocks it, such as the inside of a jacket or the collar, do not emit). The result is a natural backlight that responds to the scene's light direction and occlusion.</p>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
@@ -762,7 +847,7 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 17 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// outline &amp; orbiting-glow option</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Outline</h4>
   <p>A base feature that draws the mesh outline. It handles everything from a toon-style edge to a glowing outline like a neon tube via HDR color + Bloom. It <b>supports any 3D mesh — spheres, cubes, text, costumes, props, and more</b> — and on skinned meshes it also follows animation. The basic outline can be drawn without a texture or UV unwrap (a <b>mask is optional</b>: use a mask image only when you want to erase the line partially, such as around the corners of the eyes).</p>
@@ -824,12 +909,28 @@ details .dbody li{margin-bottom:10px}
 
 <!-- ============ PARTICLE / ANIM ============ -->
 <section id="particle">
-  <div class="sec-head rv"><div class="num">SEC. 16 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 18 — ADVANCED</div><h2>Animation &amp; Particles</h2><div class="sub">// animation properties &amp; particle system</div></div>
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color (integration with particles)</h4>
   <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
     <tr><td>Vertex Color Blend Mode</td><td>Default is <code class="inl">None</code> (does not reflect the particle vertex color). Changing it to <code class="inl">Multiply</code> receives the color from the Particle System (Color over Lifetime, etc.).</td></tr>
   </tbody></table>
+  <div class="note warn" data-label="⚠ SET REFLECTION STRENGTH TO 0 ON PARTICLES">
+    <p>Particles are drawn as many overlapping sheets, so <b>the mirroring calculation piles up once per overlapping sheet and becomes rendering load</b>. Particles almost never need mirroring in their look, so on materials whose <code class="inl">Vertex Color Blend Mode</code> is <code class="inl">Multiply</code>, it is standard practice to set <b>PBR's Reflection Strength to <code class="inl">0</code></b> (at <code class="inl">0</code> the calculation is skipped entirely and the load becomes zero). The Inspector shows a warning when this combination occurs. Note that <b>if Unlit Mode is ON, the mirroring calculation itself is skipped</b>, so there is no load and no warning.</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Soft Particles</h4>
+  <p>A feature that erases the unnatural boundary line where a semi-transparent object (Fade/Additive, etc.) intersects with an opaque object such as the ground or a wall, blending it smoothly.</p>
+  <table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+    <tr><td>Fade Distance</td><td>Adjusts the distance over which the boundary line fades out (becomes transparent).</td></tr>
+  </tbody></table>
+  <p><b>Specification note:</b> Works only when ZWrite is Off (i.e., a semi-transparent preset). Also, on VRChat thumbnail cameras and the like (orthographic cameras) it is automatically disabled to prevent glitches.</p>
+  <div class="note warn" data-label="⚠ DEPENDS ON THE WORLD ENVIRONMENT">
+    <p>Soft particles work only when the VRChat world's camera is generating a "depth texture". Specifically, it becomes active when the world uses <b>Deferred Rendering</b>, <b>uses post-processing</b>, or <b>uses another soft-particle shader</b>.</p>
+    <p>In a simple Forward Rendering world that does not meet the above conditions, the soft-particle feature is automatically disabled and displayed as ordinary semi-transparent rendering. This is a specification-level constraint that depends on the VRChat world's rendering settings and cannot be controlled from the avatar-side shader. Other VRChat shaders have the same constraint.</p>
+    <p><b>[Behavior in unsupported worlds]</b> It is drawn semi-transparently with the boundary line remaining, but the effect itself displays normally. No breakdown such as full transparency occurs.</p>
+  </div>
   </div>
   <div class="rv">
   <h3>How to control from animation</h3>
@@ -842,6 +943,9 @@ Material._Brightness         <span class="cm">// Float         ─ brightness (1
 Material._Layer1Color        <span class="cm">// Color (HDR)   ─ texture layer color tint</span>
 Material._Layer1Opacity      <span class="cm">// Float         ─ layer blend strength (0–1)</span>
 Material._Layer1AlphaMask    <span class="cm">// Float (0/1)   ─ alpha mask ON/OFF (appear/disappear staging)</span>
+Material._FakeShadowColor    <span class="cm">// Color         ─ Fake Shadow Texture shadow color</span>
+Material._FakeShadowStrength <span class="cm">// Float         ─ Fake Shadow Texture strength (0 = off)</span>
+Material._FakeShadowOffset   <span class="cm">// Vector        ─ Fake Shadow Texture position (X,Y)</span>
 Material._EmissionColor      <span class="cm">// Color (HDR)   ─ emission color</span>
 Material._EmissionIntensity  <span class="cm">// Float         ─ emission strength</span>
 Material._EmissionPulseSpeed <span class="cm">// Float         ─ emission pulse speed (0 = disabled)</span>
@@ -857,7 +961,7 @@ Material._OutlineSelfGlow       <span class="cm">// Float       ─ outline self
 Material._OutlineSweepSpeed     <span class="cm">// Float       ─ Sweep orbit speed (sign reverses direction)</span>
 Material._MatcapStrength     <span class="cm">// Float         ─ Matcap blend strength</span>
 Material._MatcapColor        <span class="cm">// Color         ─ Matcap color tint</span>
-Material._ReflectionStrength <span class="cm">// Float         ─ environment reflection strength</span>
+Material._ReflectionStrength <span class="cm">// Float         ─ reflection influence (environment reflection strength)</span>
 Material._LightMinLimit      <span class="cm">// Float         ─ ambient clamp lower bound</span>
 Material._LightMaxLimit      <span class="cm">// Float         ─ ambient clamp upper bound</span>
 Material._AudioLinkEmission  <span class="cm">// Float         ─ AudioLink reaction amount (Master)</span>
@@ -883,7 +987,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 
 <!-- ============ LICENSE ============ -->
 <section id="license">
-  <div class="sec-head rv"><div class="num">SEC. 17 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 19 — MISC</div><h2>Performance &amp; License</h2><div class="sub">// performance, fallback, license, changelog</div></div>
   <div class="rv">
   <h3>Performance &amp; Optimization</h3>
   <p>This shader is maximally optimized for lightweight operation and compile speed in the VRChat environment.</p>

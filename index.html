@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALTIMA｜ARLitToon シェーダー ドキュメント</title>
+<meta name="description" content="ALTIMA（ARL）によるVRChat向けシェーダー・アセットの公式ドキュメントサイト。軽量・高機能なトゥーンシェーダー「ARLitToon」の導入・使用ガイド（日本語/English）と、AngelStarHaloのライセンス情報を掲載。">
+<link rel="canonical" href="https://arlmaty.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTIMA">
+<meta property="og:title" content="ALTIMA｜ARLitToon シェーダー ドキュメント">
+<meta property="og:description" content="VRChat向け軽量・高機能トゥーンシェーダー「ARLitToon」の導入・使用ガイド（日本語/English）と、AngelStarHaloのライセンス情報。">
+<meta property="og:url" content="https://arlmaty.github.io/">
+<meta property="og:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="600">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ALTIMA｜ARLitToon シェーダー ドキュメント">
+<meta name="twitter:description" content="VRChat向け軽量・高機能トゥーンシェーダー「ARLitToon」の導入・使用ガイドと、AngelStarHaloのライセンス情報。">
+<meta name="twitter:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;900&family=Spectral:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#fafafc; --card:#ffffff; --ink:#0b0b12; --ink2:#4a4a58; --line:#e3e3ec;
+  --ac:#5b4df1; --ac-dim:rgba(91,77,241,.08); --ac-line:rgba(91,77,241,.28);
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Noto Sans JP',sans-serif; --serif:'Spectral',serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#0b0b12; --card:#15151f; --ink:#f3f3f8; --ink2:#a4a4b6; --line:#26262f; --ac:#9c8ff0; --ac-dim:rgba(156,143,240,.1); --ac-line:rgba(156,143,240,.32); }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px 20px}
+main{max-width:600px;width:100%}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ac);font-weight:700;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.tag::before{content:"";width:32px;height:1px;background:var(--ac)}
+h1{font-family:var(--serif);font-style:italic;font-weight:800;font-size:clamp(32px,6vw,48px);letter-spacing:-.01em}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:52ch}
+.lead b{color:var(--ink)}
+.lead a{color:var(--ac)}
+ul.docs{list-style:none;display:grid;gap:12px;margin-top:36px}
+a.doc{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s,box-shadow .15s}
+a.doc:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 8px 20px var(--ac-dim)}
+.flag{font-size:22px;flex:none}
+.doc-title{font-weight:700;font-size:14.5px}
+.doc-sub{color:var(--ink2);font-size:12.5px;margin-top:2px}
+.arrow{margin-left:auto;color:var(--ac);flex:none;font-family:var(--mono)}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ink2)}
+footer a{color:var(--ink2)}
+</style>
+</head>
+<body>
+<main>
+  <div class="tag">ALTIMA STUDIO</div>
+  <h1>ALTIMA Docs</h1>
+  <p class="lead">VRChat向けアバター・エフェクト用アセットを制作する <b>ALTIMA</b>（<b>ARL</b>）のドキュメントサイトです。配布中のシェーダー・アイテムは <a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer">BOOTH -ALTIMA-</a> にて販売しています。</p>
+
+  <ul class="docs">
+    <li>
+      <a class="doc" href="ARLitToon.html">
+        <span class="flag">🇯🇵</span>
+        <span>
+          <div class="doc-title">ARLitToon シェーダー 導入・使用ガイド</div>
+          <div class="doc-sub">日本語 / Japanese — 全機能の設定方法を解説</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="doc" href="ARLitToon_EN.html">
+        <span class="flag">🇺🇸</span>
+        <span>
+          <div class="doc-title">ARLitToon Shader — Setup &amp; Usage Guide</div>
+          <div class="doc-sub">English — full feature documentation</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a class="doc" href="angelstarhalo/license/">
+        <span class="flag">📄</span>
+        <span>
+          <div class="doc-title">AngelStarHalo — VN3 License</div>
+          <div class="doc-sub">ライセンス文書（日本語 / English / 한국어 / 中文）</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </li>
+  </ul>
+
+  <footer>
+    <div>© ARL — ALTIMA</div>
+    <div><a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer">BOOTH -ALTIMA-</a></div>
+  </footer>
+</main>
+</body>
+</html>

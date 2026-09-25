@@ -268,18 +268,10 @@ details .dbody li{margin-bottom:10px}
   <div class="sec-head rv"><div class="num">SEC. 02 — SETUP</div><h2>導入</h2><div class="sub">// requirements, placement, launch</div></div>
   <div class="rv">
   <p>対応 Unity: 2022.3 LTS（VRChat SDK3 環境を想定）。ARLitToon シェーダー本体（<code class="inl">ALTIMA/ARLitToon</code>）をプロジェクトへインポート済みにしておく。</p>
-  </div>
-  <div class="rv">
-  <h3>インストール（手動コピー）</h3>
   <ol>
-    <li>この <code class="inl">converter</code> フォルダを Unity プロジェクトの <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> などへコピーする（<code class="inl">Editor/ARLitToonConverter.cs</code> が Editor フォルダ配下にあれば場所は任意）。</li>
+    <li>このフォルダ（本 README と <code class="inl">Editor</code> フォルダが入ったもの）を Unity プロジェクトの <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> などへコピーする（<code class="inl">Editor/ARLitToonConverter.cs</code> が Editor フォルダ配下にあれば場所は任意）。</li>
+    <li>メニュー <b>Tools → ALTIMA → ARLitToon Converter (lilToon から変換)</b> で起動する。</li>
   </ol>
-  </div>
-  <div class="rv">
-  <h3>起動</h3>
-  <ul>
-    <li>メニュー <b>Tools → ALTIMA → ARLitToon Converter (lilToon から変換)</b> で起動。</li>
-  </ul>
   </div>
 </section>
 
@@ -287,12 +279,13 @@ details .dbody li{margin-bottom:10px}
 <section id="usage">
   <div class="sec-head rv"><div class="num">SEC. 03 — USAGE</div><h2>使い方</h2><div class="sub">// options, convert, report</div></div>
   <div class="rv">
+  <p>ウィンドウ上部の <b>日本語 / English</b> で表示言語を切り替えられます（初回はシェーダーの Inspector と同じ言語で開きます。<b>変換レポートは日本語のみ</b>です）。</p>
   <ol>
     <li>ウィンドウの「アバター (ルート)」に Hierarchy のアバターをドラッグ。</li>
     <li>オプションを確認（既定のまま推奨）：
       <ul style="margin:6px 0 4px 20px">
         <li><b>アバターを複製して変換する</b>: ON で <code class="inl">〇〇_ARLitToon</code> という複製に変換結果を割り当て、元は非アクティブ化（Undo 可）。</li>
-        <li><b>マスクテクスチャを焼き込む</b>: ON で「2nd テクスチャの別マスク」等をアルファへ合成した PNG を自動生成。<b>メインカラー2nd が「マスクだけ」の構成では、この設定が OFF だとマスクが効かず見た目が崩れます</b>（下記「メインカラー2nd（Texture Layer）の合成モードについて」を参照）。ON のままを推奨します。</li>
+        <li><b>マスクテクスチャを焼き込んだ合成テクスチャを生成する</b>: ON で「2nd テクスチャの別マスク」等をアルファへ合成した PNG を自動生成。<b>メインカラー2nd が「マスクだけ」の構成では、この設定が OFF だとマスクが効かず見た目が崩れます</b>（下記「メインカラー2nd（Texture Layer）の合成モードについて」を参照）。ON のままを推奨します。</li>
         <li><b>落ち影マテリアルの変換</b>: 下記「落ち影専用（FakeShadow）マテリアルの変換について」を参照。</li>
         <li><b>変換後のアバターから Pipeline Manager を外す</b>: ON で、変換後のアバターから Pipeline Manager（アップロード先を指す Blueprint ID）を外します（既定 ON）。<b>付いたままだと元アバターと同じアップロード先を指す</b>ため、変換後をアップロードすると<b>元のアバターを上書きしてしまいます</b>。<b>「アバターを複製して変換する」が ON のときだけ働き</b>、OFF のときは元アバターそのものなのでこの設定にかかわらず触りません。他のコンポーネントから必須指定されていて外せない場合は、<b>Blueprint ID だけを空に</b>します（どちらになったかはレポートに出ます）。</li>
         <li><b>変換後のアバターを Prefab として保存する</b>: ON で、変換済みのアバターを Prefab アセットとして書き出します（既定 ON）。<b>保存先の既定は上の「出力フォルダ」と同じ</b>です（<code class="inl">_2</code>, <code class="inl">_3</code> … が付いた場合もそちらへ保存します）。<code class="inl">既定に戻す</code> で追従状態へ戻せます。<b>同名の Prefab があるときは別名で保存する</b>ため、既存の Prefab を上書きすることはありません。<b>結果は必ず変換レポートに出ます</b>（保存できた場合はパス、できなかった場合は理由）。</li>
@@ -314,7 +307,7 @@ details .dbody li{margin-bottom:10px}
     <tr><td>メインテクスチャ / 色 / 色調補正(HSV)</td><td>Albedo / Color / Hue・Saturation・Brightness</td></tr>
     <tr><td>2nd テクスチャ（色・合成モード・別マスク）</td><td>Texture Layer（別マスクはアルファへ焼き込み／マスクだけの構成はマスクをアルファへ焼き直し）</td></tr>
     <tr><td>アルファマスク（＋透過率調整 Scale/Value）</td><td>Texture Layer 透明マスク（透過率調整はマスク画像へ焼き込み）/ メインテクスチャのアルファへ焼き込み</td></tr>
-    <tr><td>影（色 / 強さ / 境界 / ぼかし）・明るさ上限下限</td><td>Lighting &amp; Shadow / Light Limit</td></tr>
+    <tr><td>影（色 / 強さ / 境界 / ぼかし）・2 影 / 3 影・境界の色づけ・明るさ上限下限</td><td>Lighting &amp; Shadow / Toon Shadow（2 影・3 影・境界の色づけ）/ Light Limit</td></tr>
     <tr><td>シャドウ受光（落ち影の受け取り ON/OFF）</td><td>Receive Shadow（設定がある場合のみ引き継ぎ）</td></tr>
     <tr><td>落ち影専用シェーダー（FakeShadow）のマテリアル</td><td>Fake Shadow Mesh（影用メッシュはそのまま利用・下記参照）</td></tr>
     <tr><td>ノーマルマップ / 反射（Smoothness・Metallic 等）</td><td>PBR（BRDF）</td></tr>
@@ -501,7 +494,7 @@ details .dbody li{margin-bottom:10px}
 <section id="unsupported">
   <div class="sec-head rv"><div class="num">SEC. 05 — LIMITS</div><h2>自動変換できない主な機能（レポートで通知）</h2><div class="sub">// features to set up by hand</div></div>
   <div class="rv">
-  <p>3rd テクスチャ / デカール配置 / テクスチャ回転 / 2影（多段影）/ 影色テクスチャ / グラデーションマップ / 2nd ノーマルマップ / ラメの粒形状・密度 / 2nd 発光 / AudioLink（方式が異なるため手動設定）/ 屈折 / テッセレーション など。</p>
+  <p>3rd テクスチャ（UV Mode が MatCap 以外）/ デカール配置 / テクスチャ回転 / 影色テクスチャ / AO マップ / グラデーションマップ / 2nd ノーマルマップ / ラメの粒形状・密度 / 2nd 発光 / AudioLink（方式が異なるため手動設定）/ 屈折 / テッセレーション など。</p>
   <p>変換後は必ず実機（またはシーン上）で見た目を確認し、必要に応じて ARLitToon の Inspector（マテリアルの各セクション）で微調整してください。</p>
   </div>
 </section>
@@ -579,6 +572,7 @@ details .dbody li{margin-bottom:10px}
     <li>⑪<b>発光のマスクを Emission Map のアルファへ移すようにしました</b>（ARLitToon v48_GUIr0 以降）。<b>v6_GUIr0 までは発光の色へ掛け合わせていたため、発光がスクロールするとマスクも一緒に流れ、位置がずれていました</b>（警告も出ませんでした）。アルファはラメのマスクとの共用枠のため、両方が別の画像のときはラメを優先し、発光のマスクは従来どおり発光の色へ掛け合わせます（位置がずれる場合はレポートで警告）。</li>
     <li>⑫<b>組み立てた発光テクスチャと、そのチャンネルごとの中身（RGB／アルファ）を <code class="inl">Textures/EmissionMap_&lt;マテリアル名&gt;/</code> にまとめて書き出す</b>ようにしました。</li>
     <li>⑬<b>発光テクスチャ自身のアルファと、発光色のアルファを反映するようにしました。</b> 変換元はどちらも発光の強さに掛けますが、<b>v6_GUIr0 までは捨てていたため、透明な部分（色が黒でない場合）が光り、発光色のアルファが 1 未満のときは発光が強すぎました</b>（警告も出ませんでした）。今後は発光テクスチャのアルファを発光の色へ、発光色のアルファを Intensity へ掛け合わせます。</li>
+    <li>⑭<b>ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました</b>（ウィンドウ上部のタブ。初回はシェーダーの Inspector と同じ言語で開き、切り替えた言語は保存されます。変換レポートは日本語のみ）。</li>
   </ul>
   </div>
   <div class="rv">

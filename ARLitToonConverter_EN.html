@@ -238,7 +238,7 @@ details .dbody li{margin-bottom:10px}
 
 <div class="wrap">
   <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin:0 0 40px;max-width:640px">
-    <p>This is the English edition of the converter's <code class="inl">README.md</code>, translated from the Japanese <a href="ARLitToonConverter.html" style="color:var(--ac)">README.md (the canonical source)</a> as of converter version <b>v7_GUIr0</b>. The Japanese README remains the authoritative document. <b>The converter window and its report are in Japanese</b>, so this page quotes each label exactly as it appears, followed by an English gloss in parentheses.</p>
+    <p>This is the English edition of the converter's <code class="inl">README.md</code>, translated from the Japanese <a href="ARLitToonConverter.html" style="color:var(--ac)">README.md (the canonical source)</a> as of converter version <b>v7_GUIr0</b>. The Japanese README remains the authoritative document. The converter window can be switched to English, and this page uses its English labels; <b>the conversion report is written in Japanese</b>, so report lines are quoted as they appear, followed by an English gloss in parentheses.</p>
   </div>
 </div>
 
@@ -274,18 +274,10 @@ details .dbody li{margin-bottom:10px}
   <div class="sec-head rv"><div class="num">SEC. 02 — SETUP</div><h2>Installation</h2><div class="sub">// requirements, placement, launch</div></div>
   <div class="rv">
   <p>Supported Unity: 2022.3 LTS (a VRChat SDK3 environment is assumed). Import the ARLitToon shader itself (<code class="inl">ALTIMA/ARLitToon</code>) into the project beforehand.</p>
-  </div>
-  <div class="rv">
-  <h3>Installation (manual copy)</h3>
   <ol>
-    <li>Copy this <code class="inl">converter</code> folder into your Unity project, for example to <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> (any location works as long as <code class="inl">Editor/ARLitToonConverter.cs</code> is under an Editor folder).</li>
-  </ol>
-  </div>
-  <div class="rv">
-  <h3>Launching</h3>
-  <ul>
+    <li>Copy this folder (the one containing this README and the <code class="inl">Editor</code> folder) into your Unity project, for example to <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> (any location works as long as <code class="inl">Editor/ARLitToonConverter.cs</code> is under an Editor folder).</li>
     <li>Launch it from the menu <b>Tools → ALTIMA → ARLitToon Converter (lilToon から変換)</b> (the last item means "convert from lilToon").</li>
-  </ul>
+  </ol>
   </div>
 </section>
 
@@ -293,22 +285,23 @@ details .dbody li{margin-bottom:10px}
 <section id="usage">
   <div class="sec-head rv"><div class="num">SEC. 03 — USAGE</div><h2>Usage</h2><div class="sub">// options, convert, report</div></div>
   <div class="rv">
+  <p>Switch the display language with the <b>日本語 / English</b> tabs at the top of the window (the first time, it opens in the same language as the shader's Inspector; <b>the conversion report is in Japanese only</b>).</p>
   <ol>
-    <li>Drag the avatar from the Hierarchy into the window's 「アバター (ルート)」 (Avatar (root)) field.</li>
+    <li>Drag the avatar from the Hierarchy into the window's <b>Avatar (root)</b> field.</li>
     <li>Check the options (the defaults are recommended):
       <ul style="margin:6px 0 4px 20px">
-        <li><b>アバターを複製して変換する</b> (Duplicate the avatar and convert): when ON, the conversion results are assigned to a duplicate named <code class="inl">〇〇_ARLitToon</code>, and the original is deactivated (Undo is available).</li>
-        <li><b>マスクテクスチャを焼き込んだ合成テクスチャを生成する</b> (Generate composite textures with the masks baked in): when ON, PNGs that merge masks such as the "separate mask of the 2nd texture" into the alpha are generated automatically. <b>If Main Color 2nd is a "mask only" setup, turning this OFF leaves the mask ineffective and the look breaks</b> (see "Blend modes of Main Color 2nd (Texture Layer)" below). Keeping it ON is recommended.</li>
-        <li><b>落ち影マテリアルの変換</b> (Cast-shadow material conversion): see "Converting cast-shadow-only (FakeShadow) materials" below.</li>
-        <li><b>変換後のアバターから Pipeline Manager を外す</b> (Remove the Pipeline Manager from the converted avatar): when ON, the Pipeline Manager (which holds the Blueprint ID pointing to the upload destination) is removed from the converted avatar (default ON). <b>If it stays attached, it points to the same upload destination as the original avatar</b>, so uploading the converted avatar <b>overwrites the original avatar</b>. <b>It only works when 「アバターを複製して変換する」 is ON</b>; when that is OFF the avatar is the original itself, so it is left untouched regardless of this setting. If another component requires it and it cannot be removed, <b>only the Blueprint ID is cleared</b> (which of the two happened is shown in the report).</li>
-        <li><b>変換後のアバターを Prefab として保存する</b> (Save the converted avatar as a Prefab): when ON, the converted avatar is written out as a Prefab asset (default ON). <b>By default it is saved to the same place as the 「出力フォルダ」 (Output folder) above</b> (including when <code class="inl">_2</code>, <code class="inl">_3</code> … was appended to it). <code class="inl">既定に戻す</code> (Reset to default) makes it follow that folder again. <b>If a Prefab with the same name exists, it is saved under a different name</b>, so an existing Prefab is never overwritten. <b>The result always appears in the conversion report</b> (the path if it was saved, the reason if it was not).</li>
-        <li><b>出力フォルダ</b> (Output folder): the default is <code class="inl">Assets/ALTIMA/ARLitToon_Converted/&lt;avatar Prefab name&gt;/</code> (for a Prefab instance, <b>the name of the source Prefab asset</b> is used instead of the name in the Hierarchy). This default <b>follows automatically when you switch avatars</b> (if you typed a path yourself, that value takes precedence; <code class="inl">既定に戻す</code> makes it follow again). <b>If a folder with the same name already exists, the output goes to a new folder with <code class="inl">_2</code>, <code class="inl">_3</code> … appended</b> (each conversion's results stay separate and never mix with earlier output). The actual output location is shown in the completion dialog and at the top of the conversion report.</li>
+        <li><b>Duplicate the avatar and convert</b>: when ON, the conversion results are assigned to a duplicate named <code class="inl">〇〇_ARLitToon</code>, and the original is deactivated (Undo is available).</li>
+        <li><b>Generate composite textures with the masks baked in</b>: when ON, PNGs that merge masks such as the "separate mask of the 2nd texture" into the alpha are generated automatically. <b>If Main Color 2nd is a "mask only" setup, turning this OFF leaves the mask ineffective and the look breaks</b> (see "Blend modes of Main Color 2nd (Texture Layer)" below). Keeping it ON is recommended.</li>
+        <li><b>Cast-shadow material conversion</b>: see "Converting cast-shadow-only (FakeShadow) materials" below.</li>
+        <li><b>Remove the Pipeline Manager from the converted avatar</b>: when ON, the Pipeline Manager (which holds the Blueprint ID pointing to the upload destination) is removed from the converted avatar (default ON). <b>If it stays attached, it points to the same upload destination as the original avatar</b>, so uploading the converted avatar <b>overwrites the original avatar</b>. <b>It only works when "Duplicate the avatar and convert" is ON</b>; when that is OFF the avatar is the original itself, so it is left untouched regardless of this setting. If another component requires it and it cannot be removed, <b>only the Blueprint ID is cleared</b> (which of the two happened is shown in the report).</li>
+        <li><b>Save the converted avatar as a Prefab</b>: when ON, the converted avatar is written out as a Prefab asset (default ON). <b>By default it is saved to the same place as the "Output folder" above</b> (including when <code class="inl">_2</code>, <code class="inl">_3</code> … was appended to it). <b>Reset to default</b> makes it follow that folder again. <b>If a Prefab with the same name exists, it is saved under a different name</b>, so an existing Prefab is never overwritten. <b>The result always appears in the conversion report</b> (the path if it was saved, the reason if it was not).</li>
+        <li><b>Output folder</b>: the default is <code class="inl">Assets/ALTIMA/ARLitToon_Converted/&lt;avatar Prefab name&gt;/</code> (for a Prefab instance, <b>the name of the source Prefab asset</b> is used instead of the name in the Hierarchy). This default <b>follows automatically when you switch avatars</b> (if you typed a path yourself, that value takes precedence; <b>Reset to default</b> makes it follow again). <b>If a folder with the same name already exists, the output goes to a new folder with <code class="inl">_2</code>, <code class="inl">_3</code> … appended</b> (each conversion's results stay separate and never mix with earlier output). The actual output location is shown in the completion dialog and at the top of the conversion report.</li>
       </ul>
     </li>
-    <li>Press <b>「アバターを変換する」</b> (Convert avatar). The converted avatar is also saved as a Prefab (default ON). The save path appears in the conversion report.</li>
+    <li>Press <b>Convert avatar</b>. The converted avatar is also saved as a Prefab (default ON). The save path appears in the conversion report.</li>
     <li>Check the <b>conversion report</b> at the bottom of the window (also saved as a .txt in the output folder), and adjust by hand anything listed as 「[注意]」 ([Caution]). Materials that were not converted are gathered in the <b>「スキップしたマテリアル」 (Skipped materials) section</b>, which shows <b>the reason and where in the avatar they are used (GameObject path / slot number)</b>.</li>
   </ol>
-  <p>You can also select materials in the Project view and <b>convert just those materials</b> with 「選択中の lilToon マテリアルだけ変換する」 (Convert only the selected lilToon materials) (no scene assignment).</p>
+  <p>You can also select materials in the Project view and <b>convert just those materials</b> with <b>Convert only the selected lilToon materials</b> (no scene assignment).</p>
   </div>
 </section>
 
@@ -320,7 +313,7 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Main texture / color / color correction (HSV)</td><td>Albedo / Color / Hue Shift・Saturation・Brightness</td></tr>
     <tr><td>2nd texture (color, blend mode, separate mask)</td><td>Texture Layer (the separate mask is baked into the alpha; a mask-only setup has its mask re-baked into the alpha)</td></tr>
     <tr><td>Alpha mask (+ transparency adjustment Scale/Value)</td><td>Texture Layer Alpha Mask (the transparency adjustment is baked into the mask image) / baked into the alpha of the main texture</td></tr>
-    <tr><td>Shadow (color / strength / border / blur), brightness upper and lower limits</td><td>Lighting &amp; Shadow / Light Limit</td></tr>
+    <tr><td>Shadow (color / strength / border / blur), 2nd / 3rd shadow, shadow boundary tint, brightness upper and lower limits</td><td>Lighting &amp; Shadow / Toon Shadow (2nd / 3rd shadow, shadow boundary tint) / Light Limit</td></tr>
     <tr><td>Shadow receiving (receiving cast shadows ON/OFF)</td><td>Receive Shadow (carried over only when it is set)</td></tr>
     <tr><td>Materials of the cast-shadow-only shader (FakeShadow)</td><td>Fake Shadow Mesh (the shadow mesh is reused as is; see below)</td></tr>
     <tr><td>Normal map / reflection (Smoothness, Metallic, etc.)</td><td>PBR（BRDF）</td></tr>
@@ -353,7 +346,7 @@ details .dbody li{margin-bottom:10px}
   <p>The source blend modes map directly: <b>Normal → Normal / Add → Add / Screen → Screen / Multiply → Multiply</b>. <b>Setups with a 2nd texture (with or without a mask) follow this mapping.</b></p>
   <p><b>Only when Main Color 2nd has no texture and only a mask is set</b> (a setup used as color × mask) is it handled differently.</p>
   <ul>
-    <li><b>An image with the mask re-baked as "RGB = white / alpha = mask" is generated and assigned</b> (Tiling / Offset also use the mask's values). ARLitToon's Texture Layer reads <b>the alpha of the layer texture</b> as its blend mask, so assigning a grayscale mask image as is would leave <b>the mask completely ineffective, and with Multiply the base would be darkened in the mask's black areas</b>. Re-baking matches the source's behavior of "multiplying the 2nd color only in the white areas of the mask". <b>This generation requires 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 (Generate composite textures with the masks baked in) to be ON</b> (when it is OFF, the mask is assigned as is and the report warns that the look will break).</li>
+    <li><b>An image with the mask re-baked as "RGB = white / alpha = mask" is generated and assigned</b> (Tiling / Offset also use the mask's values). ARLitToon's Texture Layer reads <b>the alpha of the layer texture</b> as its blend mask, so assigning a grayscale mask image as is would leave <b>the mask completely ineffective, and with Multiply the base would be darkened in the mask's black areas</b>. Re-baking matches the source's behavior of "multiplying the 2nd color only in the white areas of the mask". <b>This generation requires "Generate composite textures with the masks baked in" to be ON</b> (when it is OFF, the mask is assigned as is and the report warns that the look will break).</li>
     <li><b>The blend mode defaults to <code class="inl">Multiply</code>.</b> This setup is mainly used to lay <b>patterns, dirt or shading onto the base</b>, and with <code class="inl">Normal</code> <b>the base's shading and texture are lost inside the mask area, so it looks pasted on and floating</b>. With Multiply it sits on top while keeping the base's light and dark.</li>
     <li><b>If you want to paint over the base, change <code class="inl">Blend Mode</code> to <code class="inl">Normal</code> after conversion</b> (<code class="inl">Normal</code> replaces the mask area with the Layer's color). The report shows the same guidance.</li>
   </ul>
@@ -421,7 +414,7 @@ details .dbody li{margin-bottom:10px}
     <li><b>When there is also a rim light mask, a free channel is used in the order <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code></b> (it is a different image from the rim light mask, so it cannot share <code class="inl">A</code>). <b><code class="inl">B</code> is the last resort.</b> <code class="inl">B</code> is Fake Shadow Texture's default channel, and <b>baking a Fake Shadow overwrites <code class="inl">B</code></b>, so the report warns when <code class="inl">B</code> is used. If you bake a shadow into that material, move the rim shade mask to another channel first.</li>
   </ul>
   <ul>
-    <li><b>When 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 (Generate composite textures with the masks baked in) is ON (default), even with only one mask</b> a shared mask packed into the channels in the table above is generated = <b>each feature reads ARLitToon's default channel</b> (for example, with only a Rim Light mask, <code class="inl">A</code>). <b>Unused channels are black (= that feature has no effect)</b>, so even if you turn on another feature later, it will not read an unintended picture.</li>
+    <li><b>When "Generate composite textures with the masks baked in" is ON (default), even with only one mask</b> a shared mask packed into the channels in the table above is generated = <b>each feature reads ARLitToon's default channel</b> (for example, with only a Rim Light mask, <code class="inl">A</code>). <b>Unused channels are black (= that feature has no effect)</b>, so even if you turn on another feature later, it will not read an unintended picture.</li>
     <li><b>The contents of each channel are also saved as separate per-feature images</b> (in <code class="inl">Textures/SharedMask_&lt;material name&gt;/</code>: <code class="inl">Matcap2.png</code>, <code class="inl">Matcap3.png</code>, <code class="inl">RimLight.png</code>, <code class="inl">RimShade.png</code>, plus <code class="inl">SharedMask_&lt;material name&gt;.png</code> that combines them). <b>When you want to redraw the mask of just one feature, you can edit that separate image and recombine it into the shared mask</b> (which image went into which channel appears in the report).</li>
     <li><b>When this option is OFF, no image can be generated, so the source mask image is assigned as is and the channel read is <code class="inl">R</code></b> (source masks often have an alpha of 1 everywhere, so reading <code class="inl">A</code> would be white everywhere = effective everywhere). When there are 2 or more masks, only the 1st is set, and this is reported.</li>
     <li>If several features use <b>the same mask image</b>, repacking cannot separate the regions, so this is reported.</li>
@@ -472,10 +465,10 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="rv">
   <h3>Converting cast-shadow-only (FakeShadow) materials</h3>
-  <p>Materials of the cast-shadow-only shader are <b>converted to ARLitToon's Fake Shadow Mesh (v44 and later)</b> (up to v1_GUIr0 they were skipped). <b>You can choose between 2 conversion methods</b> (the window's <b>落ち影マテリアルの変換</b> (Cast-shadow material conversion)). <b>The default is B (merge into the base material)</b>: it removes one shadow slot and keeps the number of materials and passes down. <b>If the same renderer has no base material, it automatically falls back to the equivalent of A</b>, so choosing merge never makes conversion impossible.</p>
+  <p>Materials of the cast-shadow-only shader are <b>converted to ARLitToon's Fake Shadow Mesh (v44 and later)</b> (up to v1_GUIr0 they were skipped). <b>You can choose between 2 conversion methods</b> (the window's <b>Cast-shadow material conversion</b>). <b>The default is B (merge into the base material)</b>: it removes one shadow slot and keeps the number of materials and passes down. <b>If the same renderer has no base material, it automatically falls back to the equivalent of A</b>, so choosing merge never makes conversion impossible.</p>
   </div>
   <div class="rv">
-  <h4><span class="hx">#</span> A. 「影用メッシュをそのまま変換する」 (Convert the shadow mesh as is)</h4>
+  <h4><span class="hx">#</span> A. Convert the shadow mesh as is</h4>
   <p>The shadow slot is converted to "an ARLitToon material that draws only the shadow". <b>It uses the shadow's shape and position as crafted in the source</b>, so this method reproduces the look closely.</p>
   <ul>
     <li><b>The shadow mesh is kept and used as is.</b></li>
@@ -485,7 +478,7 @@ details .dbody li{margin-bottom:10px}
   </ul>
   </div>
   <div class="rv">
-  <h4><span class="hx">#</span> B. 「ベースマテリアルへ統合する」 (Merge into the base material; removes the shadow slot; <b>default</b>)</h4>
+  <h4><span class="hx">#</span> B. Merge into the base material (removes the shadow slot; <b>default</b>)</h4>
   <p>Fake Shadow Mesh is ported into <b>the base material of the same renderer</b> (such as the hair itself), and <b>the shadow material slot is removed</b>. This saves one material and one pass.</p>
   <ul>
     <li><b>The shadow's shape changes</b>: the body mesh itself is extruded to form the shadow, so the shape differs from the source's shadow mesh.</li>
@@ -507,7 +500,7 @@ details .dbody li{margin-bottom:10px}
 <section id="unsupported">
   <div class="sec-head rv"><div class="num">SEC. 05 — LIMITS</div><h2>Main Features That Cannot Be Converted Automatically (reported)</h2><div class="sub">// features to set up by hand</div></div>
   <div class="rv">
-  <p>3rd texture / decal placement / texture rotation / 2nd shadow (multi-tier shadows) / shadow color texture / gradation map / 2nd normal map / glitter grain shape and density / 2nd emission / AudioLink (the method differs; set it up by hand) / refraction / tessellation, and so on.</p>
+  <p>3rd texture (when its UV Mode is not MatCap) / decal placement / texture rotation / shadow color texture / AO map / gradation map / 2nd normal map / glitter grain shape and density / 2nd emission / AudioLink (the method differs; set it up by hand) / refraction / tessellation, and so on.</p>
   <p>After conversion, always check the look on the actual device (or in the scene) and fine-tune as needed in the ARLitToon Inspector (each section of the material).</p>
   </div>
 </section>
@@ -521,7 +514,7 @@ details .dbody li{margin-bottom:10px}
     <li><b>The avatar contains scripts whose references are missing (Missing Script).</b> Unity cannot save objects with a Missing Script as a Prefab. The report shows <b>which GameObjects have how many</b>, so import the missing scripts (VRChat SDK or third-party assets) or delete the affected components, then convert again.</li>
     <li>The destination folder could not be created, or an exception occurred while saving. The report shows the details.</li>
   </ul>
-  <p><b>In either case, the converted avatar in the scene can be used as is</b> (the material conversion is complete). If you do not need a Prefab, turn 「変換後のアバターを Prefab として保存する」 (Save the converted avatar as a Prefab) OFF.</p>
+  <p><b>In either case, the converted avatar in the scene can be used as is</b> (the material conversion is complete). If you do not need a Prefab, turn <b>Save the converted avatar as a Prefab</b> OFF.</p>
   </div>
 </section>
 
@@ -578,13 +571,14 @@ details .dbody li{margin-bottom:10px}
     <li>④<b>The rim light texture is now converted into the Rim mask</b> (the source's rim color texture works by multiplication, so no rim appears in black areas = it is effectively used as a mask). <b>Up to v5_GUIr0 it was discarded with the warning "not applied because the feature is not supported"</b> (because ARLitToon had nothing to receive it). Color variation cannot be reproduced.</li>
     <li>⑤<b>Added support for rim shade (darkening the edges).</b> <b>Up to v5_GUIr0 it was neither converted nor warned about; it was silently dropped.</b> <b>With ARLitToon v48_GUIr0 and later it is converted directly to the dedicated Rim Shade</b> (color, width, strength and mask each go to their own items). <b>Rim Shade is a layer independent of rim light</b>, so <b>sources with both rim light and rim shade enabled are also reproduced as they are.</b> If ARLitToon is v47_GUIr0 or earlier, it is approximated with Rim Light's Multiply mode as before (they cannot be used at the same time, so when both are enabled rim light takes priority) and this is reported.</li>
     <li>⑥<b>The feel of gloss (reflection, specular) is now carried over.</b> The source paints gloss as a "surface", whereas ARLitToon expresses it through physical light reflection, so <b>bringing the values over as they were turned the gloss into a pinpoint and the sheen of fabric disappeared</b>. When reflection and specular are enabled in the source, <b>Smoothness is capped to widen the sheen, a little Metallic is added, and Specular Highlight is raised</b>. <b>Environment reflection (Reflection Strength) is not raised</b> (so that it does not depend on the world's reflection probes and does not add rendering load for particles). If it is too strong or too weak, adjust Smoothness / Specular Highlight in PBR（BRDF）.</li>
-    <li>⑦<b>Fixed a bug where the mask had no effect when Main Color 2nd was a "mask only" setup.</b> <b>Up to v6_GUIr0 the source mask image was assigned to the Layer texture as is</b>, but ARLitToon's Texture Layer reads <b>the texture's alpha</b> as its blend mask, so <b>the mask had no effect at all, and with Multiply the base was darkened in the mask's black areas</b>. An image re-baked as "RGB = white / alpha = mask" is now generated and assigned (when 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 is ON; when it is OFF, the mask is assigned as before and a warning says the look will break).</li>
+    <li>⑦<b>Fixed a bug where the mask had no effect when Main Color 2nd was a "mask only" setup.</b> <b>Up to v6_GUIr0 the source mask image was assigned to the Layer texture as is</b>, but ARLitToon's Texture Layer reads <b>the texture's alpha</b> as its blend mask, so <b>the mask had no effect at all, and with Multiply the base was darkened in the mask's black areas</b>. An image re-baked as "RGB = white / alpha = mask" is now generated and assigned (when "Generate composite textures with the masks baked in" is ON; when it is OFF, the mask is assigned as before and a warning says the look will break).</li>
     <li>⑧<b>The rim shade mask is no longer always put into the shared mask's <code class="inl">B</code>.</b> When there is no rim light mask it goes into <code class="inl">A</code>, the same as ARLitToon's default; when both exist, a free channel is used in the order <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code>. <b>Previously it was always put into <code class="inl">B</code>, so baking a Fake Shadow into that material after conversion replaced the rim shade mask with the shape of the shadow</b> (baking overwrites <code class="inl">B</code>). When only <code class="inl">B</code> is free, the report warns about it.</li>
     <li>⑨<b>Even with only one mask, a shared mask is now generated so that ARLitToon's default channel is read</b> (with baking ON). <b>Previously the source mask image was assigned as is and <code class="inl">R</code> was read</b>, so for a source with only a rim light mask, for example, the Inspector display (default <code class="inl">A</code>) and the channel actually read (<code class="inl">R</code>) did not match. In addition, <b>the contents of each channel are now also saved as separate per-feature images</b> (<code class="inl">Textures/SharedMask_&lt;material name&gt;/</code>).</li>
     <li>⑩<b>The glitter "color / mask" texture is now reflected.</b> <b>Up to v6_GUIr0 there was nothing to receive it, and masked glitter appeared over the whole surface</b> (without any warning). The texture's brightness × alpha is now baked into the alpha of the Emission Map and used as ARLitToon's glitter mask (ARLitToon v48_GUIr0 and later, with baking ON; the emission color does not change).</li>
     <li>⑪<b>The emission mask is now moved into the alpha of the Emission Map</b> (ARLitToon v48_GUIr0 and later). <b>Up to v6_GUIr0 it was multiplied into the emission color, so when the emission scrolled, the mask flowed along with it and its position shifted</b> (without any warning). The alpha is shared with the glitter mask, so when both are different images the glitter takes priority and the emission mask is multiplied into the emission color as before (the report warns when the position can shift).</li>
     <li>⑫<b>The assembled emission texture and the contents of each of its channels (RGB / alpha) are now written out together to <code class="inl">Textures/EmissionMap_&lt;material name&gt;/</code>.</b></li>
     <li>⑬<b>The emission texture's own alpha and the emission color's alpha are now reflected.</b> The source multiplies both into the emission strength, but <b>up to v6_GUIr0 they were discarded, so transparent parts (when their color is not black) glowed, and when the emission color's alpha was below 1 the emission was too strong</b> (without any warning). The emission texture's alpha is now multiplied into the emission color, and the emission color's alpha into Intensity.</li>
+    <li>⑭<b>The window's display language can now be switched between 日本語 / English</b> (tabs at the top of the window; the first time, it opens in the same language as the shader's Inspector, and the chosen language is saved; the conversion report is in Japanese only).</li>
   </ul>
   </div>
   <div class="rv">
@@ -617,7 +611,7 @@ details .dbody li{margin-bottom:10px}
   <p><span class="vtag">v2_GUIr2</span> <b>Added a dedicated "Skipped materials" section to the conversion report.</b> In addition to the material name, shader name and reason for skipping, it now <b>lists where in the avatar each material is used (GameObject path and material slot number)</b>. This also fixes an issue where materials that were already ARLitToon only increased the count without appearing as rows, so the count and the breakdown did not match.</p>
   </div>
   <div class="rv">
-  <p><span class="vtag">v2_GUIr1</span> <b>Fixed a bug where the default output folder did not follow the avatar name</b> (if the window was opened with no avatar set, it stayed fixed at <code class="inl">.../Materials</code> and did not change after an avatar was set later). The default folder name now also uses <b>the name of the source Prefab asset</b>, and the default ON state of 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 is kept in EditorPrefs.</p>
+  <p><span class="vtag">v2_GUIr1</span> <b>Fixed a bug where the default output folder did not follow the avatar name</b> (if the window was opened with no avatar set, it stayed fixed at <code class="inl">.../Materials</code> and did not change after an avatar was set later). The default folder name now also uses <b>the name of the source Prefab asset</b>, and the default ON state of "Generate composite textures with the masks baked in" is kept in EditorPrefs.</p>
   </div>
   <div class="rv">
   <p><span class="vtag">v2_GUIr0</span> Materials of the cast-shadow-only shader (FakeShadow) are now <b>converted to ARLitToon's Fake Shadow Mesh</b> instead of being skipped (the shadow mesh is reused as is; the base pass is made invisible).</p>

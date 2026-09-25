@@ -606,7 +606,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="rv">
   <h4><span class="hx">#</span> Fake Shadow の焼きこみ（影メッシュ → 受け手のマスク）</h4>
-  <p>**Fake Shadow Mesh（メッシュから落とす影）の落ち方を、影を受ける側のマテリアルの UV へ焼きこんで、Fake Shadow Texture（描いた影）として自動設定する**ツールです。メニュー <b>Tools → ALTIMA → ARLitToon Fake Shadow Bake</b>、または Bake to Base 内の <b>開く</b> ボタンから使用します。</p>
+  <p><b>Fake Shadow Mesh（メッシュから落とす影）の落ち方を、影を受ける側のマテリアルの UV へ焼きこんで、Fake Shadow Texture（描いた影）として自動設定する</b>ツールです。メニュー <b>Tools → ALTIMA → ARLitToon Fake Shadow Bake</b>、または Bake to Base 内の <b>開く</b> ボタンから使用します。</p>
   <p>焼きこむと影は静止画になるため<b>頭や光の動きには追従しなくなりますが</b>、そのかわり<b>深度テクスチャが生成されないワールドでも影が出せ、描画も1パス減ります</b>。</p>
   <table><thead><tr><th>項目</th><th>説明</th></tr></thead><tbody>
     <tr><td>アバター (ルート)</td><td>焼きこむアバターのルートを指定します。この中から <b>Fake Shadow Mesh が ON のマテリアル</b>を「影を落とす側」として自動的に探します。</td></tr>
@@ -635,7 +635,7 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="rv">
   <div class="note info" data-label="NOTE — 焼いた影が出ないときは、受け手の Fake Shadow Auto Fallback を確認してください">
-    <p>この設定が ON の間、描いた影（Fake Shadow Texture）は<b>深度テクスチャが生成されないワールドでのみ</b>表示されます（落とす側の Fake Shadow Mesh と二重に掛かるのを防ぐためです）。**「焼きこみ後に落とす側の Mesh を OFF」をON にして焼く（既定）と、この設定も自動で OFF になり、焼いた影が常に表示されます。**</p>
+    <p>この設定が ON の間、描いた影（Fake Shadow Texture）は<b>深度テクスチャが生成されないワールドでのみ</b>表示されます（落とす側の Fake Shadow Mesh と二重に掛かるのを防ぐためです）。<b>「焼きこみ後に落とす側の Mesh を OFF」を ON にして焼く（既定）と、この設定も自動で OFF になり、焼いた影が常に表示されます。</b></p>
   </div>
   </div>
   <div class="rv">

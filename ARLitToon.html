@@ -217,6 +217,9 @@ details .dbody li{margin-bottom:10px}
     <a href="#particle">アニメ・パーティクル連携</a>
     <a href="#license">パフォーマンス・利用規約</a>
   </div>
+  <div class="navgrp"><div class="glabel">Converter</div>
+    <a href="ARLitToonConverter.html">ARLitToon Converter →</a>
+  </div>
   <div class="sb-foot">© ARL / ALTIMA</div>
 </nav>
 
@@ -629,7 +632,7 @@ details .dbody li{margin-bottom:10px}
   <div class="note info" data-label="NOTE — この焼きこみには 2 通りの使い方があります。上の「焼きこみ後に落とす側の Fake Shadow Mesh を OFF にする」で選びます">
     <ul style="margin:4px 0 0 20px">
       <li><b>テクスチャで置き換える（既定・チェック ON）</b> — 焼いたあと落とす側の Fake Shadow Mesh を OFF にし、受け手の <b>Fake Shadow Auto Fallback も OFF</b> にします。<b>どのワールドでも焼いた影が常に出ます</b>。頭や光の向きへの追従はなくなりますが、<b>負荷が軽く、ワールドを選びません</b>。</li>
-      <li><b>保険として持つ（チェック OFF）</b> — Fake Shadow Mesh を残したまま焼きます。受け手の<b>Fake Shadow Auto Fallback は ON</b> になり、<b>Fake Shadow Mesh が出せないワールドでだけ</b>焼いた影が出ます。Fake Shadow Mesh は深度テクスチャを使うため、<b>ワールドの設定によっては影が出せません</b>——その穴を埋める使い方です。</li>
+      <li><b>保険として持つ（チェック OFF）</b> — Fake Shadow Mesh を残したまま焼きます。受け手の <b>Fake Shadow Auto Fallback は ON</b> になり、<b>Fake Shadow Mesh が出せないワールドでだけ</b>焼いた影が出ます。Fake Shadow Mesh は深度テクスチャを使うため、<b>ワールドの設定によっては影が出せません</b>——その穴を埋める使い方です。</li>
     </ul>
   </div>
   </div>
@@ -1519,7 +1522,7 @@ Material._GlitterALStrength  <span class="cm">// Float         ─ Glitter Audio
 <script>
 // ticker
 (function(){
-  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×3,TOON SHADOW,FAKE SHADOW,RIM SHADE,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
   var half=items.map(function(t){return t+"<b>///</b>"}).join("");
   document.getElementById("ticker").innerHTML=half+half;
 })();

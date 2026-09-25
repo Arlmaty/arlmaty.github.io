@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARLitToon Converter — Setup &amp; Usage Guide (lilToon → ARLitToon) | ALTIMA</title>
+<meta name="description" content="The official ALTIMA guide to ARLitToon Converter, a Unity Editor extension that non-destructively converts avatar materials using lilToon to ARLitToon: setup, usage and conversion mapping.">
+<link rel="canonical" href="https://arlmaty.github.io/ARLitToonConverter_EN.html">
+<link rel="alternate" hreflang="ja" href="https://arlmaty.github.io/ARLitToonConverter.html">
+<link rel="alternate" hreflang="en" href="https://arlmaty.github.io/ARLitToonConverter_EN.html">
+<link rel="alternate" hreflang="x-default" href="https://arlmaty.github.io/ARLitToonConverter.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTIMA">
+<meta property="og:title" content="ARLitToon Converter — Setup &amp; Usage Guide (lilToon → ARLitToon) | ALTIMA">
+<meta property="og:description" content="Setup &amp; usage guide for ARLitToon Converter, a non-destructive lilToon → ARLitToon conversion tool.">
+<meta property="og:url" content="https://arlmaty.github.io/ARLitToonConverter_EN.html">
+<meta property="og:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="600">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ARLitToon Converter — Setup &amp; Usage Guide (lilToon → ARLitToon) | ALTIMA">
+<meta name="twitter:description" content="Setup &amp; usage guide for ARLitToon Converter, a non-destructive lilToon → ARLitToon conversion tool.">
+<meta name="twitter:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Spectral:ital,wght@1,600;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafafc; --bg2:#f2f2f7; --ink:#0b0b12; --ink2:#4a4a58; --line:#e3e3ec;
+  --ac:#5b4df1; --ac2:#8b7cf8; --ac-dim:rgba(91,77,241,.08); --ac-line:rgba(91,77,241,.28);
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Noto Sans JP',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.85;overflow-x:hidden}
+::selection{background:var(--ac);color:#fff}
+
+/* ===== animated grid background ===== */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.5;
+  mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  animation:gridMove 24s linear infinite}
+@keyframes gridMove{to{background-position:48px 48px,48px 48px}}
+.bg-beam{position:fixed;top:-20%;right:-10%;width:60vw;height:60vw;z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,77,241,.10) 0%,transparent 60%);
+  animation:beamFloat 14s ease-in-out infinite alternate}
+@keyframes beamFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(-8vw,6vw) scale(1.15)}}
+
+/* ===== scroll progress ===== */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));z-index:100;box-shadow:0 0 12px var(--ac-line)}
+
+/* ===== sidebar ===== */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:264px;z-index:50;background:rgba(250,250,252,.92);backdrop-filter:blur(8px);border-right:1px solid var(--line);padding:28px 0 32px;overflow-y:auto;font-family:var(--mono)}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--line)}
+.brand{padding:0 24px 22px;border-bottom:1px solid var(--line)}
+.brand .tag{font-size:10px;letter-spacing:.24em;color:var(--ac);font-weight:700}
+.brand h1{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:21px;letter-spacing:0;margin-top:8px;display:flex;align-items:center;gap:9px}
+.brand h1 .mk{width:26px;height:26px;flex:none;color:var(--ink)}
+.brand .ver{display:inline-block;margin-top:8px;font-size:10px;padding:2px 8px;border:1px solid var(--ac-line);color:var(--ac);background:var(--ac-dim)}
+.navgrp{padding:18px 24px 0}
+.navgrp .glabel{font-size:9.5px;letter-spacing:.22em;color:var(--ink2);opacity:.65;margin-bottom:8px;text-transform:uppercase}
+.navgrp a{display:block;font-size:12px;color:var(--ink2);text-decoration:none;padding:5px 10px;margin:1px -10px;border-left:2px solid transparent;transition:all .18s;white-space:nowrap}
+.navgrp a:hover{color:var(--ink);background:var(--ac-dim)}
+.navgrp a.on{color:var(--ac);border-left-color:var(--ac);background:var(--ac-dim);font-weight:700}
+.sb-foot{padding:22px 24px 0;font-size:10px;color:var(--ink2);opacity:.6;letter-spacing:.1em}
+
+/* ===== layout ===== */
+.main{position:relative;z-index:1;margin-left:264px}
+.wrap{max-width:880px;margin:0 auto;padding:0 48px}
+
+/* ===== hero ===== */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero .meta{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ac);font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.hero .meta::before{content:"";width:36px;height:1px;background:var(--ac)}
+.hero-logo{display:flex;align-items:center;gap:clamp(18px,3vw,38px)}
+.hero-logo .mark{width:clamp(100px,13vw,180px);height:auto;flex:none;color:var(--ink);transition:color .35s,transform .35s}
+.hero-logo:hover .mark{color:var(--ac);transform:rotate(-6deg) scale(1.04)}
+.hero-title{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:clamp(50px,8.2vw,112px);line-height:1;letter-spacing:-.02em;position:relative;white-space:nowrap}
+.hero-tag{font-family:'Spectral',serif;font-style:italic;font-weight:700;font-size:clamp(19px,2.4vw,32px);text-align:center;margin-top:-4px}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0;opacity:0}
+.g-on .glitch::before{opacity:.85;color:var(--ac);clip-path:inset(12% 0 58% 0);animation:gA .35s steps(2) both}
+.g-on .glitch::after{opacity:.85;color:#e0447a;clip-path:inset(62% 0 8% 0);animation:gB .35s steps(2) both}
+@keyframes gA{0%{transform:translate(-5px,-2px)}50%{transform:translate(4px,2px);clip-path:inset(40% 0 30% 0)}100%{transform:translate(0)}}
+@keyframes gB{0%{transform:translate(5px,2px)}50%{transform:translate(-4px,-1px);clip-path:inset(20% 0 65% 0)}100%{transform:translate(0)}}
+.hero-sub{margin-top:28px;max-width:560px;font-size:15px;color:var(--ink2)}
+.hero-sub b{color:var(--ink)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;font-family:var(--mono)}
+.hero-chips span{font-size:10.5px;letter-spacing:.08em;padding:5px 12px;border:1px solid var(--line);background:#fff;color:var(--ink2);transition:all .2s}
+.hero-chips span:hover{border-color:var(--ac);color:var(--ac);transform:translateY(-2px);box-shadow:0 4px 14px rgba(91,77,241,.15)}
+.hero-scroll{position:absolute;bottom:36px;left:48px;font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ink2);display:flex;align-items:center;gap:10px}
+.hero-scroll .bar{width:1px;height:38px;background:var(--line);position:relative;overflow:hidden}
+.hero-scroll .bar::after{content:"";position:absolute;left:0;top:-100%;width:100%;height:100%;background:var(--ac);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{to{top:100%}}
+.hero-deco{position:absolute;right:48px;top:50%;font-family:var(--mono);font-size:10px;color:var(--ink2);opacity:.5;writing-mode:vertical-rl;letter-spacing:.4em}
+
+/* ===== ticker ===== */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ink2)}
+.ticker .in{display:inline-block;padding:10px 0;animation:tick 30s linear infinite}
+.ticker b{color:var(--ac);margin:0 18px 0 28px;font-weight:400}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ===== sections ===== */
+section{padding:88px 0 8px}
+.sec-head{margin-bottom:36px}
+.sec-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ac);font-weight:700;display:flex;align-items:center;gap:12px}
+.sec-head .num::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--ac-line),transparent)}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px);font-weight:900;letter-spacing:-.01em;line-height:1.25;margin-top:10px}
+.sec-head .sub{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:6px;letter-spacing:.06em}
+h3{font-size:19px;font-weight:700;margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+h3::before{content:"▍";color:var(--ac);font-size:16px}
+h4{font-family:var(--mono);font-size:13.5px;font-weight:700;margin:30px 0 10px;color:var(--ink)}
+h4 .hx{color:var(--ac)}
+p{margin:0 0 14px;color:var(--ink2)}
+p b,li b{color:var(--ink)}
+section ul{margin:0 0 16px 22px;color:var(--ink2)}
+section ol{margin:0 0 16px 22px;color:var(--ink2)}
+section li{margin-bottom:6px}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ===== tables ===== */
+table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:13.5px;background:#fff;border:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-align:left;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line);color:var(--ink2);text-transform:uppercase}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:var(--ac-dim)}
+td:first-child{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink);white-space:normal;width:32%}
+
+/* ===== code ===== */
+.code{position:relative;background:#0e0e18;color:#d8d8ea;font-family:var(--mono);font-size:12.5px;line-height:1.75;padding:20px 22px;margin:14px 0 22px;overflow-x:auto;border:1px solid #23233a;white-space:pre}
+.code::before{content:attr(data-label);position:absolute;top:0;right:0;font-size:9.5px;letter-spacing:.2em;color:var(--ac2);background:#1a1a2e;padding:3px 12px;border-left:1px solid #23233a;border-bottom:1px solid #23233a}
+.code .cm{color:#a3a3c6}.code .ac{color:var(--ac2)}
+code.inl{font-family:var(--mono);font-size:.88em;background:var(--ac-dim);color:var(--ac);padding:1px 6px;border:1px solid var(--ac-line)}
+
+/* ===== callouts ===== */
+.note{position:relative;border:1px solid var(--line);background:#fff;padding:16px 20px 14px;margin:16px 0 22px;font-size:13.5px}
+.note::before{content:attr(data-label);font-family:var(--mono);font-size:11px;letter-spacing:.2em;font-weight:700;display:block;margin-bottom:6px}
+.note p{margin-bottom:8px}.note p:last-child{margin-bottom:0}
+.note.tip{border-color:var(--ac-line)}.note.tip::before{color:var(--ac)}
+.note.warn{border-color:#f0c26e;background:#fffcf4}.note.warn::before{color:#b07818}
+.note.info::before{color:var(--ink2)}
+
+/* ===== preset cards ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:16px 0 22px}
+.card{border:1px solid var(--line);background:#fff;padding:16px 18px;transition:all .22s;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(11,11,18,.08);border-color:var(--ac-line)}
+.card:hover::after{transform:scaleX(1)}
+.card .cn{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ac)}
+.card .cd{font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.7}
+
+/* ===== divider / changelog ===== */
+.hr{height:1px;background:var(--line);margin:70px 0 0}
+details{border:1px solid var(--line);background:#fff;margin:16px 0}
+summary{font-family:var(--mono);font-size:12px;font-weight:700;padding:14px 18px;cursor:pointer;letter-spacing:.08em;color:var(--ac);list-style:none}
+summary::before{content:"[+] "}details[open] summary::before{content:"[-] "}
+details .dbody{padding:4px 22px 18px;font-size:13px}
+details .dbody li{margin-bottom:10px}
+.vtag{font-family:var(--mono);font-size:11px;color:var(--ac);font-weight:700;background:var(--ac-dim);border:1px solid var(--ac-line);padding:1px 7px;margin-right:6px;white-space:nowrap}
+
+.footer{border-top:1px solid var(--line);margin-top:90px;padding:40px 0 60px;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;letter-spacing:.1em}
+.footer .c{color:var(--ac)}
+
+@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.wrap{padding:0 24px}.hero-scroll{left:24px}.hero-deco{display:none}}
+
+/* ===== converter page ===== */
+.vlist{list-style:none;margin-left:6px}
+.vlist li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-beam" id="beam"></div>
+<div class="progress" id="progress"></div>
+
+<nav class="sidebar">
+  <div class="brand">
+    <div class="tag">ALTIMA STUDIO</div>
+    <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
+    <span class="ver">CONVERTER v7_GUIr0</span>
+  </div>
+  <div class="navgrp"><div class="glabel">Language</div>
+    <a href="ARLitToonConverter.html">日本語</a>
+    <a href="#" class="on">English</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Shader Guide</div>
+    <a href="ARLitToon_EN.html">← ARLitToon guide</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Converter</div>
+    <a href="#overview">Overview</a>
+    <a href="#install">Installation</a>
+    <a href="#usage">Usage</a>
+    <a href="#mapping">Conversion mapping</a>
+    <a href="#unsupported">Not auto-converted</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Troubleshooting</div>
+    <a href="#prefab">No Prefab created</a>
+    <a href="#notreflected">Changes not showing</a>
+    <a href="#draworder">Wrong draw order</a>
+    <a href="#revert">Undoing</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Version</div>
+    <a href="#version">Version history</a>
+  </div>
+  <div class="sb-foot">© ARL / ALTIMA</div>
+</nav>
+
+<main class="main">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="meta">ALTIMA OFFICIAL DOCUMENTATION</div>
+    <div class="hero-logo" id="glitchRoot">
+      <svg class="mark" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>
+      <div>
+        <div class="hero-title"><span class="glitch" data-t="ARLitToon">ARLitToon</span></div>
+        <div class="hero-tag">Converter</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">CONVERTER — SETUP &amp; USAGE GUIDE</div>
+    <p class="hero-sub">A Unity Editor extension that converts the materials of an avatar using lilToon to ARLitToon (<code class="inl">ALTIMA/ARLitToon</code>) <b>non-destructively</b>.</p>
+    <div class="hero-chips">
+      <span>NON-DESTRUCTIVE</span><span>LILTOON → ARLITTOON</span><span>AVATAR DUPLICATE</span><span>MASK BAKING</span><span>MATCAP ×3</span><span>RIM SHADE</span><span>FAKE SHADOW MESH</span><span>CONVERSION REPORT</span><span>PREFAB OUTPUT</span><span>UNDO SUPPORT</span>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
+  <div class="hero-deco">MATERIAL CONVERTER FOR ARLITTOON</div>
+</header>
+
+<div class="wrap">
+  <div class="note info" data-label="NOTE — ABOUT THIS ENGLISH EDITION" style="margin:0 0 40px;max-width:640px">
+    <p>This is the English edition of the converter's <code class="inl">README.md</code>, translated from the Japanese <a href="ARLitToonConverter.html" style="color:var(--ac)">README.md (the canonical source)</a> as of converter version <b>v7_GUIr0</b>. The Japanese README remains the authoritative document. <b>The converter window and its report are in Japanese</b>, so this page quotes each label exactly as it appears, followed by an English gloss in parentheses.</p>
+  </div>
+</div>
+
+<div class="ticker"><div class="in" id="ticker"></div></div>
+
+<div class="wrap">
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <div class="sec-head rv"><div class="num">SEC. 01 — OVERVIEW</div><h2>Overview</h2><div class="sub">// non-destructive material conversion</div></div>
+  <div class="rv">
+  <ul>
+    <li>It <b>never modifies</b> the original materials or textures. All conversion results are newly created in the output folder.</li>
+    <li>It assigns the converted materials <b>to a duplicate</b> of the avatar (the original avatar is kept as is; Undo is available).</li>
+    <li>It automatically maps lilToon settings that are hard to port by hand, such as "2nd texture + separate mask" and "MatCap with a mask".</li>
+    <li>Every feature that could not be converted automatically is <b>listed in the conversion report</b> (nothing is dropped silently).</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <ul style="margin:4px 0 0 20px">
+      <li>This tool is a companion tool separate from the ARLitToon shader itself.</li>
+      <li>lilToon is referenced only to read property names; this tool contains none of lilToon's code or assets and does not modify them.</li>
+      <li>Supported shader version: <b>ARLitToon v48_GUIr0</b> (it also works with earlier versions; items that do not exist are skipped automatically).</li>
+      <li>This tool's own version: <b>v7_GUIr0</b> (see the "Version" section at the end for the changelog; this is a different number from the "supported shader version" above).</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section id="install">
+  <div class="sec-head rv"><div class="num">SEC. 02 — SETUP</div><h2>Installation</h2><div class="sub">// requirements, placement, launch</div></div>
+  <div class="rv">
+  <p>Supported Unity: 2022.3 LTS (a VRChat SDK3 environment is assumed). Import the ARLitToon shader itself (<code class="inl">ALTIMA/ARLitToon</code>) into the project beforehand.</p>
+  </div>
+  <div class="rv">
+  <h3>Installation (manual copy)</h3>
+  <ol>
+    <li>Copy this <code class="inl">converter</code> folder into your Unity project, for example to <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> (any location works as long as <code class="inl">Editor/ARLitToonConverter.cs</code> is under an Editor folder).</li>
+  </ol>
+  </div>
+  <div class="rv">
+  <h3>Launching</h3>
+  <ul>
+    <li>Launch it from the menu <b>Tools → ALTIMA → ARLitToon Converter (lilToon から変換)</b> (the last item means "convert from lilToon").</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ USAGE ============ -->
+<section id="usage">
+  <div class="sec-head rv"><div class="num">SEC. 03 — USAGE</div><h2>Usage</h2><div class="sub">// options, convert, report</div></div>
+  <div class="rv">
+  <ol>
+    <li>Drag the avatar from the Hierarchy into the window's 「アバター (ルート)」 (Avatar (root)) field.</li>
+    <li>Check the options (the defaults are recommended):
+      <ul style="margin:6px 0 4px 20px">
+        <li><b>アバターを複製して変換する</b> (Duplicate the avatar and convert): when ON, the conversion results are assigned to a duplicate named <code class="inl">〇〇_ARLitToon</code>, and the original is deactivated (Undo is available).</li>
+        <li><b>マスクテクスチャを焼き込んだ合成テクスチャを生成する</b> (Generate composite textures with the masks baked in): when ON, PNGs that merge masks such as the "separate mask of the 2nd texture" into the alpha are generated automatically. <b>If Main Color 2nd is a "mask only" setup, turning this OFF leaves the mask ineffective and the look breaks</b> (see "Blend modes of Main Color 2nd (Texture Layer)" below). Keeping it ON is recommended.</li>
+        <li><b>落ち影マテリアルの変換</b> (Cast-shadow material conversion): see "Converting cast-shadow-only (FakeShadow) materials" below.</li>
+        <li><b>変換後のアバターから Pipeline Manager を外す</b> (Remove the Pipeline Manager from the converted avatar): when ON, the Pipeline Manager (which holds the Blueprint ID pointing to the upload destination) is removed from the converted avatar (default ON). <b>If it stays attached, it points to the same upload destination as the original avatar</b>, so uploading the converted avatar <b>overwrites the original avatar</b>. <b>It only works when 「アバターを複製して変換する」 is ON</b>; when that is OFF the avatar is the original itself, so it is left untouched regardless of this setting. If another component requires it and it cannot be removed, <b>only the Blueprint ID is cleared</b> (which of the two happened is shown in the report).</li>
+        <li><b>変換後のアバターを Prefab として保存する</b> (Save the converted avatar as a Prefab): when ON, the converted avatar is written out as a Prefab asset (default ON). <b>By default it is saved to the same place as the 「出力フォルダ」 (Output folder) above</b> (including when <code class="inl">_2</code>, <code class="inl">_3</code> … was appended to it). <code class="inl">既定に戻す</code> (Reset to default) makes it follow that folder again. <b>If a Prefab with the same name exists, it is saved under a different name</b>, so an existing Prefab is never overwritten. <b>The result always appears in the conversion report</b> (the path if it was saved, the reason if it was not).</li>
+        <li><b>出力フォルダ</b> (Output folder): the default is <code class="inl">Assets/ALTIMA/ARLitToon_Converted/&lt;avatar Prefab name&gt;/</code> (for a Prefab instance, <b>the name of the source Prefab asset</b> is used instead of the name in the Hierarchy). This default <b>follows automatically when you switch avatars</b> (if you typed a path yourself, that value takes precedence; <code class="inl">既定に戻す</code> makes it follow again). <b>If a folder with the same name already exists, the output goes to a new folder with <code class="inl">_2</code>, <code class="inl">_3</code> … appended</b> (each conversion's results stay separate and never mix with earlier output). The actual output location is shown in the completion dialog and at the top of the conversion report.</li>
+      </ul>
+    </li>
+    <li>Press <b>「アバターを変換する」</b> (Convert avatar). The converted avatar is also saved as a Prefab (default ON). The save path appears in the conversion report.</li>
+    <li>Check the <b>conversion report</b> at the bottom of the window (also saved as a .txt in the output folder), and adjust by hand anything listed as 「[注意]」 ([Caution]). Materials that were not converted are gathered in the <b>「スキップしたマテリアル」 (Skipped materials) section</b>, which shows <b>the reason and where in the avatar they are used (GameObject path / slot number)</b>.</li>
+  </ol>
+  <p>You can also select materials in the Project view and <b>convert just those materials</b> with 「選択中の lilToon マテリアルだけ変換する」 (Convert only the selected lilToon materials) (no scene assignment).</p>
+  </div>
+</section>
+
+<!-- ============ MAPPING ============ -->
+<section id="mapping">
+  <div class="sec-head rv"><div class="num">SEC. 04 — MAPPING</div><h2>Main Conversion Mapping</h2><div class="sub">// what is converted into what</div></div>
+  <div class="rv">
+  <table><thead><tr><th>lilToon side</th><th>ARLitToon side</th></tr></thead><tbody>
+    <tr><td>Main texture / color / color correction (HSV)</td><td>Albedo / Color / Hue Shift・Saturation・Brightness</td></tr>
+    <tr><td>2nd texture (color, blend mode, separate mask)</td><td>Texture Layer (the separate mask is baked into the alpha; a mask-only setup has its mask re-baked into the alpha)</td></tr>
+    <tr><td>Alpha mask (+ transparency adjustment Scale/Value)</td><td>Texture Layer Alpha Mask (the transparency adjustment is baked into the mask image) / baked into the alpha of the main texture</td></tr>
+    <tr><td>Shadow (color / strength / border / blur), brightness upper and lower limits</td><td>Lighting &amp; Shadow / Light Limit</td></tr>
+    <tr><td>Shadow receiving (receiving cast shadows ON/OFF)</td><td>Receive Shadow (carried over only when it is set)</td></tr>
+    <tr><td>Materials of the cast-shadow-only shader (FakeShadow)</td><td>Fake Shadow Mesh (the shadow mesh is reused as is; see below)</td></tr>
+    <tr><td>Normal map / reflection (Smoothness, Metallic, etc.)</td><td>PBR（BRDF）</td></tr>
+    <tr><td>Emission (color / texture / mask / scroll / blink)</td><td>Emission (the mask is baked into the alpha of the Emission Map [into the RGB when it competes with the glitter mask]; blinking is approximated with a pulse)</td></tr>
+    <tr><td>MatCap (1st / 2nd, each mask and blend mode)</td><td>Matcap 1・2・3 + region mask (see below)</td></tr>
+    <tr><td>Main Color 2nd / 3rd with <b>UV Mode = MatCap</b> selected</td><td>Matcap slots (not Texture Layer; see below)</td></tr>
+    <tr><td>Rim light (color / apply lighting / <b>texture</b>)</td><td>Rim Light (<b>strength and width are set to the post-conversion defaults</b>; see below) + Rim Env Adapt + <b>Rim mask</b> (generated from the texture's brightness)</td></tr>
+    <tr><td>Rim shade (darkening the edges / mask)</td><td><b>Rim Shade</b> (color, width, strength, mask). If ARLitToon is v47_GUIr0 or earlier, approximated with Rim Light's <b>Multiply mode</b> (see below)</td></tr>
+    <tr><td>Glitter (color / strength / color &amp; mask texture)</td><td>Glitter Sparkle (grain shape and density need adjusting; the mask is baked into the alpha of the Emission Map)</td></tr>
+    <tr><td>UV scroll (main / 2nd / emission)</td><td>Each scroll (converted to the same speed)</td></tr>
+    <tr><td>Backlight (color / strength / back-facing directivity)</td><td>Back Light (fine-tune the spread with Width)</td></tr>
+    <tr><td>Distance fade (fading to a set color at close range, color mode)</td><td>Distance Darken (color / distance / strength)</td></tr>
+    <tr><td>Outline (color / width / width mask / lighting)</td><td>Outline + Outline Mask</td></tr>
+    <tr><td>Rendering mode (opaque / cutout / transparent)</td><td>Blend Preset (equivalent to Opaque / Cutout / Fade)</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h3>How reflections and highlights are converted</h3>
+  <p>ARLitToon's lighting is <b>physically based (PBR)</b>. Because it works differently from the source, conversion is handled as follows.</p>
+  <ul>
+    <li><b>If a metallic map (a setting that makes only part of the surface metal) is set, <code class="inl">Metallic</code> is set to <code class="inl">0</code>.</b> ARLitToon has no metallic map slot, so bringing over the value alone would make <b>the whole surface metal</b>, and <b>the material would turn black because it loses its diffuse light</b>. Since the information that limits the area is lost, it errs on the side of not making it metal. If you need metal parts, set <code class="inl">Metallic</code> / <code class="inl">Reflection Strength</code> by hand after conversion (a [注意] ([Caution]) entry appears in the report).</li>
+    <li><b>Materials whose environment reflection is <code class="inl">0</code> but whose <code class="inl">Metallic</code> is high also get <code class="inl">Metallic</code> set to <code class="inl">0</code>.</b> With nothing to reflect, only the diffuse light would be lost and the material would again turn black (a combination that is not physically possible either). If you want it to look like metal, raise <code class="inl">Reflection Strength</code> first and then restore <code class="inl">Metallic</code>.</li>
+    <li><b>Materials that do not use "reflection" in the source get environment reflection explicitly turned OFF (<code class="inl">0</code>).</b> ARLitToon's <code class="inl">Reflection Strength</code> has <b>an initial value of <code class="inl">1</code> for new materials</b> (reflections on), so without this step reflections would appear on materials that did not use reflection. This step prevents that.</li>
+    <li><b><code class="inl">Specular Highlight</code> is always set to <code class="inl">0</code> (physically as is).</b> In ARLitToon this item is an "<b>extra boost</b> of light-source highlights" (<code class="inl">0</code> = physically correct, <code class="inl">1</code> = about 5×), which means something different from the source's switch for "use / do not use specular". Physically based highlights appear from the start, so no boost is added.</li>
+    <li><b>Even if specular was OFF in the source, the highlight cannot be removed completely</b> (it appears as part of the physical calculation). If it stands out, lower <code class="inl">Smoothness</code>. In this case a [注意] ([Caution]) entry appears in the report.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>Blend modes of Main Color 2nd (Texture Layer)</h3>
+  <p>The source blend modes map directly: <b>Normal → Normal / Add → Add / Screen → Screen / Multiply → Multiply</b>. <b>Setups with a 2nd texture (with or without a mask) follow this mapping.</b></p>
+  <p><b>Only when Main Color 2nd has no texture and only a mask is set</b> (a setup used as color × mask) is it handled differently.</p>
+  <ul>
+    <li><b>An image with the mask re-baked as "RGB = white / alpha = mask" is generated and assigned</b> (Tiling / Offset also use the mask's values). ARLitToon's Texture Layer reads <b>the alpha of the layer texture</b> as its blend mask, so assigning a grayscale mask image as is would leave <b>the mask completely ineffective, and with Multiply the base would be darkened in the mask's black areas</b>. Re-baking matches the source's behavior of "multiplying the 2nd color only in the white areas of the mask". <b>This generation requires 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 (Generate composite textures with the masks baked in) to be ON</b> (when it is OFF, the mask is assigned as is and the report warns that the look will break).</li>
+    <li><b>The blend mode defaults to <code class="inl">Multiply</code>.</b> This setup is mainly used to lay <b>patterns, dirt or shading onto the base</b>, and with <code class="inl">Normal</code> <b>the base's shading and texture are lost inside the mask area, so it looks pasted on and floating</b>. With Multiply it sits on top while keeping the base's light and dark.</li>
+    <li><b>If you want to paint over the base, change <code class="inl">Blend Mode</code> to <code class="inl">Normal</code> after conversion</b> (<code class="inl">Normal</code> replaces the mask area with the Layer's color). The report shows the same guidance.</li>
+  </ul>
+  <p>A 2nd layer with neither a texture nor a mask (color only) has no corresponding feature, so it is not converted and is reported.</p>
+  </div>
+  <div class="rv">
+  <h3>Converting glass materials (refraction)</h3>
+  <p>The source's high-load rendering modes <b>Refraction</b> and <b>Refraction Blur</b>, as well as <b>Gem</b>, are used for glass materials, so they are converted to ARLitToon's <b><code class="inl">Transparent</code> preset</b> (for glass and material-like surfaces) (ordinary transparency uses the <code class="inl">Fade</code> preset).</p>
+  <ul>
+    <li><b>The main color's alpha is set to <code class="inl">10/255</code></b> (the original value is not carried over). The source's refraction shader <b>looks see-through thanks to the refraction effect even when the alpha is <code class="inl">255</code></b>, so bringing that value over as is would make it <b>an opaque white board in ARLitToon</b>. Refraction itself cannot be reproduced, so <b>a thin alpha that looks like glass</b> is given as a starting point. Adjust the density with the main color's alpha, and if you want reflections, raise PBR（BRDF）'s <code class="inl">Reflection Strength</code> / <code class="inl">Fresnel Power</code> / <code class="inl">Fresnel Min</code>.</li>
+    <li><b>There is no feature that reproduces refraction itself (the background appearing distorted).</b></li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>How MatCap masks are converted</h3>
+  <p>ARLitToon's MatCap mask uses a <b>region-selection method</b> where "white = apply that slot". This differs from lilToon's "application range mask", so it is converted as follows.</p>
+  <p>There are <b>3</b> destination slots (the 3rd was added in ARLitToon v47_GUIr0).</p>
+  <table><thead><tr><th>Slot</th><th>Role</th><th>Shared mask channel read</th></tr></thead><tbody>
+    <tr><td>1st</td><td><b>Base layer shown over the whole surface</b> (the layer without a mask goes here)</td><td>—</td></tr>
+    <tr><td>2nd</td><td>Layer applied to a limited region</td><td><code class="inl">R</code></td></tr>
+    <tr><td>3rd</td><td>Same as above (a different region from the 2nd)</td><td><code class="inl">G</code></td></tr>
+  </tbody></table>
+  <ul>
+    <li><b>1 MatCap + mask</b> → the MatCap itself goes into the 2nd slot, and the mask (white = apply) is assigned as the region mask as is (the 1st slot is disabled).</li>
+    <li><b>2 MatCaps, both with masks</b> → <b>both are reproduced</b>. An image with the 1st mask packed into the shared mask's <code class="inl">R</code> and the 2nd mask into <code class="inl">G</code> is generated automatically, and they are assigned to the 2nd and 3rd slots respectively (<b>up to v5_GUIr0 only one mask could be held, so the 1st mask could not be reflected</b>).</li>
+    <li><b>2 MatCaps, only the 2nd with a mask</b> → the 1st becomes the base (whole surface) and the 2nd is assigned to the mask region.</li>
+    <li><b>2 MatCaps, no masks (layered)</b> → cannot be reproduced because the selection is exclusive. One of them is applied to the whole area, and this is reported.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>When the UV Mode of Main Color 2nd / 3rd is MatCap</h3>
+  <p>In lilToon, <b>Main Color 2nd / 3rd can select <code class="inl">MatCap</code> (projection in view space) as the UV Mode</b>. This setting is effectively used as "a 3rd and 4th matcap", so <b>it is converted to a Matcap slot rather than Texture Layer</b> (sending it to the normal-UV Texture Layer would lose the projection method, and the picture would become something else entirely).</p>
+  <ul>
+    <li>The strength comes from <b>the color's alpha</b>, and the blend mode is mapped to Multiply / Add by the same rules as MatCap.</li>
+    <li><b>Rotation angle and UV scroll are not reflected</b> (they have no meaning with view-space projection). This is reported.</li>
+    <li>When the UV Mode is <b>anything other than</b> <code class="inl">MatCap</code>, the behavior is unchanged (2nd goes to Texture Layer; 3rd gives an unsupported warning).</li>
+  </ul>
+  <p><b>Up to 3 slots in total.</b> When the source has 4 or more layers (MatCap + MatCap 2nd + Main Color 2nd + 3rd, all used as MatCap), up to 3 are assigned in the priority order <b>MatCap → MatCap 2nd → Main Color 2nd → Main Color 3rd</b>, and the overflowing layers are reported.</p>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — The shared mask holds a different picture in each channel">
+    <p>When using the 2nd and 3rd at the same time, paint separate regions into the <code class="inl">R</code> and <code class="inl">G</code> of one image (a grayscale image has R = G = B, so both slots would point to the same region and the 3rd would cover the 2nd). When this tool generates the mask, it is packed correctly. For masks that rely heavily on midtones (semi-transparent gradients), check them after conversion with the channel preview in the Inspector and fine-tune.</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h3>Converting rim light and rim shade</h3>
+  <ul>
+    <li><b>Rim light texture</b>: the source's rim color texture is white by default and <b>works by multiplication</b>, so no rim appears in areas painted black (= it is effectively a mask). This tool <b>converts its brightness into the Rim mask</b>, reproducing "where the rim appears". <b>Color variation cannot be reproduced</b> (Rim Color is a single color).</li>
+    <li><b>Rim shade (darkening the edges)</b>: in ARLitToon v48_GUIr0 and later it is converted to the dedicated <b>Rim Shade</b> (color, width, strength and mask each go to their own items). Rim Shade is a layer independent of Rim Light, so <b>even when both rim light and rim shade are enabled, both are reproduced as they are</b>. <b>The formulas differ, so the strength is approximate</b>; if it is too strong or too weak, adjust it with Rim Shade Intensity.</li>
+    <li><b>If ARLitToon is v47_GUIr0 or earlier</b> (a version without Rim Shade): as before, it is approximated with Rim Light's <b>Blend Mode = Multiply</b>, and when both are enabled <b>rim light (the brightening side) takes priority</b>, and the rim shade is reported.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>Channel assignment of the shared mask</h3>
+  <p>Up to 4 features read one shared mask. When this tool generates it, the channels are assigned as follows.</p>
+  <table><thead><tr><th>Channel</th><th>Use</th></tr></thead><tbody>
+    <tr><td><code class="inl">R</code></td><td>Region of the 2nd Matcap</td></tr>
+    <tr><td><code class="inl">G</code></td><td>Region of the 3rd Matcap</td></tr>
+    <tr><td><code class="inl">A</code></td><td>Rim Light mask</td></tr>
+    <tr><td>(see below)</td><td>Rim Shade mask</td></tr>
+  </tbody></table>
+  <p><b>Where the Rim Shade mask goes</b>:</p>
+  <ul>
+    <li><b>When there is no rim light mask, <code class="inl">A</code></b> (the same as ARLitToon's default; the slot shared with Rim Light).</li>
+    <li><b>When there is also a rim light mask, a free channel is used in the order <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code></b> (it is a different image from the rim light mask, so it cannot share <code class="inl">A</code>). <b><code class="inl">B</code> is the last resort.</b> <code class="inl">B</code> is Fake Shadow Texture's default channel, and <b>baking a Fake Shadow overwrites <code class="inl">B</code></b>, so the report warns when <code class="inl">B</code> is used. If you bake a shadow into that material, move the rim shade mask to another channel first.</li>
+  </ul>
+  <ul>
+    <li><b>When 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 (Generate composite textures with the masks baked in) is ON (default), even with only one mask</b> a shared mask packed into the channels in the table above is generated = <b>each feature reads ARLitToon's default channel</b> (for example, with only a Rim Light mask, <code class="inl">A</code>). <b>Unused channels are black (= that feature has no effect)</b>, so even if you turn on another feature later, it will not read an unintended picture.</li>
+    <li><b>The contents of each channel are also saved as separate per-feature images</b> (in <code class="inl">Textures/SharedMask_&lt;material name&gt;/</code>: <code class="inl">Matcap2.png</code>, <code class="inl">Matcap3.png</code>, <code class="inl">RimLight.png</code>, <code class="inl">RimShade.png</code>, plus <code class="inl">SharedMask_&lt;material name&gt;.png</code> that combines them). <b>When you want to redraw the mask of just one feature, you can edit that separate image and recombine it into the shared mask</b> (which image went into which channel appears in the report).</li>
+    <li><b>When this option is OFF, no image can be generated, so the source mask image is assigned as is and the channel read is <code class="inl">R</code></b> (source masks often have an alpha of 1 everywhere, so reading <code class="inl">A</code> would be white everywhere = effective everywhere). When there are 2 or more masks, only the 1st is set, and this is reported.</li>
+    <li>If several features use <b>the same mask image</b>, repacking cannot separate the regions, so this is reported.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>Transparency adjustment of the alpha mask</h3>
+  <p>lilToon's alpha mask can adjust how it looks with "transparency (Scale/Value)", but ARLitToon's Alpha Mask has no equivalent adjustment. This tool <b>automatically generates a mask image with this adjustment applied</b> and brings it over (reproducing the original transparency). If you want to fine-tune further after conversion, adjust the transparency of the whole material (the alpha of Color) or Alpha Cutoff, or change the adjustment values and convert again.</p>
+  </div>
+  <div class="rv">
+  <h3>Transparency and cast shadows (Dither Fade)</h3>
+  <p>Materials converted to transparent (Fade equivalent) <b>cannot receive cast shadows (Receive Shadow)</b> due to Unity's specifications. If you want a material to be "transparent but still receive cast shadows", for example see-through bangs, you can set the converted material's Blend Preset to <b>Cutout</b> and turn <b>Dither Fade (dithered pseudo-transparency)</b> ON (the conversion report also shows this guidance for the affected materials; it is not switched automatically).</p>
+  </div>
+  <div class="rv">
+  <h3>Rim light sharpness and glitter</h3>
+  <ul>
+    <li><b>Rim strength and width</b>: <b>only the color is carried over; <code class="inl">Rim Power</code> is set to <code class="inl">1</code> and <code class="inl">Rim Intensity</code> to <code class="inl">0.1</code>.</b> The source and ARLitToon differ in both the rim formula and the handling of ambient light, so converting the values and bringing them over <b>makes the rim far too strong</b>. <b>Start from a subdued state and raise it if needed.</b> <b>Reference values appear in the report</b> if you want to get closer to the original settings (sharpness works in opposite directions: in the source, larger values are thinner and sharper / in ARLitToon, larger values are wider, so the converted value is listed). The "apply lighting" setting is carried over to <b>Rim Env Adapt</b> (environment adaptation).</li>
+    <li><b>Glitter</b>: enabling, color and strength are carried over, but <b>the way grains are generated differs</b>, so grain size, density, shape and flicker speed are not carried over and keep the shader defaults. Match the look with Grain Scale / Coverage / Grain Size / Shape / Flicker Speed in the Glitter / Sparkle section (the report also shows guidance).</li>
+    <li><b>Glitter "color / mask" texture</b>: <b>the texture's brightness × alpha is baked into the alpha of the Emission Map</b>, and Glitter's <b>Mask Channel = Alpha (A)</b> is set (ARLitToon v48_GUIr0 and later, with baking ON). <b>The emission color (RGB) stays that of the original Emission Map</b> (without an Emission Map the RGB is made white, so the look of the emission does not change). ARLitToon reads this alpha <b>with the same UV as the main texture</b>, so even with emission scrolling or Tiling, <b>the mask does not shift</b>. <b>The "color differences" of a colored texture cannot be reproduced</b> (ARLitToon's glitter is single-colored, so only the brightness is carried over, and this is reported). <b>When a UV other than UV0 is used</b> and <b>when baking is OFF</b>, it is not reflected and the glitter appears everywhere (reported).</li>
+    <li><b>Emission mask</b>: baked into <b>the alpha of the Emission Map</b>, and Emission's <b>Mask with Emission Map alpha</b> is turned ON (ARLitToon v48_GUIr0 and later, with baking ON). The alpha is read with the same UV as the main texture, so <b>even when the emission scrolls, the mask position matches the source</b> (previously it was multiplied into the emission color, so when the emission scrolled, the mask flowed along with it).</li>
+    <li><b>When there are both an emission mask and a glitter mask</b>: the Emission Map has only one alpha, so they are assigned as follows.
+      <ul style="margin:6px 0 4px 20px">
+        <li><b>If they are the same image</b> (same Tiling/Offset), the alpha is shared (both the Emission and Glitter masks are ON).</li>
+        <li><b>If they are different images</b>, <b>the alpha is used for the glitter mask</b>, and the emission mask is <b>multiplied into the emission color (RGB)</b> as before. When the emission scrolls, or the Tiling/Offset of the emission and the mask differ, the mask position can shift, so the report warns about it.</li>
+      </ul>
+    </li>
+    <li><b>The emission texture's own alpha / the emission color's alpha</b>: the source <b>multiplies both into the emission strength</b> (transparent parts do not glow). ARLitToon's emission uses only color (RGB), so <b>the emission texture's alpha is multiplied into the emission color (RGB)</b> (only when the alpha actually has parts below 1, with baking ON), and <b>the emission color's alpha is multiplied into Intensity</b>. The emission texture's color and alpha are the same picture, so their positions match even when the emission scrolls.</li>
+    <li><b>Images written out</b>: the assembled emission texture and <b>the contents of each channel</b> are placed together in <code class="inl">Textures/EmissionMap_&lt;material name&gt;/</code> (<code class="inl">EmissionMap_&lt;material name&gt;.png</code> = the image assigned to the material / <code class="inl">Emission_RGB.png</code> = the emission color / <code class="inl">Emission_A.png</code> = the alpha contents shown in gray).</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>MatCap blend modes</h3>
+  <p>The source blend modes map as follows. ARLitToon's MatCap has 2 types: <b>Multiply / Add</b>.</p>
+  <table><thead><tr><th>Source</th><th>After conversion</th></tr></thead><tbody>
+    <tr><td>Multiply</td><td>Multiply</td></tr>
+    <tr><td>Add</td><td>Add</td></tr>
+    <tr><td>Screen</td><td>Add (approximate)</td></tr>
+    <tr><td>Normal (replace)</td><td><b>Multiply (approximate)</b></td></tr>
+  </tbody></table>
+  <p><b>Normal (replace) differs from both</b>, so it is approximated. <b>Multiply</b> is chosen because normal-blend MatCaps are often white to bright images, and with Add <b>the material would glow white</b>. With Multiply a bright MatCap comes out almost unchanged, so <b>it never becomes too bright by accident</b>. If you want strong gloss, change the blend mode to <b>Add</b> after conversion and adjust the strength (the report also shows guidance).</p>
+  </div>
+  <div class="rv">
+  <h3>Materials skipped without conversion</h3>
+  <p>Materials of the following dedicated shaders <b>have no corresponding settings in ARLitToon and cannot be approximated</b>, so they are not converted. <b>The original materials are left in their slots</b>, so those parts keep working as before (the conversion report shows that they were skipped and why).</p>
+  <ul>
+    <li><b>Fur (Fur, FurCutout, FurTwoPass)</b>: dedicated settings for growing fur in many layers. Converting them would make the fur disappear and leave only the base.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>Converting cast-shadow-only (FakeShadow) materials</h3>
+  <p>Materials of the cast-shadow-only shader are <b>converted to ARLitToon's Fake Shadow Mesh (v44 and later)</b> (up to v1_GUIr0 they were skipped). <b>You can choose between 2 conversion methods</b> (the window's <b>落ち影マテリアルの変換</b> (Cast-shadow material conversion)). <b>The default is B (merge into the base material)</b>: it removes one shadow slot and keeps the number of materials and passes down. <b>If the same renderer has no base material, it automatically falls back to the equivalent of A</b>, so choosing merge never makes conversion impossible.</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> A. 「影用メッシュをそのまま変換する」 (Convert the shadow mesh as is)</h4>
+  <p>The shadow slot is converted to "an ARLitToon material that draws only the shadow". <b>It uses the shadow's shape and position as crafted in the source</b>, so this method reproduces the look closely.</p>
+  <ul>
+    <li><b>The shadow mesh is kept and used as is.</b></li>
+    <li>The converted material is set with <b>Fake Shadow Mesh ON</b> and <b>the base pass invisible</b> (transparent + alpha 0). ARLitToon's Fake Shadow Mesh draws the shadow in its own independent pass, so the normal drawing can be removed while <b>keeping only the shadow pass</b> (the shadow board never appears as an opaque board).</li>
+    <li><b>Render Queue is set to 3001</b> (it must be drawn after the receiver). If the receiver is set to be drawn after this, the shadow will not appear, so lower the receiver's Render Queue.</li>
+    <li>The extrusion distance (FS Mesh Distance) is set to a small value (0.2), on the assumption that the shadow mesh is already placed in front of the receiver.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> B. 「ベースマテリアルへ統合する」 (Merge into the base material; removes the shadow slot; <b>default</b>)</h4>
+  <p>Fake Shadow Mesh is ported into <b>the base material of the same renderer</b> (such as the hair itself), and <b>the shadow material slot is removed</b>. This saves one material and one pass.</p>
+  <ul>
+    <li><b>The shadow's shape changes</b>: the body mesh itself is extruded to form the shadow, so the shape differs from the source's shadow mesh.</li>
+    <li><b>The Render Queue of the merge target is raised by 1</b>: Fake Shadow Mesh only works when it is <b>drawn after the receiver</b> (with the same value as the receiver, no shadow appears). If the receiver's (face etc.) Render Queue is the same as or higher than the merge target's, the shadow will not appear, so lower the receiver's value. The values before and after the adjustment appear in the report.</li>
+    <li><b>If the same renderer has no base material, it automatically falls back to A</b> and writes out a shadow material (which method was used appears in the report).</li>
+    <li><b>Safety measure for slot removal</b>: Unity assigns the Nth entry of the material array to submesh N, so removing a slot in the middle <b>shifts the pairing of the later meshes and materials</b>. Therefore only <b>the slots that are contiguous from the end</b> are actually removed, and slots left in the middle are <b>replaced with a completely invisible material</b> (it is not drawn, so the look is the same as removing it). Which was done appears in the report.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Common to both methods</h4>
+  <ul>
+    <li><b>The shadow's color and strength are carried over from the source color</b> (color RGB → shadow color, alpha → strength).</li>
+    <li>Unlike the source, with either method the shadow <b>follows the light direction and head movement</b>. Where no light reaches, the shadow appears along <b>FS Fallback Dir</b> in the Fake Shadow Mesh section (by default, diagonally upward).</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ UNSUPPORTED ============ -->
+<section id="unsupported">
+  <div class="sec-head rv"><div class="num">SEC. 05 — LIMITS</div><h2>Main Features That Cannot Be Converted Automatically (reported)</h2><div class="sub">// features to set up by hand</div></div>
+  <div class="rv">
+  <p>3rd texture / decal placement / texture rotation / 2nd shadow (multi-tier shadows) / shadow color texture / gradation map / 2nd normal map / glitter grain shape and density / 2nd emission / AudioLink (the method differs; set it up by hand) / refraction / tessellation, and so on.</p>
+  <p>After conversion, always check the look on the actual device (or in the scene) and fine-tune as needed in the ARLitToon Inspector (each section of the material).</p>
+  </div>
+</section>
+
+<!-- ============ PREFAB ============ -->
+<section id="prefab">
+  <div class="sec-head rv"><div class="num">SEC. 06 — TROUBLESHOOTING</div><h2>When No Prefab Is Created</h2><div class="sub">// prefab save failed</div></div>
+  <div class="rv">
+  <p><b>The reason appears on the <code class="inl">[全体] Prefab 保存:</code> ([Overall] Prefab save:) line of the conversion report.</b> Common causes are:</p>
+  <ul>
+    <li><b>The avatar contains scripts whose references are missing (Missing Script).</b> Unity cannot save objects with a Missing Script as a Prefab. The report shows <b>which GameObjects have how many</b>, so import the missing scripts (VRChat SDK or third-party assets) or delete the affected components, then convert again.</li>
+    <li>The destination folder could not be created, or an exception occurred while saving. The report shows the details.</li>
+  </ul>
+  <p><b>In either case, the converted avatar in the scene can be used as is</b> (the material conversion is complete). If you do not need a Prefab, turn 「変換後のアバターを Prefab として保存する」 (Save the converted avatar as a Prefab) OFF.</p>
+  </div>
+</section>
+
+<!-- ============ NOTREFLECTED ============ -->
+<section id="notreflected">
+  <div class="sec-head rv"><div class="num">SEC. 07 — TROUBLESHOOTING</div><h2>When Changes Do Not Seem to Apply</h2><div class="sub">// checking the output that is actually in use</div></div>
+  <div class="rv">
+  <p><b>First check that the path on the 「変換後マテリアルを保存: …」 (Saved converted material: …) line of the conversion report is the same as the path of the material open in the Inspector.</b> Each run outputs to <b>a different folder</b> (<code class="inl">〇〇/</code> → the 2nd run <code class="inl">〇〇_2/</code> …), so if you are looking at old materials from an earlier conversion, or an old duplicate avatar left in the scene (<code class="inl">〇〇_ARLitToon</code>), the latest conversion result is not reflected there. Deleting old folders and duplicate avatars you no longer need before checking makes it certain.</p>
+  <p>The report also outputs the toggles that were enabled and their values (for example <code class="inl">_UseBackLight=1 / Intensity=1</code>), so you can compare down to the values. If it says 「対応機能がないため反映していません（v39 以降で対応）」 (Not applied because the feature is not supported (supported from v39)), the ARLitToon shader in Unity is old, so update the shader to the latest version and convert again.</p>
+  </div>
+</section>
+
+<!-- ============ DRAWORDER ============ -->
+<section id="draworder">
+  <div class="sec-head rv"><div class="num">SEC. 08 — TROUBLESHOOTING</div><h2>When the Draw Order Looks Wrong</h2><div class="sub">// render queue, zwrite, slot order</div></div>
+  <div class="rv">
+  <p><b>Conversion does not reorder the material slots (Element 0 / 1 …).</b> The converter keeps the slot numbers and only swaps their contents (<b>the only exception is slot removal when "Merge into the base material" is chosen for cast-shadow material conversion</b>; even then, only slots at the end, where the pairing cannot shift, are removed). The material editors listed at the bottom of the Inspector can appear in a different order from the Materials list, but this is just how Unity displays them, not the slot order (selecting the original avatar shows the same order).</p>
+  <p>If the look of the stacking order has changed, compare the <b><code class="inl">描画設定: Render Queue=… / ZWrite=… / Cull=…</code></b> (render settings) lines of the conversion report between the materials involved. The two most common causes are:</p>
+  <ul>
+    <li><b>ZWrite is On for a transparent material</b>: the transparent part also writes depth, hiding what is behind it (such as bangs). It is inherited to respect the source's setting, but if it breaks, set <b>ZWrite to Off</b> in the Transparency section, or switch the Blend Preset to <b>Cutout + Dither Fade</b> (the report also shows this as a caution).</li>
+    <li><b>Render Queue</b>: the value is carried over only when it was explicitly set in the source. Otherwise it uses ARLitToon's preset defaults (Opaque=2000 / Cutout=2450 / Transparent=3000 / Fade・Additive=3001). For avatars with a carefully built front-to-back order, such as face and hair, fine-tune it with the Render Queue in the Inspector.</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ REVERT ============ -->
+<section id="revert">
+  <div class="sec-head rv"><div class="num">SEC. 09 — TROUBLESHOOTING</div><h2>To Undo the Conversion</h2><div class="sub">// undo, delete output</div></div>
+  <div class="rv">
+  <ul>
+    <li>Scene changes (duplication, deactivation, material assignment) can be undone with <b>Ctrl+Z (Undo)</b>.</li>
+    <li>The generated materials, textures and report disappear when you delete the output folder (the original avatar and original materials are not affected).</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ VERSION ============ -->
+<section id="version">
+  <div class="sec-head rv"><div class="num">SEC. 10 — VERSION</div><h2>Version</h2><div class="sub">// versioning and changelog</div></div>
+  <div class="rv">
+  <p>This tool is <b>a single file</b>, <code class="inl">converter/Editor/ARLitToonConverter.cs</code>, but its version is managed with the same scheme (<code class="inl">v{N}_GUIr{M}</code>) as the ARLitToon shader itself (<code class="inl">Shaders/ARLitToon.shader</code> + <code class="inl">Editor/ARLitToonGUI.cs</code>). It is shown at the top of the window, in the completion dialog and at the top of the conversion report.</p>
+  <ul>
+    <li><b><code class="inl">N</code> (version of the conversion logic; the counterpart of the shader)</b>: incremented for <b>changes that affect conversion results</b>, such as adding or changing properties written by the conversion, changing shared mask assignments, or adding shaders excluded from conversion; the GUI revision is then reset to 0.</li>
+    <li><b><code class="inl">M</code> (GUI revision; the counterpart of GUI.cs)</b>: incremented for <b>UI-only changes that do not affect conversion results</b>, such as the window layout or display text (the conversion logic is unchanged).</li>
+  </ul>
+  <p>This is <b>a different number</b> from the "supported shader version" above (the ARLitToon version last verified). Do not confuse the two.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v7_GUIr0</span> <b>Follows ARLitToon v48_GUIr0 (3rd Matcap, rim light mask).</b></p>
+  <ul class="vlist">
+    <li>①<b>Added support for "UV Mode = MatCap" in Main Color 2nd / 3rd.</b> <b>Up to v5_GUIr0 the UV Mode was not read and the 2nd was always converted to Texture Layer, so when it was used as a matcap the projection method was lost and the picture became something else, without any warning.</b> It is now converted to a Matcap slot (the same goes for the 3rd; when the UV Mode is anything other than MatCap, the behavior is unchanged).</li>
+    <li>②<b>When both MatCaps are used and both have masks, the 1st mask can now be reflected too</b> (an image packed into the shared mask's <code class="inl">R</code> and <code class="inl">G</code> is generated automatically). Up to v5_GUIr0 there was only one region mask, so the 1st mask could not be reflected and was only reported.</li>
+    <li>③Since there are now 3 destination Matcap slots, <b>when the source uses 4 or more matcap layers, up to 3 are assigned in priority order and the overflowing layers are reported</b>.</li>
+    <li>④<b>The rim light texture is now converted into the Rim mask</b> (the source's rim color texture works by multiplication, so no rim appears in black areas = it is effectively used as a mask). <b>Up to v5_GUIr0 it was discarded with the warning "not applied because the feature is not supported"</b> (because ARLitToon had nothing to receive it). Color variation cannot be reproduced.</li>
+    <li>⑤<b>Added support for rim shade (darkening the edges).</b> <b>Up to v5_GUIr0 it was neither converted nor warned about; it was silently dropped.</b> <b>With ARLitToon v48_GUIr0 and later it is converted directly to the dedicated Rim Shade</b> (color, width, strength and mask each go to their own items). <b>Rim Shade is a layer independent of rim light</b>, so <b>sources with both rim light and rim shade enabled are also reproduced as they are.</b> If ARLitToon is v47_GUIr0 or earlier, it is approximated with Rim Light's Multiply mode as before (they cannot be used at the same time, so when both are enabled rim light takes priority) and this is reported.</li>
+    <li>⑥<b>The feel of gloss (reflection, specular) is now carried over.</b> The source paints gloss as a "surface", whereas ARLitToon expresses it through physical light reflection, so <b>bringing the values over as they were turned the gloss into a pinpoint and the sheen of fabric disappeared</b>. When reflection and specular are enabled in the source, <b>Smoothness is capped to widen the sheen, a little Metallic is added, and Specular Highlight is raised</b>. <b>Environment reflection (Reflection Strength) is not raised</b> (so that it does not depend on the world's reflection probes and does not add rendering load for particles). If it is too strong or too weak, adjust Smoothness / Specular Highlight in PBR（BRDF）.</li>
+    <li>⑦<b>Fixed a bug where the mask had no effect when Main Color 2nd was a "mask only" setup.</b> <b>Up to v6_GUIr0 the source mask image was assigned to the Layer texture as is</b>, but ARLitToon's Texture Layer reads <b>the texture's alpha</b> as its blend mask, so <b>the mask had no effect at all, and with Multiply the base was darkened in the mask's black areas</b>. An image re-baked as "RGB = white / alpha = mask" is now generated and assigned (when 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 is ON; when it is OFF, the mask is assigned as before and a warning says the look will break).</li>
+    <li>⑧<b>The rim shade mask is no longer always put into the shared mask's <code class="inl">B</code>.</b> When there is no rim light mask it goes into <code class="inl">A</code>, the same as ARLitToon's default; when both exist, a free channel is used in the order <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code>. <b>Previously it was always put into <code class="inl">B</code>, so baking a Fake Shadow into that material after conversion replaced the rim shade mask with the shape of the shadow</b> (baking overwrites <code class="inl">B</code>). When only <code class="inl">B</code> is free, the report warns about it.</li>
+    <li>⑨<b>Even with only one mask, a shared mask is now generated so that ARLitToon's default channel is read</b> (with baking ON). <b>Previously the source mask image was assigned as is and <code class="inl">R</code> was read</b>, so for a source with only a rim light mask, for example, the Inspector display (default <code class="inl">A</code>) and the channel actually read (<code class="inl">R</code>) did not match. In addition, <b>the contents of each channel are now also saved as separate per-feature images</b> (<code class="inl">Textures/SharedMask_&lt;material name&gt;/</code>).</li>
+    <li>⑩<b>The glitter "color / mask" texture is now reflected.</b> <b>Up to v6_GUIr0 there was nothing to receive it, and masked glitter appeared over the whole surface</b> (without any warning). The texture's brightness × alpha is now baked into the alpha of the Emission Map and used as ARLitToon's glitter mask (ARLitToon v48_GUIr0 and later, with baking ON; the emission color does not change).</li>
+    <li>⑪<b>The emission mask is now moved into the alpha of the Emission Map</b> (ARLitToon v48_GUIr0 and later). <b>Up to v6_GUIr0 it was multiplied into the emission color, so when the emission scrolled, the mask flowed along with it and its position shifted</b> (without any warning). The alpha is shared with the glitter mask, so when both are different images the glitter takes priority and the emission mask is multiplied into the emission color as before (the report warns when the position can shift).</li>
+    <li>⑫<b>The assembled emission texture and the contents of each of its channels (RGB / alpha) are now written out together to <code class="inl">Textures/EmissionMap_&lt;material name&gt;/</code>.</b></li>
+    <li>⑬<b>The emission texture's own alpha and the emission color's alpha are now reflected.</b> The source multiplies both into the emission strength, but <b>up to v6_GUIr0 they were discarded, so transparent parts (when their color is not black) glowed, and when the emission color's alpha was below 1 the emission was too strong</b> (without any warning). The emission texture's alpha is now multiplied into the emission color, and the emission color's alpha into Intensity.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v6_GUIr0</span> <b>Multi-tier shadows are now carried over</b> (for ARLitToon v47_GUIr0). The color, strength, border, blur and normal map influence of the <b>2nd and 3rd shadows</b>, as well as the <b>shadow boundary tint</b>, are carried over (previously a warning said "the 2nd shadow was simplified to a single tier"). In each case <b>ON/OFF is copied to the dedicated checkbox</b>, and the opacity is passed as "the strength of the density". <b>The degree of receiving cast shadows, the main color multiplication into the shadow color and the fading in bright areas are not written</b> (these are now fixed on the ARLitToon side). <b>Items specified by images</b>, such as the shadow color texture and AO map, <b>cannot be carried over</b>, so they are reported with warnings as before.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v5_GUIr0</span> <b>Follows ARLitToon v46_GUIr0.</b></p>
+  <ul class="vlist">
+    <li>①<b>Environment reflection is now explicitly turned OFF for materials that do not use reflection in the source</b> (in ARLitToon v45 the initial value of <code class="inl">Reflection Strength</code> changed from <code class="inl">0</code> to <code class="inl">1</code>, so with the previous implementation <b>reflections would appear on every material that did not use reflection</b>).</li>
+    <li>②<b><code class="inl">Specular Highlight</code> is now always <code class="inl">0</code> (physically as is)</b> (also in v45, the meaning of this item changed from "amount of highlight" to "boost on top of the physical term (up to about 5×)", so copying the value as before made it shine too much).</li>
+    <li>③<b>Added saving the converted avatar as a Prefab</b> (default ON; saved by default to the same place as the output folder). <b>The result always appears in the report, whether it succeeded, failed or was skipped</b> (with a Missing Script, the affected GameObjects are shown too). <b>The converted avatar in the Hierarchy becomes an instance of the saved Prefab.</b></li>
+    <li>④<b>The rendering modes "[high load] Refraction" and "[high load] Refraction Blur" and Gem are now converted to <code class="inl">Transparent</code> (for glass materials)</b> (the main color's alpha keeps the original value and the value is shown in the report).</li>
+    <li>⑤<b>The rim light's strength and width are now set to the post-conversion defaults (Rim Power <code class="inl">1</code> / Rim Intensity <code class="inl">0.1</code>)</b> (converting the original values and bringing them over makes the rim too strong; reference values for matching the original are shown in the report).</li>
+    <li>⑥<b>The main color's alpha of glass materials is now set to <code class="inl">10/255</code></b> (the source looks see-through through refraction even with alpha <code class="inl">255</code>, so bringing it over as is makes an opaque white board).</li>
+    <li>⑦<b>Changed the approximation of MatCap's "Normal (replace)" blend from Add to Multiply</b> (Add makes the material glow white).</li>
+    <li>⑧<b>Added removing the Pipeline Manager from the converted avatar</b> (default ON; only when duplicating). If it stays attached it points to the same upload destination as the original avatar, and uploading the converted avatar overwrites the original.</li>
+    <li>⑨<b>Changed the default cast-shadow material conversion method to "Merge into the base material"</b> (it removes one shadow slot).</li>
+    <li>⑩<b>When Main Color 2nd is a "mask only" setup, the Texture Layer blend mode is now set to <code class="inl">Multiply</code> (default)</b> (with Normal the base's shading is lost in the mask area and it looks pasted on and floating; to replace the base, change it to Normal, as the report explains). <b>Setups with a 2nd texture keep the source's blend mode as is.</b></li>
+    <li>⑪<b>Fixed a bug where Main Color 2nd was not converted at all when it had no texture and only a mask</b> (the color overlay was not turned ON and the mask was not carried over). The mask image is assigned to the Layer texture.</li>
+    <li>⑫<b><code class="inl">Metallic</code> is now set to <code class="inl">0</code> in the 2 cases where the converted material turns black</b> = when a metallic map is set (it cannot be reproduced, so the whole surface turns into metal) and when environment reflection is <code class="inl">0</code> but only <code class="inl">Metallic</code> is high (there is nothing to reflect). Both are reported.</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v4_GUIr0</span> <b>Fixed a bug where no shadow appeared with "Merge into the base material".</b> The merge target's Render Queue is now adjusted to come after the receiver (+1) (Fake Shadow Mesh only works when it is drawn after the receiver). Before the fix, the symptom was that the shadow appeared only after turning Fake Shadow Mesh OFF and ON again in the Inspector.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v3_GUIr0</span> <b>The cast-shadow material conversion method can now be chosen</b> ("Convert the shadow mesh as is" / "Merge into the base material"). Choosing merge ports Fake Shadow Mesh into the base material of the same renderer and removes the shadow slot. When no base material shares the renderer, it automatically falls back to the previous method.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr2</span> <b>Added a dedicated "Skipped materials" section to the conversion report.</b> In addition to the material name, shader name and reason for skipping, it now <b>lists where in the avatar each material is used (GameObject path and material slot number)</b>. This also fixes an issue where materials that were already ARLitToon only increased the count without appearing as rows, so the count and the breakdown did not match.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr1</span> <b>Fixed a bug where the default output folder did not follow the avatar name</b> (if the window was opened with no avatar set, it stayed fixed at <code class="inl">.../Materials</code> and did not change after an avatar was set later). The default folder name now also uses <b>the name of the source Prefab asset</b>, and the default ON state of 「マスクテクスチャを焼き込んだ合成テクスチャを生成する」 is kept in EditorPrefs.</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr0</span> Materials of the cast-shadow-only shader (FakeShadow) are now <b>converted to ARLitToon's Fake Shadow Mesh</b> instead of being skipped (the shadow mesh is reused as is; the base pass is made invisible).</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v1_GUIr0</span> Introduced version management (added this section, the window display and the report display).</p>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer class="footer"><div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%">
+  <div>ARLitToon CONVERTER <span class="c">//</span> ALTIMA STUDIO</div>
+  <div>© ARL — ALL RIGHTS RESERVED</div>
+</div></footer>
+
+</main>
+
+<script>
+// ticker
+(function(){
+  var items="NON-DESTRUCTIVE CONVERSION,LILTOON → ARLITTOON,AVATAR DUPLICATE,MASK BAKING,MATCAP ×3,RIM SHADE,FAKE SHADOW MESH,CONVERSION REPORT,PREFAB OUTPUT,UNDO SUPPORT,UNITY 2022.3 LTS,VRCHAT SDK3".split(",");
+  var half=items.map(function(t){return t+"<b>///</b>"}).join("");
+  document.getElementById("ticker").innerHTML=half+half;
+})();
+// scroll progress + parallax beam
+var beam=document.getElementById("beam"),prog=document.getElementById("progress");
+addEventListener("scroll",function(){
+  var h=document.documentElement,max=h.scrollHeight-h.clientHeight;
+  prog.style.width=(max?h.scrollTop/max*100:0)+"%";
+  beam.style.marginTop=(h.scrollTop*-0.08)+"px";
+},{passive:true});
+// reveal
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target)}})},{threshold:.08,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+// scrollspy
+var links=[].slice.call(document.querySelectorAll(".navgrp a[href^='#']")).filter(function(a){return a.getAttribute("href").length>1});
+var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"))});
+var spy=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)});
+    }
+  });
+},{rootMargin:"-20% 0px -70% 0px"});
+secs.forEach(function(s){if(s)spy.observe(s)});
+// glitch pulse
+var gr=document.getElementById("glitchRoot");
+setInterval(function(){gr.classList.add("g-on");setTimeout(function(){gr.classList.remove("g-on")},380)},3400);
+</script>
+</body>
+</html>

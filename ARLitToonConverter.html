@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARLitToon Converter 導入・使い方ガイド（lilToon → ARLitToon 変換）| ALTIMA</title>
+<meta name="description" content="lilToon が適用されたアバターのマテリアルを ARLitToon へ非破壊で変換する Unity Editor 拡張「ARLitToon Converter」の導入・使い方・変換マッピングを解説する ALTIMA 公式ガイド。">
+<link rel="canonical" href="https://arlmaty.github.io/ARLitToonConverter.html">
+<link rel="alternate" hreflang="ja" href="https://arlmaty.github.io/ARLitToonConverter.html">
+<link rel="alternate" hreflang="en" href="https://arlmaty.github.io/ARLitToonConverter_EN.html">
+<link rel="alternate" hreflang="x-default" href="https://arlmaty.github.io/ARLitToonConverter.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTIMA">
+<meta property="og:title" content="ARLitToon Converter 導入・使い方ガイド（lilToon → ARLitToon 変換）| ALTIMA">
+<meta property="og:description" content="lilToon → ARLitToon 非破壊変換ツール「ARLitToon Converter」の導入・使い方ガイド。">
+<meta property="og:url" content="https://arlmaty.github.io/ARLitToonConverter.html">
+<meta property="og:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="600">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ARLitToon Converter 導入・使い方ガイド（lilToon → ARLitToon 変換）| ALTIMA">
+<meta name="twitter:description" content="lilToon → ARLitToon 非破壊変換ツール「ARLitToon Converter」の導入・使い方ガイド。">
+<meta name="twitter:image" content="https://arlmaty.github.io/ARLitToon_logo/ARLitToon_Logo_black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Spectral:ital,wght@1,600;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafafc; --bg2:#f2f2f7; --ink:#0b0b12; --ink2:#4a4a58; --line:#e3e3ec;
+  --ac:#5b4df1; --ac2:#8b7cf8; --ac-dim:rgba(91,77,241,.08); --ac-line:rgba(91,77,241,.28);
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Noto Sans JP',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;overflow-x:hidden}
+::selection{background:var(--ac);color:#fff}
+
+/* ===== animated grid background ===== */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.5;
+  mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 0%,#000 0%,transparent 75%);
+  animation:gridMove 24s linear infinite}
+@keyframes gridMove{to{background-position:48px 48px,48px 48px}}
+.bg-beam{position:fixed;top:-20%;right:-10%;width:60vw;height:60vw;z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,77,241,.10) 0%,transparent 60%);
+  animation:beamFloat 14s ease-in-out infinite alternate}
+@keyframes beamFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(-8vw,6vw) scale(1.15)}}
+
+/* ===== scroll progress ===== */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));z-index:100;box-shadow:0 0 12px var(--ac-line)}
+
+/* ===== sidebar ===== */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:264px;z-index:50;background:rgba(250,250,252,.92);backdrop-filter:blur(8px);border-right:1px solid var(--line);padding:28px 0 32px;overflow-y:auto;font-family:var(--mono)}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--line)}
+.brand{padding:0 24px 22px;border-bottom:1px solid var(--line)}
+.brand .tag{font-size:10px;letter-spacing:.24em;color:var(--ac);font-weight:700}
+.brand h1{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:21px;letter-spacing:0;margin-top:8px;display:flex;align-items:center;gap:9px}
+.brand h1 .mk{width:26px;height:26px;flex:none;color:var(--ink)}
+.brand .ver{display:inline-block;margin-top:8px;font-size:10px;padding:2px 8px;border:1px solid var(--ac-line);color:var(--ac);background:var(--ac-dim)}
+.navgrp{padding:18px 24px 0}
+.navgrp .glabel{font-size:9.5px;letter-spacing:.22em;color:var(--ink2);opacity:.65;margin-bottom:8px;text-transform:uppercase}
+.navgrp a{display:block;font-size:12px;color:var(--ink2);text-decoration:none;padding:5px 10px;margin:1px -10px;border-left:2px solid transparent;transition:all .18s;white-space:nowrap}
+.navgrp a:hover{color:var(--ink);background:var(--ac-dim)}
+.navgrp a.on{color:var(--ac);border-left-color:var(--ac);background:var(--ac-dim);font-weight:700}
+.sb-foot{padding:22px 24px 0;font-size:10px;color:var(--ink2);opacity:.6;letter-spacing:.1em}
+
+/* ===== layout ===== */
+.main{position:relative;z-index:1;margin-left:264px}
+.wrap{max-width:880px;margin:0 auto;padding:0 48px}
+
+/* ===== hero ===== */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero .meta{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ac);font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.hero .meta::before{content:"";width:36px;height:1px;background:var(--ac)}
+.hero-logo{display:flex;align-items:center;gap:clamp(18px,3vw,38px)}
+.hero-logo .mark{width:clamp(100px,13vw,180px);height:auto;flex:none;color:var(--ink);transition:color .35s,transform .35s}
+.hero-logo:hover .mark{color:var(--ac);transform:rotate(-6deg) scale(1.04)}
+.hero-title{font-family:'Spectral',serif;font-style:italic;font-weight:800;font-size:clamp(50px,8.2vw,112px);line-height:1;letter-spacing:-.02em;position:relative;white-space:nowrap}
+.hero-tag{font-family:'Spectral',serif;font-style:italic;font-weight:700;font-size:clamp(19px,2.4vw,32px);text-align:center;margin-top:-4px}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0;opacity:0}
+.g-on .glitch::before{opacity:.85;color:var(--ac);clip-path:inset(12% 0 58% 0);animation:gA .35s steps(2) both}
+.g-on .glitch::after{opacity:.85;color:#e0447a;clip-path:inset(62% 0 8% 0);animation:gB .35s steps(2) both}
+@keyframes gA{0%{transform:translate(-5px,-2px)}50%{transform:translate(4px,2px);clip-path:inset(40% 0 30% 0)}100%{transform:translate(0)}}
+@keyframes gB{0%{transform:translate(5px,2px)}50%{transform:translate(-4px,-1px);clip-path:inset(20% 0 65% 0)}100%{transform:translate(0)}}
+.hero-sub{margin-top:28px;max-width:560px;font-size:15px;color:var(--ink2)}
+.hero-sub b{color:var(--ink)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;font-family:var(--mono)}
+.hero-chips span{font-size:10.5px;letter-spacing:.08em;padding:5px 12px;border:1px solid var(--line);background:#fff;color:var(--ink2);transition:all .2s}
+.hero-chips span:hover{border-color:var(--ac);color:var(--ac);transform:translateY(-2px);box-shadow:0 4px 14px rgba(91,77,241,.15)}
+.hero-scroll{position:absolute;bottom:36px;left:48px;font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ink2);display:flex;align-items:center;gap:10px}
+.hero-scroll .bar{width:1px;height:38px;background:var(--line);position:relative;overflow:hidden}
+.hero-scroll .bar::after{content:"";position:absolute;left:0;top:-100%;width:100%;height:100%;background:var(--ac);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{to{top:100%}}
+.hero-deco{position:absolute;right:48px;top:50%;font-family:var(--mono);font-size:10px;color:var(--ink2);opacity:.5;writing-mode:vertical-rl;letter-spacing:.4em}
+
+/* ===== ticker ===== */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ink2)}
+.ticker .in{display:inline-block;padding:10px 0;animation:tick 30s linear infinite}
+.ticker b{color:var(--ac);margin:0 18px 0 28px;font-weight:400}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ===== sections ===== */
+section{padding:88px 0 8px}
+.sec-head{margin-bottom:36px}
+.sec-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ac);font-weight:700;display:flex;align-items:center;gap:12px}
+.sec-head .num::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--ac-line),transparent)}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px);font-weight:900;letter-spacing:-.01em;line-height:1.25;margin-top:10px}
+.sec-head .sub{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:6px;letter-spacing:.06em}
+h3{font-size:19px;font-weight:700;margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+h3::before{content:"▍";color:var(--ac);font-size:16px}
+h4{font-family:var(--mono);font-size:13.5px;font-weight:700;margin:30px 0 10px;color:var(--ink)}
+h4 .hx{color:var(--ac)}
+p{margin:0 0 14px;color:var(--ink2)}
+p b,li b{color:var(--ink)}
+section ul{margin:0 0 16px 22px;color:var(--ink2)}
+section ol{margin:0 0 16px 22px;color:var(--ink2)}
+section li{margin-bottom:6px}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ===== tables ===== */
+table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:13.5px;background:#fff;border:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-align:left;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line);color:var(--ink2);text-transform:uppercase}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:var(--ac-dim)}
+td:first-child{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink);white-space:normal;width:32%}
+
+/* ===== code ===== */
+.code{position:relative;background:#0e0e18;color:#d8d8ea;font-family:var(--mono);font-size:12.5px;line-height:1.75;padding:20px 22px;margin:14px 0 22px;overflow-x:auto;border:1px solid #23233a;white-space:pre}
+.code::before{content:attr(data-label);position:absolute;top:0;right:0;font-size:9.5px;letter-spacing:.2em;color:var(--ac2);background:#1a1a2e;padding:3px 12px;border-left:1px solid #23233a;border-bottom:1px solid #23233a}
+.code .cm{color:#a3a3c6}.code .ac{color:var(--ac2)}
+code.inl{font-family:var(--mono);font-size:.88em;background:var(--ac-dim);color:var(--ac);padding:1px 6px;border:1px solid var(--ac-line)}
+
+/* ===== callouts ===== */
+.note{position:relative;border:1px solid var(--line);background:#fff;padding:16px 20px 14px;margin:16px 0 22px;font-size:13.5px}
+.note::before{content:attr(data-label);font-family:var(--mono);font-size:11px;letter-spacing:.2em;font-weight:700;display:block;margin-bottom:6px}
+.note p{margin-bottom:8px}.note p:last-child{margin-bottom:0}
+.note.tip{border-color:var(--ac-line)}.note.tip::before{color:var(--ac)}
+.note.warn{border-color:#f0c26e;background:#fffcf4}.note.warn::before{color:#b07818}
+.note.info::before{color:var(--ink2)}
+
+/* ===== preset cards ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:16px 0 22px}
+.card{border:1px solid var(--line);background:#fff;padding:16px 18px;transition:all .22s;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(11,11,18,.08);border-color:var(--ac-line)}
+.card:hover::after{transform:scaleX(1)}
+.card .cn{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ac)}
+.card .cd{font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.7}
+
+/* ===== divider / changelog ===== */
+.hr{height:1px;background:var(--line);margin:70px 0 0}
+details{border:1px solid var(--line);background:#fff;margin:16px 0}
+summary{font-family:var(--mono);font-size:12px;font-weight:700;padding:14px 18px;cursor:pointer;letter-spacing:.08em;color:var(--ac);list-style:none}
+summary::before{content:"[+] "}details[open] summary::before{content:"[-] "}
+details .dbody{padding:4px 22px 18px;font-size:13px}
+details .dbody li{margin-bottom:10px}
+.vtag{font-family:var(--mono);font-size:11px;color:var(--ac);font-weight:700;background:var(--ac-dim);border:1px solid var(--ac-line);padding:1px 7px;margin-right:6px;white-space:nowrap}
+
+.footer{border-top:1px solid var(--line);margin-top:90px;padding:40px 0 60px;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;letter-spacing:.1em}
+.footer .c{color:var(--ac)}
+
+/* ===== mobile menu（幅 960px 以下：サイドバーを画面上部の MENU ボタンで開く引き出しにする） ===== */
+.menu-btn,.nav-backdrop{display:none}
+@media(max-width:960px){
+.main{margin-left:0}.wrap{padding:0 24px}.hero{padding:64px 0 96px}.hero-scroll{left:24px}.hero-deco{display:none}
+.sidebar{padding-top:64px;transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+body.nav-open{overflow:hidden}
+body.nav-open .sidebar{transform:none;visibility:visible;transition:transform .25s ease;box-shadow:6px 0 28px rgba(11,11,18,.18)}
+body.nav-open .nav-backdrop{display:block;position:fixed;inset:0;z-index:45;background:rgba(11,11,18,.35)}
+.menu-btn{display:flex;align-items:center;gap:10px;position:fixed;top:12px;left:12px;z-index:70;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--ac);background:rgba(250,250,252,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--ac-line);padding:9px 12px;cursor:pointer;box-shadow:0 2px 12px rgba(11,11,18,.08)}
+.menu-btn .bars{position:relative;width:16px;height:2px;background:currentColor;transition:background .2s}
+.menu-btn .bars::before,.menu-btn .bars::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;transition:transform .2s}
+.menu-btn .bars::before{transform:translateY(-5px)}.menu-btn .bars::after{transform:translateY(5px)}
+body.nav-open .menu-btn .bars{background:transparent}
+body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .menu-btn .bars::after{transform:rotate(-45deg)}
+}
+
+/* ===== converter page ===== */
+.vlist{list-style:none;margin-left:6px}
+.vlist li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-beam" id="beam"></div>
+<div class="progress" id="progress"></div>
+<button class="menu-btn" id="menuBtn" type="button" aria-controls="sidebar" aria-expanded="false" data-open="MENU" data-close="CLOSE"><span class="bars" aria-hidden="true"></span><span class="lbl">MENU</span></button>
+<div class="nav-backdrop" id="navBackdrop"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="tag">ALTIMA STUDIO</div>
+    <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
+    <span class="ver">CONVERTER v7_GUIr0</span>
+  </div>
+  <div class="navgrp"><div class="glabel">Language</div>
+    <a href="#" class="on">日本語</a>
+    <a href="ARLitToonConverter_EN.html">English</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Shader Guide</div>
+    <a href="ARLitToon.html" style="color:var(--ac)">← ARLitToon ガイド</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Converter</div>
+    <a href="#overview">概要</a>
+    <a href="#install">導入</a>
+    <a href="#usage">使い方</a>
+    <a href="#mapping">主な変換マッピング</a>
+    <a href="#unsupported">自動変換できない機能</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Troubleshooting</div>
+    <a href="#prefab">Prefab が作られないとき</a>
+    <a href="#notreflected">反映されていないとき</a>
+    <a href="#draworder">重なり順がおかしいとき</a>
+    <a href="#revert">元に戻したいとき</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Version</div>
+    <a href="#version">バージョン・更新履歴</a>
+  </div>
+  <div class="sb-foot">© ARL / ALTIMA</div>
+</nav>
+
+<main class="main">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="meta">ALTIMA OFFICIAL DOCUMENTATION</div>
+    <div class="hero-logo" id="glitchRoot">
+      <svg class="mark" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>
+      <div>
+        <div class="hero-title"><span class="glitch" data-t="ARLitToon">ARLitToon</span></div>
+        <div class="hero-tag">Converter</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">CONVERTER — 導入・使い方ガイド</div>
+    <p class="hero-sub">lilToon が適用されたアバターのマテリアルを、ARLitToon（<code class="inl">ALTIMA/ARLitToon</code>）へ<b>非破壊</b>で変換する Unity Editor 拡張です。</p>
+    <div class="hero-chips">
+      <span>NON-DESTRUCTIVE</span><span>LILTOON → ARLITTOON</span><span>AVATAR DUPLICATE</span><span>MASK BAKING</span><span>MATCAP ×3</span><span>RIM SHADE</span><span>FAKE SHADOW MESH</span><span>CONVERSION REPORT</span><span>PREFAB OUTPUT</span><span>UNDO SUPPORT</span>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
+  <div class="hero-deco">MATERIAL CONVERTER FOR ARLITTOON</div>
+</header>
+
+<div class="ticker"><div class="in" id="ticker"></div></div>
+
+<div class="wrap">
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <div class="sec-head rv"><div class="num">SEC. 01 — OVERVIEW</div><h2>概要</h2><div class="sub">// non-destructive material conversion</div></div>
+  <div class="rv">
+  <ul>
+    <li>元のマテリアル・テクスチャは<b>一切変更しません</b>。変換結果はすべて出力フォルダに新規作成されます。</li>
+    <li>アバターは<b>複製してから</b>変換後マテリアルを割り当てます（元アバターはそのまま残ります・Undo 可）。</li>
+    <li>lilToon の「2nd テクスチャ＋別マスク」「マスク付き MatCap」など手動移植が難しい設定を自動でマッピングします。</li>
+    <li>自動変換できなかった機能は<b>変換レポートにすべて明記</b>します（黙って欠落させません）。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <ul style="margin:4px 0 0 20px">
+      <li>本ツールは ARLitToon シェーダー本体とは別の付属ツールです。</li>
+      <li>lilToon はプロパティ名の読み取りにのみ参照し、lilToon 本体のコード・アセットは含みません・変更しません。</li>
+      <li>対応シェーダー版: <b>ARLitToon v48_GUIr0</b>（それ以前の版でも動作します。存在しない項目は自動でスキップ）。</li>
+      <li>本ツール自身のバージョン: <b>v7_GUIr0</b>（更新履歴は末尾「バージョン」節を参照。上記の「対応シェーダー版」とは別の番号です）。</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section id="install">
+  <div class="sec-head rv"><div class="num">SEC. 02 — SETUP</div><h2>導入</h2><div class="sub">// requirements, placement, launch</div></div>
+  <div class="rv">
+  <p>対応 Unity: 2022.3 LTS（VRChat SDK3 環境を想定）。ARLitToon シェーダー本体（<code class="inl">ALTIMA/ARLitToon</code>）をプロジェクトへインポート済みにしておく。</p>
+  <ol>
+    <li>このフォルダ（本 README と <code class="inl">Editor</code> フォルダが入ったもの）を Unity プロジェクトの <code class="inl">Assets/ALTIMA/ARLitToonConverter/</code> などへコピーする（<code class="inl">Editor/ARLitToonConverter.cs</code> が Editor フォルダ配下にあれば場所は任意）。</li>
+    <li>メニュー <b>Tools → ALTIMA → ARLitToon Converter (lilToon から変換)</b> で起動する。</li>
+  </ol>
+  </div>
+</section>
+
+<!-- ============ USAGE ============ -->
+<section id="usage">
+  <div class="sec-head rv"><div class="num">SEC. 03 — USAGE</div><h2>使い方</h2><div class="sub">// options, convert, report</div></div>
+  <div class="rv">
+  <p>ウィンドウ上部の <b>日本語 / English</b> で表示言語を切り替えられます（初回はシェーダーの Inspector と同じ言語で開きます。<b>変換レポートは日本語のみ</b>です）。</p>
+  <ol>
+    <li>ウィンドウの「アバター (ルート)」に Hierarchy のアバターをドラッグ。</li>
+    <li>オプションを確認（既定のまま推奨）：
+      <ul style="margin:6px 0 4px 20px">
+        <li><b>アバターを複製して変換する</b>: ON で <code class="inl">〇〇_ARLitToon</code> という複製に変換結果を割り当て、元は非アクティブ化（Undo 可）。</li>
+        <li><b>マスクテクスチャを焼き込んだ合成テクスチャを生成する</b>: ON で「2nd テクスチャの別マスク」等をアルファへ合成した PNG を自動生成。<b>メインカラー2nd が「マスクだけ」の構成では、この設定が OFF だとマスクが効かず見た目が崩れます</b>（下記「メインカラー2nd（Texture Layer）の合成モードについて」を参照）。ON のままを推奨します。</li>
+        <li><b>落ち影マテリアルの変換</b>: 下記「落ち影専用（FakeShadow）マテリアルの変換について」を参照。</li>
+        <li><b>変換後のアバターから Pipeline Manager を外す</b>: ON で、変換後のアバターから Pipeline Manager（アップロード先を指す Blueprint ID）を外します（既定 ON）。<b>付いたままだと元アバターと同じアップロード先を指す</b>ため、変換後をアップロードすると<b>元のアバターを上書きしてしまいます</b>。<b>「アバターを複製して変換する」が ON のときだけ働き</b>、OFF のときは元アバターそのものなのでこの設定にかかわらず触りません。他のコンポーネントから必須指定されていて外せない場合は、<b>Blueprint ID だけを空に</b>します（どちらになったかはレポートに出ます）。</li>
+        <li><b>変換後のアバターを Prefab として保存する</b>: ON で、変換済みのアバターを Prefab アセットとして書き出します（既定 ON）。<b>保存先の既定は上の「出力フォルダ」と同じ</b>です（<code class="inl">_2</code>, <code class="inl">_3</code> … が付いた場合もそちらへ保存します）。<code class="inl">既定に戻す</code> で追従状態へ戻せます。<b>同名の Prefab があるときは別名で保存する</b>ため、既存の Prefab を上書きすることはありません。<b>結果は必ず変換レポートに出ます</b>（保存できた場合はパス、できなかった場合は理由）。</li>
+        <li><b>出力フォルダ</b>: 既定は <code class="inl">Assets/ALTIMA/ARLitToon_Converted/&lt;アバターの Prefab 名&gt;/</code>（Prefab インスタンスの場合は Hierarchy 上の名前ではなく<b>元 Prefab アセットの名前</b>を使います）。この既定値は<b>アバターを差し替えると自動で追従</b>します（自分でパスを書き換えた場合は、その値が優先されます。<code class="inl">既定に戻す</code> で追従状態へ戻せます）。<b>同名のフォルダが既にある場合は <code class="inl">_2</code>, <code class="inl">_3</code> … を付けた新しいフォルダに出力します</b>（変換のたびに結果が独立し、前回の生成物と同じフォルダに混ざりません）。実際の出力先は完了ダイアログと変換レポートの先頭に表示されます。</li>
+      </ul>
+    </li>
+    <li><b>「アバターを変換する」</b> を押す。変換後のアバターは Prefab としても保存されます（既定 ON）。保存先のパスは変換レポートに出ます。</li>
+    <li>ウィンドウ下部の<b>変換レポート</b>（出力フォルダにも .txt で保存）を確認し、「[注意]」項目があれば該当箇所を手動調整する。変換しなかったマテリアルは <b>「スキップしたマテリアル」セクション</b>にまとめて表示され、<b>理由と、アバター内のどこで使われているか（GameObject パス／スロット番号）</b>まで確認できます。</li>
+  </ol>
+  <p>Project ビューでマテリアルを選択して<b>マテリアル単体だけ変換</b>することもできます（シーンへの割り当てなし）。</p>
+  </div>
+</section>
+
+<!-- ============ MAPPING ============ -->
+<section id="mapping">
+  <div class="sec-head rv"><div class="num">SEC. 04 — MAPPING</div><h2>主な変換マッピング</h2><div class="sub">// what is converted into what</div></div>
+  <div class="rv">
+  <table><thead><tr><th>lilToon 側</th><th>ARLitToon 側</th></tr></thead><tbody>
+    <tr><td>メインテクスチャ / 色 / 色調補正(HSV)</td><td>Albedo / Color / Hue・Saturation・Brightness</td></tr>
+    <tr><td>2nd テクスチャ（色・合成モード・別マスク）</td><td>Texture Layer（別マスクはアルファへ焼き込み／マスクだけの構成はマスクをアルファへ焼き直し）</td></tr>
+    <tr><td>アルファマスク（＋透過率調整 Scale/Value）</td><td>Texture Layer 透明マスク（透過率調整はマスク画像へ焼き込み）/ メインテクスチャのアルファへ焼き込み</td></tr>
+    <tr><td>影（色 / 強さ / 境界 / ぼかし）・2 影 / 3 影・境界の色づけ・明るさ上限下限</td><td>Lighting &amp; Shadow / Toon Shadow（2 影・3 影・境界の色づけ）/ Light Limit</td></tr>
+    <tr><td>シャドウ受光（落ち影の受け取り ON/OFF）</td><td>Receive Shadow（設定がある場合のみ引き継ぎ）</td></tr>
+    <tr><td>落ち影専用シェーダー（FakeShadow）のマテリアル</td><td>Fake Shadow Mesh（影用メッシュはそのまま利用・下記参照）</td></tr>
+    <tr><td>ノーマルマップ / 反射（Smoothness・Metallic 等）</td><td>PBR（BRDF）</td></tr>
+    <tr><td>発光（色 / テクスチャ / マスク / スクロール / 点滅）</td><td>Emission（マスクは Emission Map のアルファへ焼き込み〔ラメのマスクと取り合うときは RGB へ〕・点滅はパルスに近似）</td></tr>
+    <tr><td>MatCap（1枚目 / 2枚目 / 各マスク・合成モード）</td><td>Matcap 1・2・3 ＋ 領域マスク（下記参照）</td></tr>
+    <tr><td>メインカラー2nd / 3rd で <b>UV Mode = MatCap</b> を選んでいる場合</td><td>Matcap スロット（Texture Layer ではありません・下記参照）</td></tr>
+    <tr><td>リムライト（色 / ライティングを適用 / <b>テクスチャ</b>）</td><td>Rim Light（<b>強さ・太さは変換後の既定値に設定</b>・下記参照）＋ Rim Env Adapt ＋ <b>Rim マスク</b>（テクスチャの明るさから生成）</td></tr>
+    <tr><td>リムシェード（縁を暗くする / マスク）</td><td><b>Rim Shade</b>（色・太さ・濃さ・マスク）。ARLitToon が v47_GUIr0 以前なら Rim Light の <b>Multiply モード</b>で近似（下記参照）</td></tr>
+    <tr><td>ラメ（Glitter・色 / 強度 / 色・マスクのテクスチャ）</td><td>Glitter Sparkle（粒の形状・密度は要調整・マスクは Emission Map のアルファへ焼き込み）</td></tr>
+    <tr><td>UV スクロール（メイン / 2nd / 発光）</td><td>各スクロール（同じ速度になるよう換算）</td></tr>
+    <tr><td>逆光（Backlight・色 / 強度 / 背後指向）</td><td>Back Light（広がりは Width で微調整）</td></tr>
+    <tr><td>距離フェード（近距離で指定色へ・色モード）</td><td>Distance Darken（色 / 距離 / 強度）</td></tr>
+    <tr><td>アウトライン（色 / 太さ / 幅マスク / ライティング）</td><td>Outline ＋ Outline Mask</td></tr>
+    <tr><td>レンダリングモード（不透明 / カットアウト / 半透明）</td><td>Blend Preset（Opaque / Cutout / Fade 相当）</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <h3>反射・ハイライトの変換について</h3>
+  <p>ARLitToon はライティングが<b>物理ベース（PBR）</b>です。変換元とは仕組みが違うため、次のように扱います。</p>
+  <ul>
+    <li><b>メタリックマップ（一部だけ金属にする指定）が設定されている場合は、<code class="inl">Metallic</code> を <code class="inl">0</code> にします。</b>ARLitToon にはメタリックマップのスロットがないため、数値だけを持ち込むと<b>全面が金属</b>になり、<b>拡散光を失ってマテリアルが黒くなります</b>。領域を絞る情報が失われる以上、金属にしない側へ倒しています。金属パーツが必要な場合は、変換後に <code class="inl">Metallic</code> / <code class="inl">Reflection Strength</code> を手動で設定してください（レポートに[注意]が出ます）。</li>
+    <li><b>環境反射が <code class="inl">0</code> なのに <code class="inl">Metallic</code> だけ高いマテリアルも、<code class="inl">Metallic</code> を <code class="inl">0</code> にします。</b>映り込む先が無いまま拡散光だけが失われ、やはり黒くなるためです（物理的にも成立しない組み合わせです）。金属として見せたい場合は <code class="inl">Reflection Strength</code> を上げてから <code class="inl">Metallic</code> を戻してください。</li>
+    <li><b>変換元で「反射」を使っていないマテリアルは、環境反射を明示的に OFF（<code class="inl">0</code>）にします。</b>ARLitToon の <code class="inl">Reflection Strength</code> は<b>新規マテリアルの初期値が <code class="inl">1</code></b>（映り込みあり）のため、何もしないと反射を使っていなかった素材にも映り込みが乗ってしまいます。これを防ぐための処理です。</li>
+    <li><b><code class="inl">Specular Highlight</code> は常に <code class="inl">0</code>（物理そのまま）にします。</b>この項目は ARLitToon では「光源ハイライトの<b>上乗せ</b>」（<code class="inl">0</code> で物理どおり・<code class="inl">1</code> で約 5 倍）であり、変換元の「スペキュラを使う／使わない」のスイッチとは意味が違います。物理ベースのハイライトは最初から出るため、上乗せはしません。</li>
+    <li><b>変換元でスペキュラを OFF にしていた場合でも、ハイライトを完全に消すことはできません</b>（物理計算の一部として出るため）。目立つときは <code class="inl">Smoothness</code> を下げて調整してください。この場合はレポートに[注意]として出ます。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>メインカラー2nd（Texture Layer）の合成モードについて</h3>
+  <p>変換元のブレンドモードは <b>通常 → Normal / 加算 → Add / スクリーン → Screen / 乗算 → Multiply</b> とそのまま対応づけます。<b>2nd テクスチャがある構成（マスクの有無を問わず）はこの対応どおり</b>です。</p>
+  <p><b>メインカラー2nd にテクスチャが無く、マスクだけが設定されている場合</b>（色 × マスクで使う構成）だけは、扱いが変わります。</p>
+  <ul>
+    <li><b>マスク画像を「RGB = 白 / アルファ = マスク」に焼き直した画像を生成して割り当てます</b>（Tiling / Offset もマスク側の値を使います）。ARLitToon の Texture Layer は<b>レイヤーテクスチャのアルファ</b>を合成マスクとして読むため、グレースケールのマスク画像をそのまま割り当てると<b>マスクがまったく効かず、さらに乗算ではマスクの黒い領域で下地が暗く落ちます</b>。焼き直すことで「マスクの白い領域だけに 2nd カラーを乗算する」という変換元の挙動と一致します。<b>この生成には「マスクテクスチャを焼き込んだ合成テクスチャを生成する」が ON である必要があります</b>（OFF のときはマスクをそのまま割り当てたうえで、見た目が崩れる旨をレポートで警告します）。</li>
+    <li><b>合成モードは <code class="inl">Multiply</code>（乗算）を既定にします。</b> この構成は下地に<b>柄・汚し・陰影を乗せる</b>使い方が主で、<code class="inl">Normal</code> だと<b>マスク領域の中で下地の陰影やテクスチャが失われ、貼り付けたように浮いて見える</b>ためです。乗算なら下地の明暗を残したまま乗ります。</li>
+    <li><b>下地を塗りつぶしたい場合は、変換後に <code class="inl">Blend Mode</code> を <code class="inl">Normal</code> に変えてください</b>（<code class="inl">Normal</code> はマスク領域を Layer の色で置き換えます）。レポートにも同じ案内が出ます。</li>
+  </ul>
+  <p>テクスチャもマスクも無い（色だけの）2nd レイヤーは、対応する機能がないため変換せずレポートで通知します。</p>
+  </div>
+  <div class="rv">
+  <h3>ガラス材質（屈折）の変換について</h3>
+  <p>変換元の描画モード <b>「[高負荷] 屈折」「[高負荷] 屈折ぼかし」</b> と <b>Gem</b> はガラス材質の表現に使われるため、ARLitToon の <b><code class="inl">Transparent</code> プリセット</b>（ガラス・素材の質感用）へ変換します（通常の半透明は <code class="inl">Fade</code> プリセットです）。</p>
+  <ul>
+    <li><b>メインカラーのアルファは <code class="inl">10/255</code> に設定します</b>（元の値は引き継ぎません）。変換元の屈折シェーダーは<b>アルファに <code class="inl">255</code> が入っていても屈折効果で透けて見える</b>ため、その値をそのまま持ち込むと <b>ARLitToon では不透明の白い板</b>になってしまいます。屈折そのものは再現できないので、<b>ガラスらしく見える薄いアルファ</b>を出発点として与えます。濃さはメインカラーのアルファで調整し、映り込みが欲しい場合は PBR（BRDF） の <code class="inl">Reflection Strength</code> / <code class="inl">Fresnel Power</code> / <code class="inl">Fresnel Min</code> を上げてください。</li>
+    <li><b>屈折（背景が歪んで見える効果）そのものを再現する機能はありません。</b></li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>MatCap マスクの変換方式</h3>
+  <p>ARLitToon の MatCap マスクは「白=そのスロットを適用」の<b>領域選択方式</b>です。lilToon の「適用範囲マスク」とは方式が異なるため、次のように変換します。</p>
+  <p>変換先のスロットは <b>3 つ</b>です（ARLitToon v47_GUIr0 で 3枚目が追加されました）。</p>
+  <table><thead><tr><th>スロット</th><th>役割</th><th>読む共有マスクのチャンネル</th></tr></thead><tbody>
+    <tr><td>1枚目</td><td><b>全面に出る下地</b>（マスクなしの層が入ります）</td><td>—</td></tr>
+    <tr><td>2枚目</td><td>領域を絞って乗せる層</td><td><code class="inl">R</code></td></tr>
+    <tr><td>3枚目</td><td>同上（2枚目とは別の領域）</td><td><code class="inl">G</code></td></tr>
+  </tbody></table>
+  <ul>
+    <li><b>MatCap 1枚＋マスクあり</b> → MatCap の実体を2枚目スロットへ置き、マスク（白=適用）をそのまま領域マスクに割り当てて再現します（1枚目スロットは無効化）。</li>
+    <li><b>MatCap 2枚・両方にマスクあり</b> → <b>両方とも再現します</b>。1枚目のマスクを共有マスクの <code class="inl">R</code>、2枚目のマスクを <code class="inl">G</code> へ詰めた画像を自動生成し、それぞれ 2枚目・3枚目スロットへ割り当てます（<b>v5_GUIr0 まではマスクが 1 枚しか持てず、1枚目のマスクは反映できませんでした</b>）。</li>
+    <li><b>MatCap 2枚・2枚目だけマスクあり</b> → 1枚目を下地（全面）、2枚目をマスク領域へ割り当てます。</li>
+    <li><b>MatCap 2枚・マスクなし（重ね掛け）</b> → 排他選択のため再現できません。片方を全域適用にし、レポートで通知します。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>メインカラー2nd / 3rd の UV Mode が MatCap のとき</h3>
+  <p>lilToon の<b>メインカラー2nd / 3rd は UV Mode に <code class="inl">MatCap</code>（ビュー座標に投影）を選べます</b>。この設定は実質「3枚目・4枚目のマトキャップ」として使われるため、<b>Texture Layer ではなく Matcap スロットへ変換します</b>（通常 UV の Texture Layer へ流すと、投影方式が失われて絵が別物になってしまうため）。</p>
+  <ul>
+    <li>強度は<b>色のアルファ</b>、合成モードは MatCap と同じ規則で 乗算 / 加算 に寄せます。</li>
+    <li><b>回転角・UV スクロールは反映しません</b>（ビュー座標投影では意味を持たないため）。レポートで通知します。</li>
+    <li>UV Mode が <code class="inl">MatCap</code> <b>以外</b>のときは従来どおりです（2nd は Texture Layer へ、3rd は未対応の警告）。</li>
+  </ul>
+  <p><b>スロットは合計 3 つまで</b>です。変換元が 4 層以上（MatCap ＋ MatCap 2nd ＋ メインカラー2nd ＋ 3rd をすべて MatCap として使用）のときは、<b>MatCap → MatCap 2nd → メインカラー2nd → メインカラー3rd</b> の優先順で 3 つまで割り当て、あふれた層はレポートで通知します。</p>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 共有マスクの中身は「チャンネルごとに別の絵」です">
+    <p>2枚目と3枚目を同時に使うときは、1 枚の画像の <code class="inl">R</code> と <code class="inl">G</code> に別々の領域を塗り分けてください（グレースケール画像は R=G=B のためどちらのスロットも同じ領域を指し、3枚目が 2枚目を覆います）。本ツールが自動生成する場合は正しく詰め分けられます。中間調（半透明のグラデーション）を多用したマスクは、変換後に Inspector のチャンネルプレビューで確認のうえ微調整してください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h3>リムライト・リムシェードの変換</h3>
+  <ul>
+    <li><b>リムライトのテクスチャ</b>：変換元のリム色テクスチャは既定が白で<b>乗算で効く</b>ため、黒く塗った領域にはリムが出ません（＝実質マスク）。本ツールは<b>その明るさを Rim マスクへ変換</b>し、「リムが出る場所」を再現します。<b>色の変化までは再現できません</b>（Rim Color は単色のため）。</li>
+    <li><b>リムシェード（縁を暗くする）</b>：ARLitToon v48_GUIr0 以降では専用の <b>Rim Shade</b> へ変換します（色・太さ・濃さ・マスクをそれぞれ専用の項目へ）。Rim Shade は Rim Light とは独立したレイヤーなので、<b>リムライトとリムシェードが両方有効でも、両方そのまま再現できます</b>。<b>式が異なるため濃さは近似</b>なので、強すぎる・弱すぎる場合は Rim Shade Intensity で調整してください。</li>
+    <li><b>ARLitToon が v47_GUIr0 以前の場合</b>（Rim Shade が無い版）：従来どおり Rim Light の <b>Blend Mode = Multiply</b> で近似し、両方有効なときは<b>リムライト（光らせる側）を優先</b>して、リムシェードはレポートで通知します。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>共有マスクのチャンネル割り当て</h3>
+  <p>共有マスク 1 枚を最大 4 機能が読みます。本ツールが自動生成する場合の割り当ては次のとおりです。</p>
+  <table><thead><tr><th>チャンネル</th><th>用途</th></tr></thead><tbody>
+    <tr><td><code class="inl">R</code></td><td>2枚目 Matcap の領域</td></tr>
+    <tr><td><code class="inl">G</code></td><td>3枚目 Matcap の領域</td></tr>
+    <tr><td><code class="inl">A</code></td><td>Rim Light のマスク</td></tr>
+    <tr><td>（下記）</td><td>Rim Shade のマスク</td></tr>
+  </tbody></table>
+  <p><b>Rim Shade のマスクの置き場所</b>：</p>
+  <ul>
+    <li><b>リムライトのマスクが無いときは <code class="inl">A</code></b>（ARLitToon の既定と同じ・Rim Light と共用する枠）。</li>
+    <li><b>リムライトのマスクもあるときは、空いているチャンネルを <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code> の順に使います</b>（リムライトのマスクとは別の画像なので <code class="inl">A</code> を共用できないため）。<b><code class="inl">B</code> は最後の手段</b>です。<code class="inl">B</code> は Fake Shadow Texture の既定チャンネルで、<b>Fake Shadow の焼きこみ（Bake）は <code class="inl">B</code> を上書きする</b>ため、<code class="inl">B</code> に入れたときはレポートで警告します。そのマテリアルに影を焼きこむ場合は、先にリムシェードのマスクを別のチャンネルへ移してください。</li>
+  </ul>
+  <ul>
+    <li><b>「マスクテクスチャを焼き込んだ合成テクスチャを生成する」が ON（既定）のときは、マスクが 1 枚だけでも</b>上表のチャンネルへ詰めた共有マスクを生成します＝<b>各機能が ARLitToon の既定チャンネルを読みます</b>（例：Rim Light のマスクだけなら <code class="inl">A</code>）。<b>使わないチャンネルは黒（＝その機能を効かせない）</b>になるため、後から別の機能を ON にしても、意図しない絵を読むことはありません。</li>
+    <li><b>各チャンネルの中身は、機能ごとの個別画像としても保存します</b>（<code class="inl">Textures/SharedMask_&lt;マテリアル名&gt;/</code> に <code class="inl">Matcap2.png</code>・<code class="inl">Matcap3.png</code>・<code class="inl">RimLight.png</code>・<code class="inl">RimShade.png</code> と、それをまとめた <code class="inl">SharedMask_&lt;マテリアル名&gt;.png</code>）。<b>1 つの機能のマスクだけを描き直したいときは、その個別画像を編集して共有マスクへまとめ直せます</b>（どの画像がどのチャンネルに入ったかはレポートに出ます）。</li>
+    <li><b>このオプションが OFF のときは画像を生成できないため、変換元のマスク画像をそのまま割り当て、読むチャンネルは <code class="inl">R</code> になります</b>（変換元のマスクはアルファが全面 1 のことが多く、<code class="inl">A</code> を読むと全面白＝全面に効いてしまうため）。マスクが 2 枚以上あるときは 1 枚目だけを設定し、レポートで通知します。</li>
+    <li>複数の機能が<b>同じマスク画像</b>を使っている場合は、詰め直しても領域が分かれないためレポートで通知します。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>アルファマスクの透過率調整について</h3>
+  <p>lilToon のアルファマスクは「透過率（Scale/Value）」で見え方を調整できますが、ARLitToon の透明マスクには同等の調整項目がありません。本ツールは、この調整を反映した<b>調整済みのマスク画像を自動生成</b>して持ち込みます（元の透け具合を再現）。変換後にさらに微調整したい場合は、マテリアル全体の透過率（Color のアルファ）や Alpha Cutoff で調整するか、調整値を変えてから再変換してください。</p>
+  </div>
+  <div class="rv">
+  <h3>半透明と落ち影（Dither Fade）について</h3>
+  <p>半透明（Fade 相当）に変換したマテリアルは、Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪の透けなどで「半透明にしつつ落ち影も受けたい」場合は、変換後マテリアルの Blend Preset を <b>Cutout</b> にして <b>Dither Fade（ディザ擬似半透明）</b> を ON にする方法があります（変換レポートでも該当マテリアルに案内が出ます。自動では切り替えません）。</p>
+  </div>
+  <div class="rv">
+  <h3>リムライトの鋭さとラメについて</h3>
+  <ul>
+    <li><b>リムの強さ・太さ</b>：<b>色だけを引き継ぎ、<code class="inl">Rim Power</code> は <code class="inl">1</code>・<code class="inl">Rim Intensity</code> は <code class="inl">0.1</code> に設定します。</b>変換元と ARLitToon ではリムの算出式も環境光の扱いも違うため、数値を換算して持ち込むと<b>リムが強く出すぎる</b>ためです。<b>まず控えめな状態から始めて、必要なら上げてください。</b>元の設定に寄せたい場合の<b>目安の数値はレポートに出ます</b>（鋭さは効き方が逆向き＝変換元は値が大きいほど細く鋭い／ARLitToon は値が大きいほど太いため、換算した値を載せています）。「ライティングを適用」の設定は <b>Rim Env Adapt</b>（環境順応）へ引き継ぎます。</li>
+    <li><b>ラメ（Glitter）</b>：有効化と色・強度は移しますが、<b>粒の生成方式が異なる</b>ため、粒の大きさ・密度・形状・点滅速度は引き継がずシェーダー既定のままにします。Glitter Sparkle 節の Grain Scale / Coverage / Size / Shape / Flicker Speed で見た目を合わせてください（レポートにも案内が出ます）。</li>
+    <li><b>ラメの「色 / マスク」テクスチャ</b>：<b>テクスチャの明るさ × アルファを Emission Map のアルファへ焼き込み</b>、Glitter の <b>マスクに使うチャンネル = アルファ (A)</b> に設定します（ARLitToon v48_GUIr0 以降・焼き込み ON のとき）。<b>発光の色（RGB）は元の Emission Map のまま</b>です（Emission Map が無い場合は RGB を白にするので、発光の見た目は変わりません）。ARLitToon はこのアルファを<b>メインテクスチャと同じ UV</b> で読むため、発光のスクロールや Tiling があっても<b>マスクの位置はずれません</b>。<b>色付きのテクスチャの「色の違い」は再現できません</b>（ARLitToon のラメは単色のため、明るさだけを移し、レポートで通知します）。<b>UV0 以外の UV を使っている場合</b>と、<b>焼き込みが OFF の場合</b>は反映せず、ラメは全面に出ます（レポートで通知）。</li>
+    <li><b>発光のマスク</b>：<b>Emission Map のアルファ</b>へ焼き込み、Emission の <b>Emission Map のアルファでマスク</b> を ON にします（ARLitToon v48_GUIr0 以降・焼き込み ON のとき）。アルファはメインテクスチャと同じ UV で読まれるため、<b>発光がスクロールしていても、マスクの位置は変換元と一致します</b>（以前は発光の色へ掛け合わせていたため、発光がスクロールするとマスクも一緒に流れていました）。</li>
+    <li><b>発光のマスクとラメのマスクの両方がある場合</b>：Emission Map のアルファは 1 つしかないため、次のように割り当てます。
+      <ul style="margin:6px 0 4px 20px">
+        <li><b>同じ画像</b>（同じ Tiling/Offset）なら、アルファを共用します（Emission・Glitter のマスクとも ON）。</li>
+        <li><b>別の画像</b>なら、<b>アルファはラメのマスクに使い</b>、発光のマスクは従来どおり<b>発光の色（RGB）へ掛け合わせます</b>。発光がスクロールする・発光とマスクの Tiling/Offset が違う場合は、マスクの位置がずれることがあるためレポートで警告します。</li>
+      </ul>
+    </li>
+    <li><b>発光テクスチャ自身のアルファ／発光色のアルファ</b>：変換元はどちらも<b>発光の強さに掛けます</b>（透明な部分は光らない）。ARLitToon の発光は色（RGB）しか使わないため、<b>発光テクスチャのアルファは発光の色（RGB）へ掛け合わせ</b>（アルファが実際に 1 未満の部分を持つときだけ・焼き込み ON のとき）、<b>発光色のアルファは Intensity へ掛け合わせます</b>。発光テクスチャの色とアルファは同じ絵なので、発光がスクロールしても位置は一致します。</li>
+    <li><b>書き出す画像</b>：組み立てた発光テクスチャと、<b>チャンネルごとの中身</b>を <code class="inl">Textures/EmissionMap_&lt;マテリアル名&gt;/</code> にまとめて置きます（<code class="inl">EmissionMap_&lt;マテリアル名&gt;.png</code>＝マテリアルに割り当てる本体／<code class="inl">Emission_RGB.png</code>＝発光の色／<code class="inl">Emission_A.png</code>＝アルファの中身を灰色で表したもの）。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>MatCap の合成モードについて</h3>
+  <p>変換元の合成モードは次のように対応づけます。ARLitToon の MatCap は <b>乗算 / 加算</b> の 2 種類です。</p>
+  <table><thead><tr><th>変換元</th><th>変換後</th></tr></thead><tbody>
+    <tr><td>乗算</td><td>乗算</td></tr>
+    <tr><td>加算</td><td>加算</td></tr>
+    <tr><td>スクリーン</td><td>加算（近似）</td></tr>
+    <tr><td>通常（置き換え）</td><td><b>乗算（近似）</b></td></tr>
+  </tbody></table>
+  <p><b>通常（置き換え）はどちらとも違う</b>ため近似になります。<b>乗算</b>を選んでいるのは、通常合成の MatCap は白〜明るい画であることが多く、加算にすると<b>素材が白く発光してしまう</b>ためです。乗算なら明るい MatCap はほぼ素通しに倒れるので、<b>明るくなりすぎる事故が起きません</b>。艶を強く出したい場合は、変換後に合成モードを <b>加算</b> へ変えて強度を調整してください（レポートにも案内が出ます）。</p>
+  </div>
+  <div class="rv">
+  <h3>変換せずスキップするマテリアル</h3>
+  <p>次の専用シェーダーのマテリアルは <b>ARLitToon に対応する設定がなく、近似変換もできない</b>ため変換しません。<b>元のマテリアルのままスロットに残す</b>ので、これらの部分はこれまでどおり機能します（変換レポートにスキップした旨と理由が出ます）。</p>
+  <ul>
+    <li><b>ファー / 毛（Fur・FurCutout・FurTwoPass）</b>：毛を多層で生やすための専用設定。変換すると毛が消えて土台だけが残ります。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h3>落ち影専用（FakeShadow）マテリアルの変換について</h3>
+  <p>落ち影専用シェーダーのマテリアルは、<b>ARLitToon の Fake Shadow Mesh（v44 以降）へ変換します</b>（v1_GUIr0 まではスキップ対象でした）。<b>変換方式は 2 つから選べます</b>（ウィンドウの<b>落ち影マテリアルの変換</b>）。<b>既定は B（ベースマテリアルへ統合する）</b>です——影用スロットが 1 つ減り、マテリアル数とパス数を抑えられるためです。<b>同じレンダラーにベースマテリアルが無い場合は自動的に A 相当へ倒れる</b>ので、統合を選んでも変換できなくなることはありません。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> A. 影用メッシュをそのまま変換する</h4>
+  <p>影用スロットを「影だけを描く ARLitToon マテリアル」に変換します。<b>変換元で作り込まれた影の形・位置をそのまま使う</b>ため、見た目の再現性が高い方式です。</p>
+  <ul>
+    <li><b>影用のメッシュはそのまま残して使います。</b></li>
+    <li>変換後のマテリアルは <b>Fake Shadow Mesh が ON</b>、<b>base pass は不可視</b>（半透明＋アルファ 0）に設定されます。ARLitToon の Fake Shadow Mesh は影を描く専用パスが独立しているため、通常の描画だけを消して<b>影のパスだけを残す</b>ことができます（影の板が不透明な板として出ることはありません）。</li>
+    <li><b>Render Queue は 3001</b>（受け手より後に描く必要があるため）を設定します。受け手側がこれより後に描かれる設定になっている場合は影が出ないため、受け手側の Render Queue を下げてください。</li>
+    <li>押し出し距離（FS Mesh Distance）は、影用メッシュがすでに受け手の手前に置かれていることを前提に小さめの値（0.2）を設定します。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> B. ベースマテリアルへ統合する（影用スロットを削除・<b>既定</b>）</h4>
+  <p><b>同じレンダラーのベースマテリアル</b>（髪本体など）へ Fake Shadow Mesh を移植し、<b>影用のマテリアルスロットを削除</b>します。マテリアル 1 枚とパス 1 つぶん軽くなります。</p>
+  <ul>
+    <li><b>影の形が変わります</b>：本体メッシュ自身を押し出して影にするため、変換元の影用メッシュの形とは異なります。</li>
+    <li><b>統合先の Render Queue を +1 します</b>：Fake Shadow Mesh は<b>受け手より後に描かれる</b>ことが動作条件のため（受け手と同じ値だと影が出ません）。受け手（顔など）の Render Queue が統合先と同じかそれ以上の場合は影が出ないので、受け手側の値を下げてください。調整前後の値はレポートに出ます。</li>
+    <li><b>ベースマテリアルが同じレンダラーに無い場合は、自動的に A へフォールバック</b>して影用マテリアルを書き出します（どちらで処理したかはレポートに出ます）。</li>
+    <li><b>スロット削除の安全策</b>：Unity はマテリアル配列の N 番目をサブメッシュ N に割り当てるため、途中のスロットを削除すると<b>以降のメッシュとマテリアルの対応がずれます</b>。そのため実際に削除するのは<b>末尾から連続している分だけ</b>で、中間に残るスロットは<b>完全不可視のマテリアルに置き換えます</b>（描画されないので見た目は削除した場合と同じです）。どちらの処理をしたかはレポートに出ます。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 両方式に共通</h4>
+  <ul>
+    <li><b>影の色・濃さは変換元の色から引き継ぎます</b>（色の RGB → 影色、アルファ → 濃さ）。</li>
+    <li>変換元と異なり、どちらの方式でも影は<b>光源の向きと頭の動きに追従します</b>。光源が届かない場所では Fake Shadow Mesh 節の <b>FS Fallback Dir</b>（既定は斜め上方向）に沿って影が出ます。</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ UNSUPPORTED ============ -->
+<section id="unsupported">
+  <div class="sec-head rv"><div class="num">SEC. 05 — LIMITS</div><h2>自動変換できない主な機能（レポートで通知）</h2><div class="sub">// features to set up by hand</div></div>
+  <div class="rv">
+  <p>3rd テクスチャ（UV Mode が MatCap 以外）/ デカール配置 / テクスチャ回転 / 影色テクスチャ / AO マップ / グラデーションマップ / 2nd ノーマルマップ / ラメの粒形状・密度 / 2nd 発光 / AudioLink（方式が異なるため手動設定）/ 屈折 / テッセレーション など。</p>
+  <p>変換後は必ず実機（またはシーン上）で見た目を確認し、必要に応じて ARLitToon の Inspector（マテリアルの各セクション）で微調整してください。</p>
+  </div>
+</section>
+
+<!-- ============ PREFAB ============ -->
+<section id="prefab">
+  <div class="sec-head rv"><div class="num">SEC. 06 — TROUBLESHOOTING</div><h2>Prefab が作られないとき</h2><div class="sub">// prefab save failed</div></div>
+  <div class="rv">
+  <p><b>変換レポートの <code class="inl">[全体] Prefab 保存:</code> の行に理由が出ます。</b> よくある原因は次のとおりです。</p>
+  <ul>
+    <li><b>参照の切れたスクリプト（Missing Script）がアバターに含まれている。</b>Unity は Missing Script を持つオブジェクトを Prefab として保存できません。レポートに<b>どの GameObject に何件あるか</b>まで出るので、不足しているスクリプト（VRChat SDK や外部アセット）をインポートするか、該当コンポーネントを削除してから再変換してください。</li>
+    <li>保存先フォルダを作成できなかった／保存時に例外が出た。レポートに内容が出ます。</li>
+  </ul>
+  <p><b>いずれの場合も、シーン上の変換済みアバターはそのまま使えます</b>（マテリアルの変換は完了しています）。Prefab が要らなければ「変換後のアバターを Prefab として保存する」を OFF にしてください。</p>
+  </div>
+</section>
+
+<!-- ============ NOTREFLECTED ============ -->
+<section id="notreflected">
+  <div class="sec-head rv"><div class="num">SEC. 07 — TROUBLESHOOTING</div><h2>反映されていないように見えるとき</h2><div class="sub">// checking the output that is actually in use</div></div>
+  <div class="rv">
+  <p><b>まず変換レポートの「変換後マテリアルを保存: …」のパスと、Inspector で開いているマテリアルのパスが同じか確認してください。</b> 変換は実行するたびに<b>別のフォルダ</b>（<code class="inl">〇〇/</code> → 2回目は <code class="inl">〇〇_2/</code> …）へ出力するため、以前の変換で作られた古いマテリアルや、シーンに残っている古い複製アバター（<code class="inl">〇〇_ARLitToon</code>）を見ていると、最新の変換結果は反映されていません。不要になった古いフォルダと複製アバターを削除してから確認すると確実です。</p>
+  <p>レポートには有効化したトグルと設定値（例: <code class="inl">_UseBackLight=1 / Intensity=1</code>）も出力されるので、値まで含めて突き合わせられます。「対応機能がないため反映していません（v39 以降で対応）」と出ている場合は、Unity 側の ARLitToon シェーダーが古いので、シェーダーを最新版へ更新してから再変換してください。</p>
+  </div>
+</section>
+
+<!-- ============ DRAWORDER ============ -->
+<section id="draworder">
+  <div class="sec-head rv"><div class="num">SEC. 08 — TROUBLESHOOTING</div><h2>重なり順（描画順）がおかしいとき</h2><div class="sub">// render queue, zwrite, slot order</div></div>
+  <div class="rv">
+  <p><b>マテリアルスロット（Element 0 / 1 …）の並びは変換で入れ替わりません。</b> 変換ツールはスロットの番号を保ったまま中身だけを差し替えます（<b>唯一の例外が、落ち影マテリアルの変換で「ベースマテリアルへ統合する」を選んだときのスロット削除</b>です。この場合も、対応がずれない末尾のスロットだけを削除します）。Inspector の下部に並ぶマテリアルのエディタは Materials リストと順番が違って見えることがありますが、これは Unity の表示上の並びで、スロット順ではありません（元のアバターを選択しても同じ並びになります）。</p>
+  <p>見た目の重なり順が変わってしまう場合は、変換レポートの <b><code class="inl">描画設定: Render Queue=… / ZWrite=… / Cull=…</code></b> の行を該当マテリアルどうしで見比べてください。よくある原因は次の2つです。</p>
+  <ul>
+    <li><b>半透明の ZWrite が On</b>：半透明部分も深度を書くため、後ろにあるもの（前髪など）が隠れます。変換元の設定を尊重して継承していますが、崩れる場合は Transparency 節で <b>ZWrite を Off</b> にするか、Blend Preset を <b>Cutout ＋ Dither Fade</b> に切り替えてください（レポートにも注意として出ます）。</li>
+    <li><b>Render Queue</b>：変換元で明示的に指定されていた場合のみ、その値を引き継ぎます。指定が無い場合は ARLitToon のプリセット既定（Opaque=2000 / Cutout=2450 / Transparent=3000 / Fade・Additive=3001）です。顔と髪など前後関係を作り込んでいたアバターでは、Inspector の Render Queue で微調整してください。</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ REVERT ============ -->
+<section id="revert">
+  <div class="sec-head rv"><div class="num">SEC. 09 — TROUBLESHOOTING</div><h2>元に戻したいとき</h2><div class="sub">// undo, delete output</div></div>
+  <div class="rv">
+  <ul>
+    <li>シーンの変更（複製・非アクティブ化・マテリアル割り当て）は <b>Ctrl+Z（Undo）</b> で戻せます。</li>
+    <li>生成されたマテリアル・テクスチャ・レポートは出力フォルダごと削除すれば消えます（元アバター・元マテリアルには影響しません）。</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ VERSION ============ -->
+<section id="version">
+  <div class="sec-head rv"><div class="num">SEC. 10 — VERSION</div><h2>バージョン</h2><div class="sub">// versioning and changelog</div></div>
+  <div class="rv">
+  <p>本ツールは <code class="inl">converter/Editor/ARLitToonConverter.cs</code> の<b>1ファイル</b>ですが、ARLitToon シェーダー本体（<code class="inl">Shaders/ARLitToon.shader</code> ＋ <code class="inl">Editor/ARLitToonGUI.cs</code>）と同じ <b>B方式</b>（<code class="inl">v{N}_GUIr{M}</code>）でバージョンを管理します。ウィンドウ上部・完了ダイアログ・変換レポートの先頭に表示されます。</p>
+  <ul>
+    <li><b><code class="inl">N</code>（変換ロジックの版・shader 相当）</b>：変換で書き込むプロパティの追加/変更、共有マスクの割当変更、変換対象外シェーダーの追加など、<b>変換結果に影響する変更</b>をしたら +1 し、GUI 枝番を 0 に戻す。</li>
+    <li><b><code class="inl">M</code>（GUI 枝番・GUI.cs 相当）</b>：ウィンドウのレイアウト・表示文言など、<b>変換結果に影響しない UI のみの変更</b>のとき +1（変換ロジックは無変更）。</li>
+  </ul>
+  <p>上記の「対応シェーダー版」（ARLitToon 側の最終確認バージョン）とは<b>別の番号</b>です。混同しないでください。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v7_GUIr0</span> <b>ARLitToon v48_GUIr0（3枚目 Matcap・リムライトのマスク）へ追従</b>。</p>
+  <ul class="vlist">
+    <li>①<b>メインカラー2nd / 3rd の「UV Mode = MatCap」に対応</b>しました。<b>v5_GUIr0 までは UV Mode を読まずに 2nd を無条件で Texture Layer へ変換していたため、マトキャップとして使われていた場合に投影方式が失われて絵が別物になり、警告も出ませんでした。</b>今後は Matcap スロットへ変換します（3rd も同様。UV Mode が MatCap 以外のときは従来どおり）。</li>
+    <li>②<b>MatCap を 2 枚とも使い、両方にマスクがある構成で、1枚目のマスクも反映できるようになりました</b>（共有マスクの <code class="inl">R</code> と <code class="inl">G</code> へ詰めた画像を自動生成します）。v5_GUIr0 までは領域マスクが 1 本しか無かったため 1枚目のマスクは反映できず、レポートで通知するだけでした。</li>
+    <li>③変換先の Matcap スロットが 3 つになったため、<b>変換元が 4 層以上のマトキャップを使っている場合は優先順で 3 つまで割り当て、あふれた層をレポートで通知</b>します。</li>
+    <li>④<b>リムライトのテクスチャを Rim マスクへ変換</b>するようにしました（変換元のリム色テクスチャは乗算で効くため、黒い領域はリムが出ません＝実質マスクとして使われています）。<b>v5_GUIr0 までは「対応機能がないため反映していません」と警告して捨てていました</b>（ARLitToon 側に受け皿が無かったため）。色の変化までは再現できません。</li>
+    <li>⑤<b>リムシェード（縁を暗くする）に対応しました</b>。<b>v5_GUIr0 までは変換も警告もされず、黙って落ちていました。</b><b>ARLitToon v48_GUIr0 以降では、専用の Rim Shade へそのまま変換します</b>（色・太さ・濃さ・マスクをそれぞれ専用の項目へ移します）。<b>Rim Shade はリムライトとは独立したレイヤー</b>なので、<b>リムライトとリムシェードが両方有効な変換元も、両方そのまま再現できます。</b>ARLitToon が v47_GUIr0 以前の場合は、従来どおり Rim Light の Multiply モードで近似し（リムライトと同時には使えないため、両方有効なときはリムライトを優先して）レポートで通知します。</li>
+    <li>⑥<b>光沢（反射・スペキュラ）の質感を移植するようにしました。</b> 変換元は光沢を「面」として塗るのに対し、ARLitToon は物理的な光の反射で表現するため、<b>設定値をそのまま持ち込むと光沢が針の先のような点になり、布のツヤが消えていました</b>。変換元で反射とスペキュラが有効なときは、<b>Smoothness に上限をかけてツヤを広げ、Metallic をわずかに持たせ、Specular Highlight を上げます</b>。<b>環境反射（Reflection Strength）は上げません</b>（ワールドのリフレクションプローブに依存せず、パーティクルの描画負荷にもならないため）。強すぎる・弱すぎる場合は PBR（BRDF） の Smoothness / Specular Highlight で調整してください。</li>
+    <li>⑦<b>メインカラー2nd が「マスクだけ」の構成で、マスクが効いていなかった不具合を修正しました。</b><b>v6_GUIr0 までは変換元のマスク画像をそのまま Layer テクスチャに割り当てていました</b>が、ARLitToon の Texture Layer は<b>テクスチャのアルファ</b>を合成マスクとして読むため、<b>マスクがまったく効かず、さらに乗算ではマスクの黒い領域で下地が暗く落ちていました</b>。今後は「RGB = 白 / アルファ = マスク」に焼き直した画像を生成して割り当てます（「マスクテクスチャを焼き込んだ合成テクスチャを生成する」が ON のとき。OFF のときは従来どおり割り当てたうえで見た目が崩れる旨を警告します）。</li>
+    <li>⑧<b>リムシェードのマスクを共有マスクの <code class="inl">B</code> に固定で入れるのをやめました。</b> リムライトのマスクが無いときは ARLitToon の既定と同じ <code class="inl">A</code> に、両方あるときは空いているチャンネルを <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code> の順に使います。<b>以前は常に <code class="inl">B</code> に入れていたため、変換後にそのマテリアルへ Fake Shadow を焼きこむと、リムシェードのマスクが影の形に置き換わっていました</b>（焼きこみは <code class="inl">B</code> を上書きするため）。<code class="inl">B</code> しか空いていないときは、その旨をレポートで警告します。</li>
+    <li>⑨<b>マスクが 1 枚だけのときも、共有マスクを生成して ARLitToon の既定チャンネルを読むようにしました</b>（焼き込み ON のとき）。<b>以前は変換元のマスク画像をそのまま割り当てて <code class="inl">R</code> を読ませていた</b>ため、たとえばリムライトのマスクだけの変換元では、Inspector の表示（既定 <code class="inl">A</code>）と実際に読むチャンネル（<code class="inl">R</code>）が食い違っていました。あわせて、<b>各チャンネルの中身を機能ごとの個別画像としても保存</b>するようにしました（<code class="inl">Textures/SharedMask_&lt;マテリアル名&gt;/</code>）。</li>
+    <li>⑩<b>ラメの「色 / マスク」テクスチャを反映するようにしました。</b> <b>v6_GUIr0 までは受け皿が無く、マスク付きのラメが全面に出ていました</b>（警告も出ませんでした）。今後はテクスチャの明るさ × アルファを Emission Map のアルファへ焼き込み、ARLitToon のラメのマスクにします（ARLitToon v48_GUIr0 以降・焼き込み ON のとき。発光の色は変わりません）。</li>
+    <li>⑪<b>発光のマスクを Emission Map のアルファへ移すようにしました</b>（ARLitToon v48_GUIr0 以降）。<b>v6_GUIr0 までは発光の色へ掛け合わせていたため、発光がスクロールするとマスクも一緒に流れ、位置がずれていました</b>（警告も出ませんでした）。アルファはラメのマスクとの共用枠のため、両方が別の画像のときはラメを優先し、発光のマスクは従来どおり発光の色へ掛け合わせます（位置がずれる場合はレポートで警告）。</li>
+    <li>⑫<b>組み立てた発光テクスチャと、そのチャンネルごとの中身（RGB／アルファ）を <code class="inl">Textures/EmissionMap_&lt;マテリアル名&gt;/</code> にまとめて書き出す</b>ようにしました。</li>
+    <li>⑬<b>発光テクスチャ自身のアルファと、発光色のアルファを反映するようにしました。</b> 変換元はどちらも発光の強さに掛けますが、<b>v6_GUIr0 までは捨てていたため、透明な部分（色が黒でない場合）が光り、発光色のアルファが 1 未満のときは発光が強すぎました</b>（警告も出ませんでした）。今後は発光テクスチャのアルファを発光の色へ、発光色のアルファを Intensity へ掛け合わせます。</li>
+    <li>⑭<b>ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました</b>（ウィンドウ上部のタブ。初回はシェーダーの Inspector と同じ言語で開き、切り替えた言語は保存されます。変換レポートは日本語のみ）。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v6_GUIr0</span> <b>多段の影を引き継ぐようにした</b>（ARLitToon v47_GUIr0 対応）。<b>2 影・3 影</b> の色・強度・境界・ボケ足・ノーマルマップの反映度と、<b>境界の色づけ</b>を引き継ぎます（これまでは「2影は 1 段に簡略化」という警告を出していました）。いずれも <b>ON/OFF は専用チェックボックスへ写し</b>、不透明度は「濃さの強度」として渡します。<b>落ち影を受ける度合い・影色へのメインカラー乗算・明るい場所での薄め方は書き込みません</b>（ARLitToon 側で固定運用になったため）。影色テクスチャ・AO マップなど<b>画像で指定する項目は引き継げない</b>ため、従来どおり警告でお知らせします。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v5_GUIr0</span> <b>ARLitToon v46_GUIr0 へ追従</b>。</p>
+  <ul class="vlist">
+    <li>①<b>変換元で反射を使っていないマテリアルの環境反射を明示的に OFF にした</b>（ARLitToon v45 で <code class="inl">Reflection Strength</code> の初期値が <code class="inl">0</code> → <code class="inl">1</code> に変わったため、従来の実装のままだと<b>反射を使っていなかった素材すべてに映り込みが乗る</b>状態になっていた）。</li>
+    <li>②<b><code class="inl">Specular Highlight</code> を常に <code class="inl">0</code>（物理そのまま）にした</b>（同じく v45 でこの項目の意味が「ハイライトの量」から「物理項への上乗せ（最大約 5 倍）」へ変わったため、従来どおり値を写すと過剰に光っていた）。</li>
+    <li>③<b>変換後のアバターを Prefab として保存する機能を追加</b>（既定 ON・保存先の既定は出力フォルダと同じ）。<b>保存の結果は成功・失敗・スキップのいずれでも必ずレポートに出ます</b>（Missing Script がある場合は該当する GameObject まで表示）。<b>Hierarchy の変換済みアバターは、保存した Prefab のインスタンスになります。</b></li>
+    <li>④<b>描画モード「[高負荷] 屈折」「[高負荷] 屈折ぼかし」と Gem を <code class="inl">Transparent</code>（ガラス材質向け）へ変換</b>するようにした（メインカラーのアルファは元の数値をそのまま引き継ぎ、値をレポートに表示）。</li>
+    <li>⑤<b>リムライトの強さ・太さを変換後の既定値（Rim Power <code class="inl">1</code> / Rim Intensity <code class="inl">0.1</code>）に設定</b>するようにした（元の値を換算して持ち込むとリムが強く出すぎるため。元に寄せる場合の目安はレポートに表示）。</li>
+    <li>⑥<b>ガラス材質のメインカラーのアルファを <code class="inl">10/255</code> に設定</b>するようにした（変換元はアルファ <code class="inl">255</code> でも屈折で透けるため、そのまま持ち込むと不透明の白い板になる）。</li>
+    <li>⑦<b>MatCap の「通常（置き換え）」合成の近似先を加算 → 乗算へ変更</b>（加算だと素材が白く発光するため）。</li>
+    <li>⑧<b>変換後のアバターから Pipeline Manager を外す機能を追加</b>（既定 ON・複製時のみ）。付いたままだと元アバターと同じアップロード先を指し、変換後をアップロードすると元を上書きしてしまうため。</li>
+    <li>⑨<b>落ち影マテリアルの変換方式の既定を「ベースマテリアルへ統合する」に変更</b>（影用スロットが 1 つ減るため）。</li>
+    <li>⑩<b>メインカラー2nd が「マスクのみ」の構成のとき、Texture Layer の合成モードを <code class="inl">Multiply</code>（既定）に設定</b>するようにした（Normal だとマスク領域で下地の陰影が失われ、貼り付けたように浮くため。下地を置き換えたい場合は Normal へ変更・レポートで案内）。<b>2nd テクスチャがある構成は変換元のブレンドモードをそのまま引き継ぎます。</b></li>
+    <li>⑪<b>メインカラー2nd がテクスチャ未設定でマスクのみの場合に、まったく変換されなかった不具合を修正</b>（色オーバーレイが ON にならずマスクも運ばれていなかった）。マスク画像を Layer テクスチャへ割り当てます。</li>
+    <li>⑫<b>変換後のマテリアルが黒くなる 2 つのケースで <code class="inl">Metallic</code> を <code class="inl">0</code> にするようにした</b>＝メタリックマップが設定されている場合（再現できないため全面金属に化ける）と、環境反射が <code class="inl">0</code> なのに <code class="inl">Metallic</code> だけ高い場合（映り込む先が無い）。いずれもレポートで通知します。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v4_GUIr0</span> <b>「ベースマテリアルへ統合する」で影が出ない不具合を修正</b>。統合先の Render Queue を受け手より後ろへ（+1）調整するようにした（Fake Shadow Mesh は受け手より後に描くことが動作条件のため）。修正前は Inspector で Fake Shadow Mesh を OFF→ON すると出る、という症状になっていた。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v3_GUIr0</span> <b>落ち影マテリアルの変換方式を選べるようにした</b>（「影用メッシュをそのまま変換する」／「ベースマテリアルへ統合する」）。統合を選ぶと、同じレンダラーのベースマテリアルへ Fake Shadow Mesh を移植し、影用スロットを削除する。ベースが同居しない場合は自動で従来方式へフォールバック。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr2</span> <b>変換レポートに「スキップしたマテリアル」の専用セクションを追加</b>。マテリアル名・シェーダー名・スキップ理由に加え、<b>アバター内のどこで使われているか（GameObject パスとマテリアルスロット番号）を一覧表示</b>するようにした。また、すでに ARLitToon になっているマテリアルが件数だけ増えて行に出ず件数と内訳が合わなかった問題も解消。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr1</span> <b>出力フォルダの既定がアバター名に追従しない不具合を修正</b>（アバター未設定のままウィンドウを開くと <code class="inl">.../Materials</code> で固定され、後からアバターを入れても変わらなかった）。あわせて既定のフォルダ名に<b>元 Prefab アセットの名前</b>を使うようにし、「マスクテクスチャを焼き込んだ合成テクスチャを生成する」の既定 ON を EditorPrefs で保持するようにした。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v2_GUIr0</span> 落ち影専用シェーダー（FakeShadow）のマテリアルを、スキップせず <b>ARLitToon の Fake Shadow Mesh へ変換</b>するようにした（影用メッシュはそのまま利用・base pass は不可視化）。</p>
+  </div>
+  <div class="rv">
+  <p><span class="vtag">v1_GUIr0</span> バージョン管理を導入（本節・ウィンドウ表示・レポート表示を新設）。</p>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer class="footer"><div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%">
+  <div>ARLitToon CONVERTER <span class="c">//</span> ALTIMA STUDIO</div>
+  <div>© ARL — ALL RIGHTS RESERVED</div>
+</div></footer>
+
+</main>
+
+<script>
+// ticker
+(function(){
+  var items="NON-DESTRUCTIVE CONVERSION,LILTOON → ARLITTOON,AVATAR DUPLICATE,MASK BAKING,MATCAP ×3,RIM SHADE,FAKE SHADOW MESH,CONVERSION REPORT,PREFAB OUTPUT,UNDO SUPPORT,UNITY 2022.3 LTS,VRCHAT SDK3".split(",");
+  var half=items.map(function(t){return t+"<b>///</b>"}).join("");
+  document.getElementById("ticker").innerHTML=half+half;
+})();
+// scroll progress + parallax beam
+var beam=document.getElementById("beam"),prog=document.getElementById("progress");
+addEventListener("scroll",function(){
+  var h=document.documentElement,max=h.scrollHeight-h.clientHeight;
+  prog.style.width=(max?h.scrollTop/max*100:0)+"%";
+  beam.style.marginTop=(h.scrollTop*-0.08)+"px";
+},{passive:true});
+// reveal
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target)}})},{threshold:.08,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+// scrollspy
+var links=[].slice.call(document.querySelectorAll(".navgrp a[href^='#']")).filter(function(a){return a.getAttribute("href").length>1});
+var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"))});
+var spy=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)});
+    }
+  });
+},{rootMargin:"-20% 0px -70% 0px"});
+secs.forEach(function(s){if(s)spy.observe(s)});
+// glitch pulse
+var gr=document.getElementById("glitchRoot");
+setInterval(function(){gr.classList.add("g-on");setTimeout(function(){gr.classList.remove("g-on")},380)},3400);
+// mobile menu（幅 960px 以下：MENU ボタンでサイドバーを引き出す。背景・リンク・Esc・画面幅の拡大で閉じる）
+(function(){
+  var btn=document.getElementById("menuBtn"),bd=document.getElementById("navBackdrop"),nav=document.getElementById("sidebar");
+  if(!btn||!nav)return;
+  var lbl=btn.querySelector(".lbl");
+  function set(open){
+    document.body.classList.toggle("nav-open",open);
+    btn.setAttribute("aria-expanded",open?"true":"false");
+    lbl.textContent=btn.getAttribute(open?"data-close":"data-open");
+  }
+  btn.addEventListener("click",function(){set(!document.body.classList.contains("nav-open"))});
+  if(bd)bd.addEventListener("click",function(){set(false)});
+  nav.addEventListener("click",function(e){if(e.target.closest("a"))set(false)});
+  addEventListener("keydown",function(e){if(e.key==="Escape")set(false)});
+  var mq=matchMedia("(min-width:961px)"),off=function(){if(mq.matches)set(false)};
+  if(mq.addEventListener)mq.addEventListener("change",off);else mq.addListener(off);
+})();
+</script>
+</body>
+</html>

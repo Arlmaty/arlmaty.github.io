@@ -169,19 +169,35 @@ details .dbody li{margin-bottom:10px}
 .footer{border-top:1px solid var(--line);margin-top:90px;padding:40px 0 60px;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;letter-spacing:.1em}
 .footer .c{color:var(--ac)}
 
-@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.wrap{padding:0 24px}.hero-scroll{left:24px}.hero-deco{display:none}}
+/* ===== mobile menu（幅 960px 以下：サイドバーを画面上部の MENU ボタンで開く引き出しにする） ===== */
+.menu-btn,.nav-backdrop{display:none}
+@media(max-width:960px){
+.main{margin-left:0}.wrap{padding:0 24px}.hero{padding:64px 0 96px}.hero-scroll{left:24px}.hero-deco{display:none}
+.sidebar{padding-top:64px;transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+body.nav-open{overflow:hidden}
+body.nav-open .sidebar{transform:none;visibility:visible;transition:transform .25s ease;box-shadow:6px 0 28px rgba(11,11,18,.18)}
+body.nav-open .nav-backdrop{display:block;position:fixed;inset:0;z-index:45;background:rgba(11,11,18,.35)}
+.menu-btn{display:flex;align-items:center;gap:10px;position:fixed;top:12px;left:12px;z-index:70;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--ac);background:rgba(250,250,252,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--ac-line);padding:9px 12px;cursor:pointer;box-shadow:0 2px 12px rgba(11,11,18,.08)}
+.menu-btn .bars{position:relative;width:16px;height:2px;background:currentColor;transition:background .2s}
+.menu-btn .bars::before,.menu-btn .bars::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;transition:transform .2s}
+.menu-btn .bars::before{transform:translateY(-5px)}.menu-btn .bars::after{transform:translateY(5px)}
+body.nav-open .menu-btn .bars{background:transparent}
+body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .menu-btn .bars::after{transform:rotate(-45deg)}
+}
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-beam" id="beam"></div>
 <div class="progress" id="progress"></div>
+<button class="menu-btn" id="menuBtn" type="button" aria-controls="sidebar" aria-expanded="false" data-open="MENU" data-close="CLOSE"><span class="bars" aria-hidden="true"></span><span class="lbl">MENU</span></button>
+<div class="nav-backdrop" id="navBackdrop"></div>
 
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
-    <span class="ver">v45_GUIr2 / PC ONLY</span>
+    <span class="ver">v48_GUIr0 / PC ONLY</span>
   </div>
   <div class="navgrp"><div class="glabel">Language</div>
     <a href="#" class="on">日本語</a>
@@ -193,29 +209,32 @@ details .dbody li{margin-bottom:10px}
   </div>
   <div class="navgrp"><div class="glabel">Core Features</div>
     <a href="#rendering">Transparency / Rendering</a>
-    <a href="#base">Base（基本の見た目）</a>
-    <a href="#layer">Texture Layer（重ね合わせ）</a>
-    <a href="#bake">Bake to Base（焼きこみ）</a>
+    <a href="#base">Base</a>
+    <a href="#layer">Texture Layer</a>
+    <a href="#bake">Bake to Base</a>
   </div>
   <div class="navgrp"><div class="glabel">Lighting &amp; Shading</div>
-    <a href="#lighting">Lighting &amp; Shadow</a>
     <a href="#pbr">PBR &amp; Specular</a>
+    <a href="#lighting">Lighting &amp; Shadow</a>
+    <a href="#toonshadow">Toon Shadow</a>
     <a href="#matcap">Matcap</a>
-    <a href="#fakeshadowmesh">Fake Shadow Mesh</a>
-    <a href="#fakeshadowtex">Fake Shadow Texture</a>
-  </div>
-  <div class="navgrp"><div class="glabel">Visual Effects</div>
-    <a href="#emission">Emission</a>
-    <a href="#audiolink">AudioLink</a>
-    <a href="#glitter">Glitter / Sparkle</a>
-    <a href="#dissolve">Dissolve</a>
     <a href="#rimlight">Rim Light</a>
     <a href="#backlight">Back Light（逆光ライト）</a>
+    <a href="#fakeshadow">Fake Shadow</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Visual Effects</div>
     <a href="#outline">Outline &amp; Sweep</a>
+    <a href="#emission">Emission</a>
+    <a href="#glitter">Glitter / Sparkle</a>
+    <a href="#audiolink">AudioLink</a>
+    <a href="#dissolve">Dissolve</a>
   </div>
   <div class="navgrp"><div class="glabel">Advanced &amp; Misc</div>
     <a href="#particle">アニメ・パーティクル連携</a>
     <a href="#license">パフォーマンス・利用規約</a>
+  </div>
+  <div class="navgrp"><div class="glabel">Converter</div>
+    <a href="ARLitToonConverter.html" style="color:var(--ac)">ARLitToon Converter →</a>
   </div>
   <div class="sb-foot">© ARL / ALTIMA</div>
 </nav>
@@ -236,7 +255,7 @@ details .dbody li{margin-bottom:10px}
     <div style="font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--ink2);margin-top:28px">SHADER — 導入・使用ガイド</div>
     <p class="hero-sub">ARLitToon（エーアールリット・トゥーン）は、VRChat のアバターやパーティクルエフェクトのための<b>軽量・高機能なアニメ・トゥーン調カスタムシェーダー</b>。イラスト風・セル画風の表現に最適化された、<b>キャラクターアバター・アバター装飾品とエフェクト制作に特化した汎用トゥーンシェーダー</b>です。<br><br><b style="color:var(--ac)">BOOTH -ALTIMA-</b>　<a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer" style="color:var(--ac)">https://altima.booth.pm/</a></p>
     <div class="hero-chips">
-      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>GLITTER / SPARKLE</span><span>OUTLINE / SWEEP</span><span>MATCAP ×2</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
+      <span>PARTICLE COLOR</span><span>DISSOLVE</span><span>SOFT PARTICLES</span><span>HDR EMISSION</span><span>RIM LIGHT</span><span>AUDIOLINK</span><span>GLITTER / SPARKLE</span><span>OUTLINE / SWEEP</span><span>MATCAP ×3</span><span>TOON SHADOW</span><span>FAKE SHADOW</span><span>RIM SHADE</span><span>BACK LIGHT</span><span>DISTANCE DARKEN</span><span>DITHER FADE</span><span>RECEIVE SHADOW</span><span>TEXTURE LAYER</span><span>LIGHT LIMIT</span><span>SPECULAR REFLECTION</span><span>DISTANCE FADE</span>
     </div>
   </div>
   <div class="hero-scroll"><span class="bar"></span>SCROLL</div>
@@ -258,19 +277,23 @@ details .dbody li{margin-bottom:10px}
 
   <div class="rv" id="changelog">
   <h3>バージョン（更新履歴 / Changelog）</h3>
-  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v45_GUIr2</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
-  <div class="note tip" data-label="最新版 — v45_GUIr2" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p><span class="vtag">v45_GUIr2</span> <b>Unlit モードのとき、PBR の項目をすべて隠すようにしました。</b></p>
-    <p><span class="vtag">v45_GUIr1</span> <b>パーティクル運用（Vertex Color Blend Mode = Multiply）で、PBR（Toon Specular）の環境反射が有効なままのときに警告を追加しました。</b></p>
-    <p><span class="vtag">v45_GUIr0</span> <b>ライティングを PBR（物理ベース）にしました。</b> Metallic で金属か非金属かを、Smoothness で表面の粗さを表す、物理ベースの光の反射（PBR BRDF）が標準のライティングになりました。トゥーンの陰影（影色・境界・ぼかし）はそのまま併用でき、セル塗りの質感は保たれます。<b>⚠️ この版から既存マテリアルの見た目が変わる場合があります。</b></p>
-    <p><span class="vtag">v44_GUIr2</span> <b>Soft Particles（ソフトパーティクル）の設置場所を Transparency / Rendering から Particle Color（パーティクルとの連携）へ移動</b>しました（GUI のみ）。Soft Particles はパーティクル向けの機能であるため、同じくパーティクル関連の設定である <b>Vertex Color Blend Mode の下</b>にまとめました。<b>機能・プロパティ・保存値・見た目は従来と完全に同じ</b>です（Particle Color の項を参照）。</p>
-    <p><span class="vtag">v44_GUIr1</span> Bake to Base の <b>「レイヤー（上から順に重なる）」</b> の見出しに <b>「・プレビューで表示」</b> を追記しました（GUI のみ）。この一覧の並び順・調整はプレビュー中の見た目にそのまま反映されることを明示する文言変更で、<b>機能・保存値・見た目は従来と完全に同じ</b>です。</p>
-    <p><span class="vtag">v44_GUIr0</span> <b>Fake Shadow Mesh（メッシュから落とす影）</b> を追加しました。前髪などのメッシュ自身の形を<b>光の向きへ押し出して、顔の上に影として落とす</b>機能です。従来の <b>Fake Shadow Texture（描いた影）</b> が UV に描いた静止画だったのに対し、こちらは<b>頭の動きと光の向きに追従します</b>。影が届く奥行きを制限しているため、<b>背景や他のアバターが暗くなることはありません</b>。光の無いワールドでは、指定した向き（既定はやや前上方）へ影が落ちるようフォールバックし、明るさに応じて滑らかに切り替わります。<b>使うには、影を落とす側（前髪など）のマテリアルの Render Queue を受け手（顔など）より大きい値にしてください</b>（設定しないと影が出ません）。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Fake Shadow Mesh の項を参照）。</p>
-    <p><span class="vtag">v43_GUIr0</span> <b>Fake Shadow（意匠的な落ち影）</b> を追加しました。前髪の影のように「作者が描いた影」を、<b>ワールドの光源に関係なく常に同じ位置・同じ濃さで</b>顔や体の上へ表示する機能です。既存の <b>Receive Shadow（落ち影を受ける）</b> は実際の光源とシャドウ設定があるワールドでしか影が出ませんが、Fake Shadow Texture は<b>照明の無いワールド・暗いワールドでも意図した陰影を保てます</b>（両者は別機能で、併用できます）。影の形は新設の <b>共有マスク（RGBA パック）</b> の指定チャンネルから読み取ります。<b>Tiling / Offset</b> で位置と繰り返しを調整でき、影の位置はテクスチャを描き直さずスライダーで微調整できます。影の色と濃さも調整でき、<b>Unlit モードでも同じように影が出ます</b>。UV に描いた静止画のため頭や光の向きには追従しません。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Fake Shadow Texture の項を参照）。</p>
+  <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v48_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v48_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p><span class="vtag">v48_GUIr0</span> <b>3枚目の Matcap と、リムライトのマスクを追加しました。</b></p>
+    <p><span class="vtag">v47_GUIr0</span> <b>影を多段に重ねられるようにし、向きの決め方を選べるようにしました。</b></p>
+    <p><span class="vtag">v46_GUIr1</span> <b>Inspector の項目の並び順を変更しました。</b></p>
+    <p><span class="vtag">v46_GUIr0</span> <b>Fake Shadow まわりを大きく強化しました。</b></p>
   </div>
   <details>
     <summary>過去の更新履歴を開く（クリックで展開）</summary>
     <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v45_GUIr2</span> <b>Unlit モードのとき、PBR の項目をすべて隠すようにしました。</b></li>
+      <li><span class="vtag">v45_GUIr1</span> <b>パーティクル運用（Vertex Color Blend Mode = Multiply）で、PBR（Toon Specular）の環境反射が有効なままのときに警告を追加しました。</b></li>
+      <li><span class="vtag">v45_GUIr0</span> <b>ライティングを PBR（物理ベース）にしました。</b> Metallic で金属か非金属かを、Smoothness で表面の粗さを表す、物理ベースの光の反射（PBR BRDF）が標準のライティングになりました。トゥーンの陰影（影色・境界・ぼかし）はそのまま併用でき、セル塗りの質感は保たれます。<b>⚠️ この版から既存マテリアルの見た目が変わる場合があります</b>（詳細は後述）。</li>
+      <li><span class="vtag">v44_GUIr2</span> <b>Soft Particles（ソフトパーティクル）の設置場所を Transparency / Rendering から Particle Color（パーティクルとの連携）へ移動</b>しました（GUI のみ）。Soft Particles はパーティクル向けの機能であるため、同じくパーティクル関連の設定である <b>Vertex Color Blend Mode の下</b>にまとめました。<b>機能・プロパティ・保存値・見た目は従来と完全に同じ</b>です（Particle Color の項を参照）。</li>
+      <li><span class="vtag">v44_GUIr1</span> Bake to Base の <b>「レイヤー（上から順に重なる）」</b> の見出しに <b>「・プレビューで表示」</b> を追記しました（GUI のみ）。この一覧の並び順・調整はプレビュー中の見た目にそのまま反映されることを明示する文言変更で、<b>機能・保存値・見た目は従来と完全に同じ</b>です。</li>
+      <li><span class="vtag">v44_GUIr0</span> <b>Fake Shadow Mesh（メッシュから落とす影）</b> を追加しました。前髪などのメッシュ自身の形を<b>光の向きへ押し出して、顔の上に影として落とす</b>機能です。従来の <b>Fake Shadow Texture（描いた影）</b> が UV に描いた静止画だったのに対し、こちらは<b>頭の動きと光の向きに追従します</b>。影が届く奥行きを制限しているため、<b>背景や他のアバターが暗くなることはありません</b>。光の無いワールドでは、指定した向き（既定はやや前上方）へ影が落ちるようフォールバックし、明るさに応じて滑らかに切り替わります。<b>使うには、影を落とす側（前髪など）のマテリアルの Render Queue を受け手（顔など）より大きい値にしてください</b>（設定しないと影が出ません）。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Fake Shadow Mesh の項を参照）。</li>
+      <li><span class="vtag">v43_GUIr0</span> <b>Fake Shadow（意匠的な落ち影）</b> を追加しました。前髪の影のように「作者が描いた影」を、<b>ワールドの光源に関係なく常に同じ位置・同じ濃さで</b>顔や体の上へ表示する機能です。既存の <b>Receive Shadow（落ち影を受ける）</b> は実際の光源とシャドウ設定があるワールドでしか影が出ませんが、Fake Shadow Texture は<b>照明の無いワールド・暗いワールドでも意図した陰影を保てます</b>（両者は別機能で、併用できます）。影の形は新設の <b>共有マスク（RGBA パック）</b> の指定チャンネルから読み取ります。<b>Tiling / Offset</b> で位置と繰り返しを調整でき、影の位置はテクスチャを描き直さずスライダーで微調整できます。影の色と濃さも調整でき、<b>Unlit モードでも同じように影が出ます</b>。UV に描いた静止画のため頭や光の向きには追従しません。<b>既定 OFF・既存マテリアルの見た目は従来と完全に同じ</b>です（Fake Shadow Texture の項を参照）。</li>
       <li><span class="vtag">v42_GUIr0</span> <b>Back Light（逆光ライト）にも 環境順応（Env Adapt）／環境色になじませる（Env Tint）を追加</b>しました。逆光は「光が背後にあるかどうか」と「影で遮られているか」だけで判定していたため、<b>ライトを弱めても逆光の明るさは変わらず</b>、暗いワールドでは逆光だけが強く残って浮いて見えることがありました。環境順応を上げると、<b>周囲の明るさ（環境光＋メインのライト）に合わせて逆光が自動的に弱まります</b>。<b>明るい場所での見え方は変わりません</b>（暗い側にだけ効きます）。環境色になじませるを上げると、周囲の光の色みが逆光の色に乗ります（明るさは変えません）。<b>Rim Light の同名の項目とまったく同じ仕組み・同じ操作感</b>なので、両方を使う場合も設定の勘所は共通です。暗いワールドで弱まりすぎる場合は <b>暗所の下限</b> を上げてください（Back Light の項を参照）。</li>
       <li><span class="vtag">v41_GUIr0</span> Rim Light に <b>環境順応（Env Adapt）</b> を追加しました。これまでリムの発光は周囲の明るさに関係なく一定だったため、<b>暗いワールドではリムだけが強く浮いて見える</b>ことがありました。環境順応を上げると、<b>周囲の明るさに合わせてリムが自動的に減光</b>され、暗い場所でも風景に馴染みます。<b>明るい場所での見た目は変わりません</b>（暗い側にだけ効く一方向の調整のため、これまでの見え方が明るくなることはありません）。<b>暗所の下限</b> を上げると真っ暗な場所でもうっすら輪郭が残ります。あわせて <b>環境色になじませる（Env Tint）</b> を上げると、<b>周囲の光の色みがリムの色に乗ります</b>（寒色の場所では青寄り、暖色の場所では暖色寄り）。色みだけを寄せて明るさは変えないため、環境順応と組み合わせても二重に暗くなることはありません。どちらも Blend Mode の <code class="inl">Add</code> / <code class="inl">Multiply</code>、および Unlit に同じように効きます。<b>環境順応は既定 ON（= 1）</b>ですが、<b>明るい場所での見え方は従来と変わりません</b>（暗い側にだけ効くため）。従来どおり明るさが一定のリムにしたい場合は環境順応を <code class="inl">0</code> にしてください（Rim Light の項を参照）。</li>
       <li><span class="vtag">v40_GUIr2</span> <b>Bake to Base（テクスチャ焼きこみ）</b> を追加しました。複数のレイヤー画像（デカール・ロゴ・模様・メイクなど）とカラー調整（Hue / Saturation / Brightness）を、<b>ベーステクスチャへ焼きこんで1枚の画像にまとめる Unity エディタ用のツール</b>です。実行時に重ねられるテクスチャレイヤーは1枚までですが、焼きこみなら<b>枚数に制限がなく</b>、焼いた後もテクスチャは1枚のままなので<b>実行時の負荷もテクスチャメモリも増えません</b>。マテリアル Inspector の <b>Texture Layer の下</b>に追加された <code class="inl">Bake to Base</code> から操作します。<b>上の Texture Layer に設定した画像をそのまま焼きこめる</b>ので、「Texture Layer で位置や合成方法を決める → 焼く → 空いたスロットに次のデカールを置く」を繰り返せば何枚でも重ねられます（焼きこみ後は同じ絵が二重に乗らないよう <b>Texture Layer が自動で OFF</b> になり、焼いた設定はレシピに取り込まれるので<b>前に焼いた分が消えることはありません</b>）。カラー調整も同様に<b>焼き重ね</b>ができます。焼く前に<b>実際のモデル上で焼き上がりを確認できるプレビュー</b>があり、<b>プレビュー中に設定を動かせばリアルタイムでモデルに反映されます</b>。プレビューと最終出力は同じ処理で作られるため見え方が一致します。焼きこみ結果は<b>新しい PNG として保存</b>され、元のテクスチャは変更しません。設定（レシピ）は保存されるので、いつでも1クリックで焼き直せます。<b>シェーダー本体は変更していないため、既存マテリアルの見た目・実行時の負荷は完全に従来どおり</b>です（Bake to Base の項を参照）。</li>
@@ -367,9 +390,24 @@ details .dbody li{margin-bottom:10px}
   <div class="note info" data-label="NOTE — 配置場所について">
     <p><code class="inl">ARLitToonGUI.cs</code> は必ず <code class="inl">Editor</code> フォルダ内に配置してください。フォルダ外に置いた場合でも <code class="inl">#if UNITY_EDITOR</code> ガードにより動作しますが、<code class="inl">Editor</code> 内への配置を推奨します。</p>
   </div>
-  <p>以降のセクションの並びは Unity の Inspector（マテリアル設定画面）の表示順と同じです。Inspector と本ガイドを見比べながら設定できます。</p>
-  <div class="note tip" data-label="🌐 表示言語の切り替え">
-    <p>Inspector ヘッダ（<code class="inl">✦ ARLit Toon ✦</code>）の直下に言語トグル（<b>日本語 / English</b>）があります。ラベルとヘルプ文の表示言語を切り替えられます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません）。</p>
+  <div class="note info" data-label="NOTE">
+    <p>セクションの並びは Unity の Inspector（マテリアル設定画面）の表示順と同じです。Inspector と本ガイドを見比べながら設定できます。</p>
+  </div>
+  <div class="note info" data-label="NOTE — 表示言語の切り替え">
+    <p>Inspector ヘッダ（<code class="inl">✦ ARLit Toon ✦</code>）の直下に、左寄せの言語タブ（<b>日本語 / English</b>）があります。ラベルとヘルプ文の表示言語を切り替えられます。設定はエディタ単位で記憶され、すべてのマテリアルに反映されます（マテリアル自体には保存されません）。</p>
+  </div>
+  <div class="note info" data-label="NOTE — ヘルプ（説明文）の表示切り替え">
+    <p>言語タブの<b>右隣</b>に <b>「ヘルプ非表示」／「ヘルプ表示」</b> のタブがあります（<b>初期状態はヘルプ表示 ON</b>＝タブには「ヘルプ非表示」と出ます）。タブの文言は<b>押したときに起きること</b>を表します。押すと各項目の<b>解説文が一括で隠れ</b>、プロパティだけのコンパクトな表示になります。操作に慣れたあとや、画面が狭いときにどうぞ。<b>設定値や見た目には一切影響しません</b>（表示だけの設定で、エディタ単位で記憶されます）。なお<b>ヘルプの文字サイズはプロパティ名と同じ大きさ</b>で、エディタの文字サイズ設定に自動で追随します。</p>
+  </div>
+  <div class="note warn" data-label="⚠ 次の 2 つは、ヘルプ非表示でも隠れません">
+    <p>どちらも「設定したのに効かない」の<b>原因を伝えるもの</b>で、隠すと原因が追えなくなるためです。</p>
+    <ul style="margin:4px 0 0 20px">
+      <li><b>警告メッセージ（黄色のアイコン）</b></li>
+      <li><b>項目が丸ごと無効になっている理由の説明</b>（例：Unlit モードが ON のとき、<code class="inl">PBR（BRDF）</code>・<code class="inl">Lighting &amp; Shadow</code>・<code class="inl">Toon Shadow</code>・<code class="inl">Back Light</code> に出る案内）</li>
+    </ul>
+  </div>
+  <div class="note info" data-label="NOTE — Web 版ガイドを開く">
+    <p>ヘルプ切り替えタブの<b>右隣</b>の <b>「Web」</b> ボタンを押すと、本ガイドの Web 版がブラウザで開きます。<b>表示言語が English のときは英語版のページ</b>が開きます。</p>
   </div>
   </div>
 </section>
@@ -377,25 +415,25 @@ details .dbody li{margin-bottom:10px}
 <!-- ============ RENDERING ============ -->
 <section id="rendering">
   <div class="sec-head rv"><div class="num">SEC. 02 — CORE</div><h2>Transparency / Rendering</h2><div class="sub">// 透明度と描画設定</div></div>
-
   <div class="rv">
-  <p>用途に合わせて Preset から選択するだけで、内部のブレンドや Cutoff 設定が自動で最適化されます。基本的には <b>Preset を選ぶだけ</b>で、詳細設定を手動で触る必要はありません。</p>
+  <p>用途に合わせて Preset から選択するだけで、内部のブレンドや Cutoff 設定が自動で最適化されます。基本的には <b>Preset を選ぶだけ</b>で、下記の詳細設定を手動で触る必要はありません。</p>
+  </div>
+  <div class="rv">
   <h4><span class="hx">#</span> Blend Preset（ブレンドプリセット）</h4>
-  <div class="cards">
-    <div class="card"><div class="cn">Opaque</div><div class="cd">不透明（デフォルト）。通常の体や服、武器など。最も処理が軽いです。</div></div>
-    <div class="card"><div class="cn">Cutout</div><div class="cd">葉っぱや金網など。テクスチャのアルファでバッサリと切り抜きます。</div></div>
-    <div class="card"><div class="cn">Fade</div><div class="cd">魔法のエフェクトなど、全体が徐々に透けていく表現。<b>アルファ値で段階的にフェードさせたい場合はこのモード。</b>複数光源下でも白飛びしない事前乗算（Premult）方式に最適化。</div></div>
-    <div class="card"><div class="cn">Additive</div><div class="cd">炎や光る魔法陣など、背景に色を加算して光らせる表現。アルファ値によるフェードも可能。</div></div>
-    <div class="card"><div class="cn">Transparent</div><div class="cd">ガラスやスライムなど。透明にしつつ光の反射（ハイライト）は残したい時に。<b>常時半透明の「素材の質感」表現向け</b>で、アルファで徐々に消すフェード用途ではありません。</div></div>
+  <ul>
+    <li><b>Opaque</b>: 不透明（デフォルト）。通常の体や服、武器など。最も処理が軽いです。</li>
+    <li><b>Cutout</b>: 葉っぱや金網など。テクスチャのアルファでバッサリと切り抜きます。</li>
+    <li><b>Fade</b>: 魔法のエフェクトなど、全体が徐々に透けていく表現。<b>アルファ値で段階的にフェード（フェードイン/アウト）させたい場合はこのモードを使います。</b>※複数光源下でも白飛びしない事前乗算（Premult）方式に最適化されています。</li>
+    <li><b>Additive</b>: 炎や光る魔法陣など、背景に色を加算して光らせる表現。アルファ値によるフェードも可能です。</li>
+    <li><b>Transparent</b>: ガラスやスライムなど。透明にしつつ光の反射（ハイライト）は残したい時に。<b>常時半透明の「素材の質感」表現向けで、アルファで徐々に消すフェード用途ではありません。</b></li>
+  </ul>
+  <p>（※半透明系のプリセットでは、完全な透明部分に発生する描画エラーを防ぐための安全処理が自動適用されます）</p>
   </div>
-  <p style="font-size:12.5px">（※半透明系のプリセットでは、完全な透明部分に発生する描画エラーを防ぐための安全処理が自動適用されます）</p>
-  <div class="note tip" data-label="💡 TIP — アルファでフェードさせたいときは Fade を使ってください">
-    <p>他のシェーダーでは Transparent 系モードでアルファによる段階的フェードを行えることが多いですが、本シェーダーの <b>Transparent はガラス等の常時半透明の質感表現に最適化</b>されており、マテリアルの透明度（<code class="inl">_Color.a</code> やテクスチャのアルファ）を下げても、ハイライト（鏡面反射）・環境反射（映り込み）・発光は<b>透けずに残ります</b>（質感を保つため）。アニメーションで <code class="inl">_Color.a</code> を 0 にしても照り返し・映り込み・発光だけが残ります。</p>
-    <p>そのため、マテリアルのアルファや <code class="inl">_Color</code> のアルファでオブジェクト全体を<b>フェードイン/アウト</b>したい場合は、<b>Fade（不透明な発光・反射も含めて透ける）</b>または <b>Additive</b> を選択してください。</p>
-    <p><b>【例外：パーティクルの寿命フェード】</b> Transparent でも、<b>パーティクルの頂点カラーのアルファ（Color over Lifetime）</b>で下げた場合は、ハイライト・環境反射・発光（Dissolve エッジ・Rim・Emission 含む）もすべて<b>完全に消えます</b>。これは「マテリアル透明度＝ガラスの透け具合（映り込みは残る）」「パーティクル寿命＝存在そのもの（消えれば全部消える）」を区別しているためです。<b>Transparent のガラスマテリアルを Dissolve で消すエフェクト</b>もこの仕組みで、映り込みごと自然に消滅します。<code class="inl">Vertex Color Blend Mode</code> を <code class="inl">Multiply</code> にして使ってください。</p>
+  <div class="rv">
+  <div class="note tip" data-label="💡 アルファでフェードさせたいときは Fade を使ってください">
+    <p>他のシェーダーでは Transparent 系モードでアルファによる段階的フェードを行えることが多いですが、本シェーダーの <b>Transparent はガラス等の常時半透明の質感表現に最適化</b>されており、マテリアルの透明度（<code class="inl">_Color.a</code> やテクスチャのアルファ）を下げても、ハイライト（鏡面反射）・環境反射（映り込み）・発光は<b>透けずに残ります</b>（質感を保つため）。アニメーションで <code class="inl">_Color.a</code> を 0 にしても照り返し・映り込み・発光だけが残ります。<br>そのため、マテリアルのアルファや <code class="inl">_Color</code> のアルファでオブジェクト全体を<b>フェードイン/アウト</b>したい場合は、<b><code class="inl">Fade</code>（不透明な発光・反射も含めて透ける）</b> または <b><code class="inl">Additive</code></b> を選択してください。<br><b>【例外：パーティクルの寿命フェード】</b> Transparent でも、<b>パーティクルの頂点カラーのアルファ（Color over Lifetime）</b> で下げた場合は、ハイライト・環境反射・発光（Dissolve エッジ・Rim・Emission 含む）もすべて<b>完全に消えます</b>。これは「マテリアル透明度＝ガラスの透け具合（映り込みは残る）」「パーティクル寿命＝存在そのもの（消えれば全部消える）」を区別しているためです。<b>Transparent のガラスマテリアルを Dissolve で消すエフェクト</b>もこの仕組みで、映り込みごと自然に消滅します。<code class="inl">Vertex Color Blend Mode</code> を <code class="inl">Multiply</code> にして使ってください。</p>
   </div>
   </div>
-
   <div class="rv">
   <h4><span class="hx">#</span> 詳細設定（通常は変更不要）</h4>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -404,12 +442,12 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Alpha Cutoff</td><td>テクスチャのアルファ値が、この数値より低い部分を切り抜く（消す）しきい値です。主に Cutout モードで使用します。半透明系プリセットでは透明部分のエラー防止のため自動で <code class="inl">0.001</code> に設定されます。</td></tr>
     <tr><td>Render Queue（描画順）</td><td>オブジェクトを描画する順番です。数値が大きいほど後（手前）に描画されます。Preset が自動設定します。</td></tr>
   </tbody></table>
-  <div class="note tip" data-label="💡 TIP — 描画順のバグ対策（Zソート）">
-    <p><code class="inl">Fade</code> / <code class="inl">Additive</code> は既定で <code class="inl">Render Queue</code> = <b>3001</b>（ガラス等の <code class="inl">Transparent</code> = 3000 より手前）に設定されます。これは、同じ Render Queue（3000 同士）だと Unity が前後をオブジェクト単位の距離で並べ替えるため、半透明エフェクトがガラスの裏に回り込んで見える現象を避けるためです。</p>
-    <p>それでもパーティクルやエフェクトが奥のガラスなどに隠れて見えなくなる場合は、インスペクターの Render Queue の数値を <b>3050</b> などへさらに上げることで手前に描画できます。逆に手前に出すぎる場合は数値を下げてください。</p>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 TIP">
+    <p>💡 <b>【描画順のバグ対策（Zソート）】</b><code class="inl">Fade</code> / <code class="inl">Additive</code> は既定で <code class="inl">Render Queue</code> = <b>3001</b>（ガラス等の <code class="inl">Transparent</code> = 3000 より手前）に設定されます。これは、同じ <code class="inl">Render Queue</code>（3000 同士）だと Unity が前後をオブジェクト単位の距離で並べ替えるため、半透明エフェクトがガラスの裏に回り込んで見える現象を避けるためです。それでもパーティクルやエフェクトが奥のガラスなどに隠れて見えなくなる場合は、インスペクターの <code class="inl">Render Queue</code> の数値を <b>3050</b> などへさらに上げることで手前に描画できます。逆に手前に出すぎる場合は数値を下げてください。</p>
   </div>
   </div>
-
   <div class="rv">
   <h4><span class="hx">#</span> Distance Fade（カメラ距離フェード）</h4>
   <p>カメラからの距離に応じてオブジェクトのアルファをフェードさせる機能です。一人称視点で自分のオーラやエフェクトが視界を塞ぐのを防いだり、近づくと消える演出に使えます。輪郭線（Outline）も本体と同じ距離設定でいっしょにフェードします。</p>
@@ -418,26 +456,51 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Fade Near</td><td>この距離（カメラからの距離）以下で完全に透明になります。</td></tr>
     <tr><td>Fade Far</td><td>この距離以上で完全に不透明（通常表示）になります。</td></tr>
   </tbody></table>
-  <p><b>仕様上の注意:</b> アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<b>Cutout / Opaque でも Dither Fade を ON にすれば使用できます</b>（アルファが網点の密度として反映されます）。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>アルファを操作する機能のため、半透明プリセット（<b>Fade / Additive / Transparent</b>）での使用を前提としています。<b>Cutout / Opaque でも Dither Fade を ON にすれば使用できます</b>（アルファが網点の密度として反映されます）。<code class="inl">Fade Near</code> を <code class="inl">Fade Far</code> より大きい値にすると挙動が反転し、「遠いほど透明」になります。<code class="inl">_DistanceFadeNear</code> / <code class="inl">_DistanceFadeFar</code> はアニメーションも可能です。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Distance Darken（カメラ距離で減光）</h4>
+  <p>カメラからの距離に応じて、本体の色を<b>減光色（既定は黒）へ近づける</b>機能です。上の Distance Fade がアルファ（透明度）を操作するのに対し、こちらは<b>色そのもの</b>を変えるため、<b>不透明（Opaque）のマテリアルでも作用</b>します。「近づくと暗くなる」「なでなで時に手元を暗くする」「覗き込みを暗くして隠す」といった演出に使えます。Distance Fade とは独立したトグルで、併用もできます。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Use Distance Darken</td><td>機能の有効/無効。</td></tr>
+    <tr><td>Darken Color</td><td>近づいたときに寄せる色（既定は黒＝暗くする）。</td></tr>
+    <tr><td>Darken Near</td><td>この距離（カメラからの距離）以下で最も強く減光します。</td></tr>
+    <tr><td>Darken Far</td><td>この距離以上で元の色（通常表示）に戻ります。</td></tr>
+    <tr><td>Darken Strength</td><td>減光の最大の強さ（<code class="inl">0</code>＝無効／<code class="inl">1</code>＝Near で完全に Darken Color）。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>色を操作する機能のため、<b>不透明・半透明どちらのプリセットでも使用できます</b>。<code class="inl">Darken Near</code> を <code class="inl">Darken Far</code> より大きい値にすると挙動が反転し、「遠いほど暗い」になります。加算系の<b>発光（Emission / Rim / AudioLink 等）は減光の対象外</b>です（本体色のみが暗くなります）。<code class="inl">_DistanceDarkenColor</code> / <code class="inl">_DistanceDarkenStrength</code> などはアニメーションも可能です。</p>
+  </div>
+  </div>
+
 </section>
 
 <!-- ============ BASE ============ -->
 <section id="base">
   <div class="sec-head rv"><div class="num">SEC. 03 — CORE</div><h2>Base（基本の見た目）</h2><div class="sub">// キャラクターの肌や服、エフェクトの基本的な色と模様</div></div>
   <div class="rv">
+  <p>キャラクターの肌や服、エフェクトの基本的な色と模様を決定します。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Albedo テクスチャ</td><td>モデルの表面に貼り付ける基本の画像です。A（アルファ）チャンネルを持たせることで、切り抜きや半透明の表現も可能です。</td></tr>
     <tr><td>Color</td><td>全体の色合いを調整します。テクスチャの色を上書きして別の色にしたり、暗いワールドに合わせて少し暗く落としたい時に使います。（アニメーションで色を変えることも可能です）</td></tr>
     <tr><td>Color Intensity</td><td>色の明るさ（強度）を 0 から調整します。全体をパッと明るく見せたい時に数値を上げます。</td></tr>
     <tr><td>Hue Shift（色相）</td><td>テクスチャを編集せずに色相を回転させて色違いを作れます。<code class="inl">0</code> で無変化。アニメーションさせると虹色に変化させることもできます。</td></tr>
     <tr><td>Saturation（彩度）/ Brightness（明度）</td><td>彩度と明度を補正します。どちらも <code class="inl">1</code> で無変化（<code class="inl">2</code> で2倍）。色をくすませたり鮮やかにしたい時に。</td></tr>
-    <tr><td>Albedo/Normal Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> にスクロール速度を入れると、Albedo と Normal が同じ速度で流れます（<code class="inl">0</code> で停止）。流れる炎・水・スキャンライン等のエフェクトに使います。</td></tr>
+    <tr><td>Albedo/Normal Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> にスクロール速度を入れると、Albedo と Normal が同じ速度で流れます（<code class="inl">0</code> で停止）。流れる炎・水・スキャンライン等のエフェクトに使います。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
   </tbody></table>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — 補足">
     <p>Hue/Saturation/Brightness はデフォルト値（Hue=0 / Sat=1 / Bright=1）では一切処理を行わない（恒等変換）ため、既存マテリアルの見た目とパフォーマンスに影響しません。</p>
   </div>
   </div>
+
 </section>
 
 <!-- ============ TEXTURE LAYER ============ -->
@@ -445,50 +508,50 @@ details .dbody li{margin-bottom:10px}
   <div class="sec-head rv"><div class="num">SEC. 04 — CORE</div><h2>Texture Layer（重ね合わせ）</h2><div class="sub">// 2枚目の重ね合わせ・透明マスク</div></div>
   <div class="rv">
   <p>ベーステクスチャの上にもう1枚の画像を重ねる「色オーバーレイ」と、画像の明るさでベースを透明にくり抜く「透明マスク」の2つを備えた機能です。<b>両者は独立したトグル</b>で、片方だけ・両方の併用ができます（同じ Layer テクスチャを共有します）。</p>
-  <h4><span class="hx">#</span> ① 色オーバーレイ（Use Texture Layer）</h4>
-  <p>ロゴ・刺繍・ワンポイント模様・タトゥー・メイク・エフェクトの二層パターンなどに使えます。</p>
+  <p><b>① 色オーバーレイ（Use Texture Layer）</b> — ロゴ・刺繍・ワンポイント模様・タトゥー・メイク・エフェクトの二層パターンなどに使えます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Texture Layer</td><td>色オーバーレイの有効/無効。</td></tr>
     <tr><td>Layer テクスチャ (A=合成マスク)</td><td>重ねる画像を設定します。<b>画像のアルファ（透明度）チャンネルが合成強度のマスクになります</b>（白=合成 / 黒=スキップ）。別途マスク画像を用意する必要はありません。Tiling/Offset でベースとは独立に配置・繰り返しを調整できます。</td></tr>
     <tr><td>Color Tint (HDR)</td><td>レイヤー画像にかける色味。HDR 対応のため、Add/Screen と組み合わせて発光的な重ねも可能です。</td></tr>
     <tr><td>Blend Mode</td><td>合成方法。<code class="inl">Normal</code>（通常の上重ね）/ <code class="inl">Multiply</code>（乗算・陰影や汚し）/ <code class="inl">Add</code>（加算・発光的な重ね）/ <code class="inl">Screen</code>（スクリーン・明るく重ねる）。</td></tr>
     <tr><td>Opacity</td><td>合成の強さ（<code class="inl">0</code>=完全に透明 〜 <code class="inl">1</code>=最大）。アニメーション可能で、模様をフェードイン/アウトさせられます。</td></tr>
-    <tr><td>Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> に速度を入れるとレイヤー画像が流れます（<code class="inl">0</code> で停止）。</td></tr>
+    <tr><td>Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> に速度を入れるとレイヤー画像が流れます（<code class="inl">0</code> で停止）。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
   </tbody></table>
-  </div>
-  <div class="rv">
-  <h4><span class="hx">#</span> ② 透明マスク（Use Texture Layer as Alpha Mask）</h4>
-  <p>グレースケールのマスク画像でベース形状を切り抜く機能です。</p>
+  <p><b>② 透明マスク（Use Texture Layer as Alpha Mask）</b> — グレースケールのマスク画像でベース形状を切り抜く機能です。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Texture Layer as Alpha Mask</td><td>透明マスクの有効/無効。</td></tr>
     <tr><td>Layer / マスク テクスチャ</td><td>マスク画像を設定します（色オーバーレイと共有）。<b>画像の明るさが透明度になります</b>（黒=透明 / 白=不透明 / グラデーション=半透明）。色オーバーレイ OFF でマスクだけ使う場合は、このトグルを開くとテクスチャ欄が表示されます。</td></tr>
-    <tr><td>Scroll（スクロール）</td><td>マスクを流して、くり抜く位置を動かせます（<code class="inl">0</code> で停止）。</td></tr>
+    <tr><td>Scroll（スクロール）</td><td>マスクを流して、くり抜く位置を動かせます（<code class="inl">0</code> で停止）。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
   </tbody></table>
-  <p><b>マスクの使い方:</b> グレースケール（黒〜白）のマスク画像を用意し、透けさせたい部分を黒、残したい部分を白で描きます。中間色やグラデーションは半透明になります。色オーバーレイと併用する場合は同じ画像の<b>明るさ＝透明マスク／アルファ＝色の合成マスク</b>と役割が分かれます。</p>
-  <div class="note warn" data-label="⚠ 重要 — 描画モードの前提">
-    <p>透明マスクが見えるのは半透明系の <b>Blend Preset（Cutout / Fade / Transparent）</b>のときです。<code class="inl">Opaque</code>（不透明）では不透明度が無視されるため透けません。くっきり切り抜くなら <code class="inl">Cutout</code>、グラデーションで滑らかに透かすなら <code class="inl">Fade</code> が向いています。<code class="inl">Transparent</code> では素材の透明感を保つ設計上、反射・発光などのハイライトはマスクで消えずに残ります（ガラス表現用）。</p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — マスクの使い方">
+    <p>グレースケール（黒〜白）のマスク画像を用意し、透けさせたい部分を黒、残したい部分を白で描きます。中間色やグラデーションは半透明になります。色オーバーレイと併用する場合は同じ画像の <b>明るさ＝透明マスク／アルファ＝色の合成マスク</b> と役割が分かれます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 重要 — 描画モードの前提">
+    <p>透明マスクが見えるのは半透明系の <b>Blend Preset（Cutout / Fade / Transparent）</b> のときです。<code class="inl">Opaque</code>（不透明）では不透明度が無視されるため透けません。くっきり切り抜くなら <code class="inl">Cutout</code>、グラデーションで滑らかに透かすなら <code class="inl">Fade</code> が向いています。<code class="inl">Transparent</code> では素材の透明感を保つ設計上、反射・発光などのハイライトはマスクで消えずに残ります（ガラス表現用）。</p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — 仕様上の注意">
     <p>色オーバーレイの重ね合わせはオブジェクトの<b>色（見た目）にのみ</b>作用し、不透明度は変更しません。色相シフト（Hue Shift）はベース色のみに作用し、このレイヤー画像には影響しません（ロゴ等の色を保つため）。無効時はほぼ負荷ゼロです。</p>
   </div>
   </div>
-
   <div class="rv">
   <h4><span class="hx">#</span> Dither Fade（ディザ擬似半透明）</h4>
   <p>Cutout / Opaque の描画のまま、細かい網点（ディザ）パターンでピクセルを間引き、アルファ値どおりの<b>擬似半透明</b>を作る機能です。上の透明マスクと同じ「アルファで抜く」系の機能のため、本セクションに配置しています。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Dither Fade</td><td>機能の有効/無効（既定 OFF）。ON にするとテクスチャやレイヤーマスクのアルファ値がそのまま「残すピクセルの割合」になります。</td></tr>
   </tbody></table>
+  </div>
+  <div class="rv">
   <div class="note tip" data-label="💡 主な用途 — 前髪を表情に重ねて透かす">
-    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 仕様上の注意">
-    <p>網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。</p>
-  </div>
-  <div class="note tip" data-label="💡 輪郭線（Outline）との併用">
-    <p>Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
+    <p>Fade などの半透明プリセットは Unity の仕様で<b>落ち影（Receive Shadow）を受けられません</b>。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade ON</b> にすることで、影を受けながらアルファどおりに透かすことができます。<b>仕様上の注意:</b> 網点はピクセル単位の間引きのため、至近距離では点々のパターンが見える場合があります（アンチエイリアス（MSAA）が有効な環境では目立ちにくくなります）。<b>Scene ビューと Game ビュー、また VRChat 実機では、解像度・アンチエイリアス・カメラ角度が異なるため網点の見え方（透け具合）が変わります。最終的な見た目は VRChat 実機でご確認ください。</b> Alpha Cutoff は併用でき、Cutoff 未満のアルファは従来どおり完全に切り抜かれます。Distance Fade やテクスチャレイヤーの透明マスクによるアルファも網点として反映されます。半透明プリセット（Fade / Transparent / Additive）ではこの機能は無効です（通常のアルファブレンドが使われます）。<b>輪郭線（Outline）との併用:</b> Outline の <b>Alpha Sync が ON</b>（既定）のとき、輪郭線も本体と同じ網点で追従します（網点の穴から輪郭色が面状に透けて飽和して見えることを防ぎます）。Alpha Sync を OFF にすると輪郭線は網点に追従せず常時表示になります。</p>
   </div>
   </div>
+
 </section>
 
 <!-- ============ BAKE TO BASE ============ -->
@@ -496,14 +559,18 @@ details .dbody li{margin-bottom:10px}
   <div class="sec-head rv"><div class="num">SEC. 05 — CORE</div><h2>Bake to Base（テクスチャ焼きこみ）</h2><div class="sub">// レイヤーとカラー調整をベーステクスチャへ焼きこむ</div></div>
   <div class="rv">
   <p>複数のレイヤー画像（デカール・ロゴ・模様・メイクなど）とカラー調整を、<b>ベーステクスチャへ焼きこんで1枚の画像にまとめる Unity エディタ用のツール</b>です。上の Texture Layer が「実行時に1枚だけ重ねる」機能なのに対し、こちらは<b>あらかじめ1枚に焼いてしまう</b>ため、<b>重ねる枚数に制限がなく、実行時の負荷もテクスチャメモリも増えません</b>（焼いた後はテクスチャ1枚のままです）。</p>
-  <div class="note tip" data-label="💡 提供ファイルについて">
-    <p><b>この機能は追加ファイル <code class="inl">Editor/ARLitToonBaker.cs</code> で提供されます。</b>配布パッケージには常に含まれています。このファイルが無い場合、マテリアル Inspector に <code class="inl">Bake to Base</code> の項目が表示されないだけで、シェーダーの他の機能はすべて通常どおり動作します。</p>
   </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 TIP">
+    <p>💡 <b>この機能は追加ファイル <code class="inl">Editor/ARLitToonBaker.cs</code> で提供されます。</b>配布パッケージには常に含まれています。このファイルが無い場合、マテリアル Inspector に <code class="inl">Bake to Base</code> の項目が表示されないだけで、シェーダーの他の機能はすべて通常どおり動作します。</p>
+  </div>
+  </div>
+  <div class="rv">
   <table><thead><tr><th>項目</th><th>説明</th></tr></thead><tbody>
     <tr><td>焼きこみレシピを作成</td><td>このマテリアル用の設定ファイル（レシピ）を作ります。マテリアルと同じフォルダに <code class="inl">&lt;マテリアル名&gt;_BakeRecipe.asset</code> として保存され、レイヤー構成が記録されます。</td></tr>
     <tr><td>焼き元テクスチャ (Base)</td><td>焼きこみの土台になる画像です。レシピを作った時点の Albedo テクスチャが自動で入ります。<b>焼いた後もこの項目は変わりません</b>（何度でもここから焼き直せます）。<b>焼いたテクスチャはこの画像と同じフォルダに保存されます</b>（直下の <code class="inl">出力フォルダ</code> に表示されます）。</td></tr>
     <tr><td>出力解像度</td><td>既定は「焼き元と同じ」です。変更する場合は焼き元の縦横比を保ったまま拡大縮小されます。</td></tr>
-    <tr><td>基本色の調整（プレビューで表示）</td><td><b>焼き元テクスチャにだけ</b>掛かる Hue / Saturation / Brightness です。<b>この調整はマテリアルには直接反映されず、プレビューまたは焼きこみで初めて見えます。レイヤーには作用しません</b>。1つの値としてだけ持つので、何度焼き直しても調整が積み重なることはありません。</td></tr>
+    <tr><td>基本色の調整（プレビューで表示）</td><td><b>焼き元テクスチャにだけ</b>掛かる Hue / Saturation / Brightness です。<b>この調整はマテリアルには直接反映されず、プレビューまたは焼きこみで初めて見えます。</b><b>レイヤーには作用しません</b>。1つの値としてだけ持つので、何度焼き直しても調整が積み重なることはありません。</td></tr>
     <tr><td>マテリアルの カラー調整 (HSV) も取り込む</td><td>マテリアル側の Hue / Saturation / Brightness を焼きこみに含め、焼いた後は <b>基本色の調整</b> へまとめて、マテリアル側は初期値（0 / 1 / 1）へ戻します（既定 ON）。<b>チェックボックスのみで、値の編集は上の Base セクションで行います</b>（プレビュー中は取り込む値が数値で表示されます）。<b>Color と Color Intensity は焼きこみません</b>（色変えギミック等でアニメーションさせるために残します）。</td></tr>
     <tr><td>Texture Layer も焼きこむ</td><td>上の <b>Texture Layer</b> に設定したレイヤーを、<b>最下層（いちばん奥）</b>に重ねて焼きこみます（既定 ON）。テクスチャ・Color Tint・Blend Mode・Opacity・Tiling / Offset・透明マスクの設定がそのまま反映されます。<b>焼きこみ後は Texture Layer が自動的に OFF</b> になり、その設定は下のレイヤー一覧の<b>先頭</b>へ取り込まれます（重ね順は取り込み後に <code class="inl">▲▼</code> で入れ替えられます）（同じ絵が二重に乗るのを防ぎ、かつ焼き直しても同じ結果になるようにするためです）。スロットが空くので、次のデカールに使えます。</td></tr>
     <tr><td>レイヤー</td><td>焼きこむ画像が <b>上から順に重なります</b>（一覧の上にあるものほど奥、下にあるものほど手前）。<code class="inl">▲▼</code> で順番の入れ替え、<code class="inl">✕</code> で削除、左のチェックで一時的な無効化ができ、値も後から編集できます。焼きこみは毎回この一覧どおりに焼き元テクスチャから作り直すため、<b>後から直して焼き直せます</b>。焼きこんだ Texture Layer は <code class="inl">（Texture Layer から取り込み）</code> と表示されます。</td></tr>
@@ -511,10 +578,7 @@ details .dbody li{margin-bottom:10px}
     <tr><td>レイヤーを追加</td><td>Texture Layer とは別に、画像を<b>何枚でも</b>ここへ足して一度に焼きこめます（実行時には存在しないレイヤーです）。1枚ごとに <b>テクスチャ / Color Tint (HDR) / Blend Mode / Opacity / Tiling / Offset</b> と上記の調整を指定できます。Blend Mode と Opacity の意味は Texture Layer と同じです。</td></tr>
     <tr><td>輝度でベースをくり抜く</td><td>そのレイヤー画像の明るさを透明マスクとして使い、ベースの不透明度をくり抜きます（黒=透明 / 白=不透明）。Texture Layer の「透明マスク」と同じ計算です。</td></tr>
   </tbody></table>
-  </div>
-
-  <div class="rv">
-  <h4><span class="hx">#</span> 使い方の流れ</h4>
+  <p><b>使い方の流れ</b></p>
   <ol>
     <li>上の <b>Texture Layer</b> に重ねたい画像を設定し、位置（Tiling / Offset）や合成方法（Blend Mode）を実際の見た目で決めます。</li>
     <li><code class="inl">Bake to Base</code> を開き、<code class="inl">焼きこみレシピを作成</code> を押します。さらに何枚も一度に重ねたい場合は <code class="inl">レイヤーを追加</code> で登録します。</li>
@@ -523,92 +587,140 @@ details .dbody li{margin-bottom:10px}
     <li>さらに重ねたい場合は、空いた <b>Texture Layer</b> に次の画像を設定して 3〜4 を繰り返します。</li>
     <li>やり直したいときは <code class="inl">焼き元テクスチャへ戻す</code> で、<b>一度も焼いていない状態</b>（焼き元テクスチャ・HSV・Texture Layer の ON/OFF）に戻ります。このとき、焼きこみが自動で足したステップ（カラー調整と取り込まれた Texture Layer）もまとめて取り消されます（自分で追加したレイヤーは残ります）。</li>
   </ol>
-  <div class="note tip" data-label="💡 何度でも焼き重ねられます">
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 何度でも焼き重ねられます">
     <p>焼きこみは毎回「焼き元テクスチャ ＋ 焼きこみステップ」から作り直しますが、<b>焼いた内容はステップとして残る</b>ので、2回目以降も前に焼いた分は消えません。毎回元から作り直すため、<b>何度焼き重ねても画質が劣化しません</b>。</p>
   </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — カラー調整は「基本色」と「各レイヤー」で独立しています">
-    <p>基本色の調整は焼き元テクスチャだけに、レイヤーの調整はそのレイヤーだけに掛かり、<b>互いに影響しません</b>。デカールの色だけを変えたいときはそのレイヤーの調整を、下地だけを変えたいときは基本色の調整を動かしてください。どちらも<b>積み重なりません</b>（何度焼き直しても二重に掛かることはありません）。</p>
-    <p>なお <code class="inl">マテリアルの カラー調整 (HSV) も取り込む</code> で取り込まれる調整は <b>基本色にだけ</b>掛かります。すでにレイヤーがある状態でマテリアル側のスライダーを動かすと、画面では全体の色が変わって見えるのに焼き結果はベースだけが変わる、という差が出るため、その場合は Inspector に注意が表示されます（レイヤーの色も変えたいときは各レイヤーの調整を使ってください）。</p>
+    <p>基本色の調整は焼き元テクスチャだけに、レイヤーの調整はそのレイヤーだけに掛かり、<b>互いに影響しません</b>。デカールの色だけを変えたいときはそのレイヤーの調整を、下地だけを変えたいときは基本色の調整を動かしてください。どちらも<b>積み重なりません</b>（何度焼き直しても二重に掛かることはありません）。なお <code class="inl">マテリアルの カラー調整 (HSV) も取り込む</code> で取り込まれる調整は <b>基本色にだけ</b>掛かります。すでにレイヤーがある状態でマテリアル側のスライダーを動かすと、画面では全体の色が変わって見えるのに焼き結果はベースだけが変わる、という差が出るため、その場合は Inspector に注意が表示されます（レイヤーの色も変えたいときは各レイヤーの調整を使ってください）。</p>
   </div>
-  <div class="note info" data-label="NOTE — 焼きこんだ結果が反映されているか確かめるには">
-    <p><code class="inl">Bake to Base</code> の下部に出る <b><code class="inl">直近の結果</code></b> を見てください（例：<code class="inl">焼きこみ: 基本色の調整 あり / レイヤー 2 枚（うち調整あり 1 枚）（うち Texture Layer 1 枚）</code>）。ここが <code class="inl">レイヤー 0 枚</code> なら、その回は画像が焼かれていません（Texture Layer が OFF／テクスチャ未設定などが原因です）。</p>
   </div>
-  <div class="note tip" data-label="💡 元の画像も、以前に焼いた画像も上書きされません">
-    <p>焼きこみ結果は毎回<b>新しいファイル</b>として保存されます（不要になった古い焼き結果は Project ウィンドウから削除してください）。また、カラー調整（HSV）を焼きこんだときは、<b>同じ調整が二重に掛からないよう Hue / Saturation / Brightness が自動で初期値（0 / 1 / 1）に戻ります</b>。これらの操作は Unity の Undo（<code class="inl">Ctrl+Z</code>）で取り消せます。</p>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <p><b>焼きこんだ結果が反映されているか確かめるには</b>、<code class="inl">Bake to Base</code> の下部に出る <b><code class="inl">直近の結果</code></b> を見てください（例：<code class="inl">焼きこみ: 基本色の調整 あり / レイヤー 2 枚（うち調整あり 1 枚）（うち Texture Layer 1 枚）</code>）。ここが <code class="inl">レイヤー 0 枚</code> なら、その回は画像が焼かれていません（Texture Layer が OFF／テクスチャ未設定などが原因です）。</p>
   </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 元の画像も、以前に焼いた画像も上書きされません">
+    <p>焼きこみ結果は毎回<b>新しいファイル</b>として保存されます（不要になった古い焼き結果は Project ウィンドウから削除してください）。また、カラー調整（HSV）を焼きこんだときは、<b>同じ調整が二重に掛からないよう Hue / Saturation / Brightness が自動で初期値（0 / 1 / 1）に戻ります</b>。これらの操作は Unity の Undo（Ctrl+Z）で取り消せます。</p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — プレビューと最終結果は同じ処理で作られます">
     <p>ただし、プレビューは無圧縮・保存後は圧縮設定が効くため、色にごくわずかな差が出ることがあります。<b>最終確認は保存後</b>に行ってください。</p>
   </div>
-  <div class="note tip" data-label="💡 プレビュー中のカラー調整について">
-    <p><b>プレビュー中のカラー調整は <code class="inl">基本色の調整</code> と各レイヤーの <code class="inl">レイヤーの調整</code> で行います。</b> プレビューを開始すると、マテリアル側の Hue / Saturation / Brightness は（焼きこみに含まれるため）いったん初期値に戻ります。<b>色を詰めたいときはこの2つのスライダーを動かしてください</b>（リアルタイムに反映され、その値のまま焼きこまれます）。</p>
   </div>
-  <div class="note warn" data-label="⚠ 仕様上の注意 — 焼けるもの・焼けないもの">
-    <p>焼きこみは UV 空間の操作です。<b>時間で動く要素は焼けません</b>（Texture Layer の Scroll など）。Scroll が 0 以外のときは注意が表示され、<b>停止状態（開始位置）の絵</b>が焼かれます。位置は Scroll を 0 にして Tiling / Offset で合わせてください。また、<b>焼いた後はレイヤーを個別にアニメーションできません</b>（スクロール・フェード・色変え）。動かしたい画像が1枚あるなら Texture Layer（実行時合成）、動かさない意匠は焼きこみ、という使い分けになります。</p>
-    <p>なお、<b>Color に色を付けた状態でカラー調整（HSV）を焼きこむと、焼く前後で色がわずかに変わる</b>ことがあります（実行時は Color を掛けてから HSV、焼きこみは画像に HSV を掛けてから Color の順になるためです）。この条件に当てはまるときは Inspector に注意が表示されます。プレビューで確認するか、Color を白にしてから焼いてください。</p>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — プレビュー中のカラー調整は 基本色の調整 と各レイヤーの レイヤーの調整 で行います">
+    <p>プレビューを開始すると、マテリアル側の Hue / Saturation / Brightness は（焼きこみに含まれるため）いったん初期値に戻ります。<b>色を詰めたいときはこの2つのスライダーを動かしてください</b>（リアルタイムに反映され、その値のまま焼きこまれます）。</p>
   </div>
   </div>
-</section>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意 — 焼けるもの・焼けないもの">
+    <p>焼きこみは UV 空間の操作です。<b>時間で動く要素は焼けません</b>（Texture Layer の Scroll など）。Scroll が 0 以外のときは注意が表示され、<b>停止状態（開始位置）の絵</b>が焼かれます。位置は Scroll を 0 にして Tiling / Offset で合わせてください。また、<b>焼いた後はレイヤーを個別にアニメーションできません</b>（スクロール・フェード・色変え）。動かしたい画像が1枚あるなら Texture Layer（実行時合成）、動かさない意匠は焼きこみ、という使い分けになります。なお、<b>Color に色を付けた状態でカラー調整（HSV）を焼きこむと、焼く前後で色がわずかに変わる</b>ことがあります（実行時は Color を掛けてから HSV、焼きこみは画像に HSV を掛けてから Color の順になるためです）。この条件に当てはまるときは Inspector に注意が表示されます。プレビューで確認するか、Color を白にしてから焼いてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Fake Shadow の焼きこみ（影メッシュ → 受け手のマスク）</h4>
+  <p><b>Fake Shadow Mesh（メッシュから落とす影）の落ち方を、影を受ける側のマテリアルの UV へ焼きこんで、Fake Shadow Texture（描いた影）として自動設定する</b>ツールです。メニュー <b>Tools → ALTIMA → ARLitToon Fake Shadow Bake</b>、または Bake to Base 内の <b>開く</b> ボタンから使用します。</p>
+  <p>焼きこむと影は静止画になるため<b>頭や光の動きには追従しなくなりますが</b>、そのかわり<b>深度テクスチャが生成されないワールドでも影が出せ、描画も1パス減ります</b>。</p>
+  <table><thead><tr><th>項目</th><th>説明</th></tr></thead><tbody>
+    <tr><td>アバター (ルート)</td><td>焼きこむアバターのルートを指定します。この中から <b>Fake Shadow Mesh が ON のマテリアル</b>を「影を落とす側」として自動的に探します。</td></tr>
+    <tr><td>影を落とすメッシュ</td><td>見つかった落とす側のメッシュ一覧です。<b>チェックを外したメッシュは影を落としません</b>。後ろ髪・尻尾など受け手に影を落とさないメッシュを外すと、<b>焼きこみ時間が大きく短くなります</b>（三角形の数がそのまま処理時間になるため）。マテリアル側で Fake Shadow Mesh を切り替えたら <b>再検索</b> を押してください。</td></tr>
+    <tr><td>影を受けるマテリアル</td><td>影を<b>受ける側</b>の候補一覧です（アバター内の ARLitToon マテリアルのうち、落とす側でないもの）。<b>最初は「頭まわりのマテリアル」だけにチェックが入ります</b>——焼きこみ時間は選んだ枚数にほぼ比例するため、靴やエフェクトまで最初から選ばれていると無駄に待つことになるからです。<b>必要な部位は手でチェックを足してください</b>（<b>すべて選択</b> で全部に戻せます。<b>頭だけ選択</b> でいつでも初期状態へ戻せます）。<b>チェックを外したマテリアルには焼きこみません</b>——影が乗ってほしくない材質を外してください。<b>外したマテリアルは設定を一切変更しません</b>（以前に焼いた Fake Shadow Texture もそのまま残ります）。各行の <code class="inl">[ ]</code> はそのマテリアルを使っている部位の名前です（同じ材質を複数の部位が使っている場合は並記されます）。</td></tr>
+    <tr><td>シーンのライトから向きを取る</td><td>ON でシーン内の Directional Light の向きを使います（既定 ON）。OFF にすると、<b>落とす側マテリアルの「光が弱いときの向き」</b>が使われます。</td></tr>
+    <tr><td>Fake Shadow Mesh の「光が弱い時の向き」設定を使用する</td><td>上を OFF にしたときに使われる向きの<b>確認用の表示</b>です。<b>ここでは変更できません</b>——値はマテリアルの <b>Fake Shadow Mesh</b> 節にある「光が弱いときの向き」で設定してください（設定場所を 1 か所にまとめ、値がずれないようにするためです）。</td></tr>
+    <tr><td>マスク解像度</td><td>出力する影マスク画像の解像度です（既定 2048）。</td></tr>
+    <tr><td>落とす側マテリアルの設定を引き継ぐ</td><td>ON で、<b>押し出し距離・影を受ける距離・影の色・濃さ</b>を落とす側の Fake Shadow Mesh の設定に合わせます（<b>既定 ON</b>）。<b>元の影と同じ見た目に焼くための項目</b>なので、通常は ON のままにしてください。OFF にすると下の手動値を使います。</td></tr>
+    <tr><td>影を受ける距離 (m)</td><td>影が届く奥行きの上限です（0.001〜0.1 m）。大きくしすぎると離れた部位まで暗くなり、<b>焼きこみにも時間がかかります</b>。<b>上の引き継ぎが ON のときは使われません</b>（落とす側の値が使われます。落とす側の設定値がこの範囲を超えていても、そのままの値が使われます）。</td></tr>
+    <tr><td>影にする被覆率</td><td>少し角度を変えた複数の判定のうち、<b>何割が影になったら影とするか</b>です（既定 0.5）。<b>上げるほど影が細く・出にくくなります</b>。目の窪みなど凹んだ場所に影が出てしまうときは上げてください。</td></tr>
+    <tr><td>ぼかし</td><td>焼き上がりに<b>ガウスぼかし</b>をかけて、<b>影の重なりに出る境界線を馴染ませます</b>（0〜10・<b>0 でぼかしなし</b>）。ぼけ具合はマスク解像度に比例するので、解像度を変えても見た目の印象は揃います。</td></tr>
+    <tr><td>受け手マテリアルへ設定まで行う</td><td>ON で、生成したマスクを受け手マテリアルに割り当て、<b>Fake Shadow Texture を自動で ON</b> にします（既定 ON）。</td></tr>
+    <tr><td>焼きこみ後に落とす側の Fake Shadow Mesh を OFF にする</td><td><b>既定 ON</b>。ON にすると、焼きこみ後に落とす側の Fake Shadow Mesh を OFF にし、受け手の <b>Fake Shadow Auto Fallback も OFF</b> にします（＝<b>焼いた影を常に表示</b>する／テクスチャで置き換える使い方）。<b>Fake Shadow Mesh を残したまま、焼いた影を「Mesh が出せないワールド用の保険」として持ちたい場合は OFF にしてください</b>（OFF なら Mesh はそのまま使われ、<b>焼いた影は Mesh が出せないワールドでだけ</b>表示されます）。</td></tr>
+    <tr><td>出力フォルダ</td><td>生成したマスク画像の保存先です。</td></tr>
+    <tr><td>書き出し形式</td><td>マスク画像のファイル形式です（<b>PNG</b> / <b>TGA</b>・<b>既定 TGA</b>）。<b>焼き上がりの中身とシェーダーでの見え方はどちらも同じ</b>で、<b>あとから画像編集ソフトで開き直して直せるか</b>だけが違います。<b>TGA なら焼いた影を手で修正できます</b>（下記）。ファイルサイズを抑えたい・修正の予定がない場合は PNG を選んでください。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — この焼きこみには 2 通りの使い方があります。上の「焼きこみ後に落とす側の Fake Shadow Mesh を OFF にする」で選びます">
+    <ul style="margin:4px 0 0 20px">
+      <li><b>テクスチャで置き換える（既定・チェック ON）</b> — 焼いたあと落とす側の Fake Shadow Mesh を OFF にし、受け手の <b>Fake Shadow Auto Fallback も OFF</b> にします。<b>どのワールドでも焼いた影が常に出ます</b>。頭や光の向きへの追従はなくなりますが、<b>負荷が軽く、ワールドを選びません</b>。</li>
+      <li><b>保険として持つ（チェック OFF）</b> — Fake Shadow Mesh を残したまま焼きます。受け手の <b>Fake Shadow Auto Fallback は ON</b> になり、<b>Fake Shadow Mesh が出せないワールドでだけ</b>焼いた影が出ます。Fake Shadow Mesh は深度テクスチャを使うため、<b>ワールドの設定によっては影が出せません</b>——その穴を埋める使い方です。</li>
+    </ul>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 焼いた影が出ないときは、受け手の Fake Shadow Auto Fallback を確認してください">
+    <p>この設定が ON の間、描いた影（Fake Shadow Texture）は<b>深度テクスチャが生成されないワールドでのみ</b>表示されます（落とす側の Fake Shadow Mesh と二重に掛かるのを防ぐためです）。<b>「焼きこみ後に落とす側の Mesh を OFF」を ON にして焼く（既定）と、この設定も自動で OFF になり、焼いた影が常に表示されます。</b></p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 影は共有マスクの B チャンネルに書き込まれます">
+    <p>すでに共有マスクを使っている場合（Matcap 2枚目など）、<b>R / G / A の内容はそのまま引き継がれます</b>ので、他の機能の設定が消えることはありません。ただし既存のマスク画像が読み取れない設定になっていた場合は R / G / A が黒で作り直され、その旨がレポートに出ます。<b>B を別の機能も読んでいる場合</b>（変換ツールでリムシェードのマスクが B に入ったマテリアルなど）は、そのマスクが焼いた影で置き換わります。このときは<b>レポートに警告が出ます</b>（元のマスク画像はプロジェクトに残っています）。その機能のマスクを空いているチャンネルへ描き直し、チャンネルの選択を変えてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 焼いた影を画像編集ソフトで直したいときは 書き出し形式 を TGA にしてください">
+    <p>共有マスクは <b>チャンネルごとに別々の情報を詰めたデータ</b>で、色画像ではありません。PNG はアルファを<b>透明度</b>として扱う形式のため、新しく作ったマスク（A ＝ 予約枠が 0 のまま）を画像編集ソフトで開くと<b>画像全体が透明</b>として表示され、B チャンネルに焼いた影を目で追えません。<b>TGA（32bit・非圧縮）ならアルファが独立したチャンネルとして残る</b>ので、RGB がそのまま見えて影の修正やチャンネルの差し替えができます。そのかわり<b>ファイルサイズは大きく</b>なります。<b>Unity へ読み込んだ結果はどちらも同じ</b>（インポート設定も同一）です。<b>既定は TGA</b> で、修正の予定がなくファイルサイズを抑えたい場合だけ PNG に切り替えてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — レポートの「マスクを生成: …」の行には色が付きます">
+    <p>その焼きこみで<b>実際に作られたテクスチャ</b>の行です（<code class="inl">マテリアル名 -&gt; 保存先パス</code>）。<b><code class="inl">[!]</code> で始まる警告の行は赤で表示されます</b>（焼きこみは完了していても、そのままでは見た目が崩れるなど、手を入れる必要がある内容です）。レポート全体を書き出したいときは見出し右の <b><code class="inl">全文をコピー</code></b> を押してください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 「頭まわり」の判定について">
+    <p>アバターの <b>Animator（humanoid）の Head ボーン</b>を中心にした球と、マテリアルごとの面の重なりで判定します（ボーンの名前や材質の名前では判定しません）。<b>顔と体が 1 つのメッシュに同居していてもマテリアル単位で分けられます。</b>humanoid の Animator が無いアバターでは判定できないため、<b>従来どおり全部にチェックが入ります</b>（一覧の上に、何枚が選ばれているか・なぜ絞れなかったかが表示されます）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 焼きこみ中は進捗バーが出ます">
+    <p>時間がかかりすぎるときは中断してください。<b>中断した場合、画像は 1 枚も書き出されず、マテリアルにも変更は加わりません</b>（焼きこみ前の状態がそのまま残ります）。時間を短くしたいときは、<b>「影を落とすメッシュ」で不要なメッシュのチェックを外す</b>のが最も効果的です。次に効くのが<b>「落とす側マテリアルの設定を引き継ぐ」を ON にする</b>ことです（落とす側に合わせた適切な距離が使われます）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — うまく焼けないときは、実行後のレポートを確認してください">
+    <p>「Fake Shadow Mesh が有効なマテリアルが無い」「マテリアルはあるがジオメトリを取得できない」「影が掛からなかった」を<b>それぞれ別のメッセージで区別して報告</b>します。落とす側と受け手が光の向きに重なっているか、受け手のマテリアルが ARLitToon になっているかを確認してください。</p>
+  </div>
+  </div>
 
-<!-- ============ LIGHTING ============ -->
-<section id="lighting">
-  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// 光と影・トゥーン調整</div></div>
-  <div class="rv">
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Unlit モード</td><td>光源を完全に無視して常に100%の明るさで表示します。パーティクルや発光エフェクト向けです。</td></tr>
-    <tr><td>Shadow Color / Intensity</td><td>影の色と、影の濃さ（暗さ）を調整します。</td></tr>
-    <tr><td>Shadow Border</td><td>光と影の境界線の位置を調整します。アニメ調（トゥーン）の表現を作る際に重要です。</td></tr>
-    <tr><td>Shadow Blur</td><td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td></tr>
-    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 ON</b>）。影の縞や粗さが目立つワールドでは OFF にするか、Shadow Blur を上げて馴染ませてください。</td></tr>
-  </tbody></table>
-  <div class="note info" data-label="NOTE — Receive Shadow の発現条件">
-    <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
-  </div>
-  <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
-    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b>を使用してください（Texture Layer の項を参照）。</p>
-    <p><b>GUI の表示（v40_GUIr1〜）:</b> 半透明プリセットでチェックが ON になっているときは、チェックボックスの右に <b>「（現在の Preset では無効）」</b> と表示され、下の説明も対処を案内する警告表示に切り替わります（表示のみで、設定値は変わりません）。チェックはそのまま操作できるので、<b>Opaque / Cutout に戻せば設定した内容がそのまま効きます</b>。</p>
-  </div>
-  </div>
-  <div class="rv">
-  <h4><span class="hx">#</span> Light Limit（環境光クランプ・白飛び/黒つぶれ防止）</h4>
-  <p>ワールドの環境光が過剰に明るい・暗いときに、アバターが受ける光量を一定範囲に制限し、白飛びや真っ暗で何も見えない状況を防ぎます。暗いワールドではより暗く、明るいワールドでは白飛びしない範囲で明るさに余裕を持たせています。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Light Min Limit</td><td><b>その部分が受ける光の下限</b>。影の中や暗いワールドで光量が下限に満たない分を、フラットな環境光として補います。<b>上げるほど影が持ち上がって明るくなり</b>、下げるほど影が濃く沈みます（<code class="inl">0</code> で下限なし＝影を完全に暗くできます）。</td></tr>
-    <tr><td>Light Max Limit</td><td>明所での明るさの上限（白飛び防止）。上げるほど明るいワールドで明るく見えます。</td></tr>
-  </tbody></table>
-  <div class="note tip" data-label="💡 TIP — Light Min Limit は「影の濃さの下限」としても使えます">
-    <p>下限は<b>画素ごとの受光量</b>に対して働くため、光の当たっている面はそのままに、<b>影になっている部分だけを持ち上げる</b>ことができます。暗いワールドで顔の陰影が潰れて見えないときや、影を薄く保ちたいときに上げてください。影の色そのものを変えたい場合は Lighting &amp; Shadow の <b>Shadow Color / Shadow Intensity</b> を使います（こちらは光量ではなく影の色と濃さを直接指定します）。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 仕様上の注意">
-    <p>本機能は<b>常時有効</b>です。Lit（Unlit OFF）のときのみ作用し、<b>Unlit モードのときは光に応答しないため、この項目自体が自動的に非表示</b>になります。発光（Emission）と環境反射の映り込みは制限の対象外です。<b>追加のリアルタイムライトも、メイン光・環境光とまとめて 1 回の上限・下限処理にかかります</b>（追加ライトは頂点単位・最大4灯として扱われます）。<code class="inl">_LightMinLimit</code> / <code class="inl">_LightMaxLimit</code> はアニメーション可能です。</p>
-  </div>
-  </div>
 </section>
 
 <!-- ============ PBR ============ -->
 <section id="pbr">
-  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// 物理ベースの質感・環境反射・ガラス/金属の映り込み</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 06 — LIGHTING</div><h2>PBR &amp; Specular</h2><div class="sub">// 物理ベースの質感・環境反射・ガラス/金属の映り込み</div></div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <p><b>※ Unlit モード（光を無視）を ON にすると、この節の他の項目はすべて効かなくなるため Inspector から隠れます</b>（<b>Unlit モードのチェックは残ります</b>。設定値も保持され、OFF に戻せば元の値のまま再表示されます）。<b><code class="inl">Lighting &amp; Shadow</code>・<code class="inl">Toon Shadow</code>・<code class="inl">Back Light</code> の項目も同様に隠れます。</b></p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Matcap と Rim Light は隠れません＝Unlit でも効きます">
+    <p>どちらも「光の当たり方」ではなく<b>見る向きだけ</b>で決まる擬似的な効果のためです。同じく <b>Emission・Glitter・AudioLink・Dissolve のふち・Fake Shadow・Outline も Unlit で効きます</b>。Unlit で効かないのは、<b>実際の光源と環境光を必要とするもの</b>（陰影・鏡面ハイライト・環境反射・逆光）だけです。</p>
+  </div>
+  </div>
   <div class="rv">
   <p>本シェーダーのライティングは<b>物理ベース（PBR BRDF）</b>です。金属・非金属の区別を Metallic で表し、光の総量が保たれるように計算されます。<b>トゥーンの陰影（Lighting &amp; Shadow の影色・境界・ぼかし）はその上にそのまま乗る</b>ため、セル塗りの質感は保たれます。</p>
-  <div class="note info" data-label="NOTE — Unlit モードのときは項目が隠れます">
-    <p><b>Unlit モード（光を無視）が ON のときは、この節の項目はすべて効かないため Inspector から隠れます</b>（設定値は保持され、OFF に戻せば元の値のまま再表示されます）。セクションの見出しは残り、代わりに復帰方法を案内するメッセージが表示されます。</p>
-  </div>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Unlit モード</td><td>光源を完全に無視して常に100%の明るさで表示します。パーティクルや発光エフェクト向けです。</td></tr>
     <tr><td>Metallic</td><td><b>その面が金属かどうか</b>。<code class="inl">1</code> に近づくほど<b>塗りの色（拡散光）が消えて、ハイライトと映り込みがベースカラーの色に染まります</b>（金は金色に、銅は赤銅色に光ります）。金・銅・真鍮などの金属は <code class="inl">1</code>、布・肌・プラスチックなどの非金属は <code class="inl">0</code> が基本で、<b>中間の値は基本的に使いません</b>。</td></tr>
     <tr><td>Smoothness</td><td>表面の滑らかさ。ハイライトの広がりと映り込みのぼやけ具合を同時に決めます（高い＝鋭く小さいハイライト＋くっきりした映り込み／低い＝広くぼやけた反射）。</td></tr>
     <tr><td>金属に影を出さない（純物理）</td><td><code class="inl">OFF</code>（デフォルト）では、金属の映り込みにもトゥーンの陰影がかかり、<b>落ち影・トゥーン影が金属パーツにも出ます</b>。<code class="inl">ON</code> にすると陰影がかからなくなり、<b>鏡が影の中でも同じ景色を映すのと同じ、物理的に正しい挙動</b>になります。そのぶん金属は影を示さなくなり、Smoothness を上げるほど陰影が見えなくなります。<b>Metallic が <code class="inl">0</code> の面（ガラス・布・肌）には影響しません。</b></td></tr>
     <tr><td>Normal Map + Scale</td><td>ポリゴン数を増やさずに細かい凹凸（服のシワ、レンガの溝など）を表現したい時に使います。</td></tr>
   </tbody></table>
-  <div class="note tip" data-label="💡 TIP — 金属パーツの作り方">
-    <p>金具や装飾のマテリアルで <b>Metallic を <code class="inl">1</code></b>、<b>Smoothness を <code class="inl">0.7</code>〜<code class="inl">0.9</code></b> にします（<b>Reflection Strength はデフォルトの <code class="inl">1</code> のままで構いません</b>）。<b>金属は周囲の映り込みから色を得るため、Reflection Strength が <code class="inl">0</code> のままだと暗くなります</b>（Metallic が高いのに <code class="inl">0</code> のときは Inspector に警告が出ます）。トゥーンの陰影・輪郭線・Matcap・リムライトはそのまま併用でき、<b>セル塗りの質感を保ったまま金具や装飾だけを金属らしく</b>できます。</p>
-    <p><b>金属の影も Lighting &amp; Shadow で調整できます</b>：映り込みにもトゥーンの陰影がかかるため、<b>Shadow Color / Shadow Border / Shadow Blur</b> が金属パーツにもそのまま効きます（Smoothness を高くすると光源のハイライトは小さな点に集中しますが、影は映り込み側が表現するため消えません）。</p>
   </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 金属パーツの作り方">
+    <p>金具や装飾のマテリアルで <b>Metallic を <code class="inl">1</code></b>、<b>Smoothness を <code class="inl">0.7</code>〜<code class="inl">0.9</code></b> にします（<b>Reflection Strength はデフォルトの <code class="inl">1</code> のままで構いません</b>）。<b>金属は周囲の映り込みから色を得るため、Reflection Strength が <code class="inl">0</code> のままだと暗くなります</b>（Metallic が高いのに <code class="inl">0</code> のときは Inspector に警告が出ます）。トゥーンの陰影・輪郭線・Matcap・リムライトはそのまま併用でき、<b>セル塗りの質感を保ったまま金具や装飾だけを金属らしく</b>できます。<b>金属の影も Lighting &amp; Shadow で調整できます</b>：映り込みにもトゥーンの陰影がかかるため、<b>Shadow Color / Shadow Border / Shadow Blur</b> が金属パーツにもそのまま効きます（Smoothness を高くすると光源のハイライトは小さな点に集中しますが、影は映り込み側が表現するため消えません）。</p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note warn" data-label="⚠ 金属でない部分の Metallic は 0 にしてください">
     <p>Metallic を上げた面は<b>塗りの色（ベースカラーの拡散光）を失います</b>。これは金属の物理的な性質どおりの挙動です。肌や布など金属でない部分の Metallic を上げると、色が抜けて暗く見えます。<b>テカリ（ハイライト）だけを強くしたい場合は Metallic ではなく Specular Highlight を使ってください。</b></p>
-  </div>
-  <div class="note warn" data-label="⚠ v45_GUIr0 から既存マテリアルの見え方が変わります（後方互換はありません）">
-    <p>特に注意が必要なのは、<b>これまで Metallic を「テカリを強くするつまみ」として使っていたマテリアル</b>です。旧方式では Metallic はハイライトの明るさを上げるだけでしたが、本版からは<b>金属を意味する</b>ため、値が高いままだと<b>塗りの色が失われて暗く見えます</b>。</p>
-    <p><b>対処：</b> そのマテリアルの <b>Metallic を <code class="inl">0</code> に戻し</b>、テカリが欲しい場合は <b>Specular Highlight</b> で足してください。本物の金属パーツには <b>Metallic を <code class="inl">1</code></b>、<b>Reflection Strength を <code class="inl">1</code></b> に設定します（映り込みが金属の色の主成分になるため、<code class="inl">0</code> のままだと暗くなります）。Metallic が高いのに Reflection Strength が <code class="inl">0</code> のときは Inspector に警告が出ます。</p>
-    <p>なお <b>Metallic が <code class="inl">0</code> のマテリアル</b>（デフォルト値）は、光の総量が保たれる分だけ<b>わずかに落ち着いた明るさ</b>になります。<b>Reflection Strength の初期値も <code class="inl">0</code> から <code class="inl">1</code> へ変わりました</b>が、<b>作成済みのマテリアルに保存された値は変わりません</b>（必要に応じて手動で上げてください）。</p>
   </div>
   </div>
   <div class="rv">
@@ -620,21 +732,134 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Fresnel Min</td><td>正面を向いた面の反射量。ガラスは <code class="inl">0</code> 付近、鏡・金属は上げます。</td></tr>
     <tr><td>Specular Highlight</td><td>物理計算で出たハイライトに対する<b>追加のテカリ</b>（<code class="inl">0</code> で物理どおり）。<b>金属でない面のテカリを強くしたいときは、Metallic ではなくこちらを使います。</b></td></tr>
   </tbody></table>
-  <p><b>反射の鮮鋭さは Smoothness で決まります</b>（高い＝鏡のようにくっきり / 低い＝すりガラスのようにぼやける）。</p>
-  <div class="note tip" data-label="💡 TIP — ガラスの作り方">
-    <p>Blend Preset を <b>Transparent</b>、<b>Unlit は OFF（Lit）</b>にし、<b>Reflection Strength</b> を上げ、<b>Fresnel Power</b> を 4〜6 程度にします。必要に応じて <b>Specular Highlight</b> でテカリを、Matcap で擬似的な光沢を追加します。Transparent はマテリアル透明度（<code class="inl">_Color.a</code>）では反射・ハイライト・Matcap を透かさない設計のため、薄く透けつつ映り込みがしっかり乗ります（Fade/Additive では反射もアルファに追従して透けます）。</p>
-    <p>なお Transparent のガラスを<b>パーティクルで使い、Color over Lifetime でフェードアウト</b>させた場合は、環境反射・Matcap・発光も含めてすべて完全に消えます。ガラスを Dissolve で消すエフェクトでも映り込みごと自然に消滅します。</p>
-    <p><b>※ Unlit モードは光に応答しないため、環境反射・鏡面ハイライト・Matcap がいずれも表示されません。ガラスは必ず Lit（Unlit OFF）で使用してください。</b> <b>Unlit のときは Specular Reflection の項目自体が Inspector から隠れます</b>（設定値は保持され、Unlit を OFF に戻せば元の値のまま再表示されます）。<b>計算もスキップされるため負荷はかかりません。</b></p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <p><b>反射の鮮鋭さは Smoothness で決まります</b>（高い＝鏡のようにくっきり / 低い＝すりガラスのようにぼやける）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 ガラスの作り方">
+    <p>Blend Preset を <b>Transparent</b>、<b>Unlit は OFF（Lit）</b> にし、<b>Reflection Strength</b> を上げ、<b>Fresnel Power</b> を 4〜6 程度にします。必要に応じて <b>Specular Highlight</b> でテカリを、Matcap で擬似的な光沢を追加します。Transparent はマテリアル透明度（<code class="inl">_Color.a</code>）では反射・ハイライト・Matcap を透かさない設計のため、薄く透けつつ映り込みがしっかり乗ります（Fade/Additive では反射もアルファに追従して透けます）。なお Transparent のガラスを<b>パーティクルで使い、Color over Lifetime でフェードアウト</b>させた場合は、環境反射・Matcap・発光も含めてすべて完全に消えます。ガラスを Dissolve で消すエフェクトでも映り込みごと自然に消滅します。<b>※ Unlit モードは光に応答しないため、環境反射・鏡面ハイライトが表示されません。ガラスは必ず Lit（Unlit OFF）で使用してください</b>（Matcap だけは <code class="inl">v47_GUIr0</code> より Unlit でも効きますが、映り込みの主役は環境反射のほうです）。<b>Unlit のときは Specular Reflection の項目自体が Inspector から隠れます</b>（設定値は保持され、Unlit を OFF に戻せば元の値のまま再表示されます）。<b>計算もスキップされるため負荷はかかりません。</b></p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note warn" data-label="⚠ ワールド環境依存の機能です">
     <p>映り込む内容は、VRChat ワールド側のリフレクションプローブ／スカイボックスに依存します。プローブが配置されていないワールドでは反射が暗くなる場合があります（ソフトパーティクル・AudioLink と同様、ワールド側の環境に依存する仕様上の制約です）。</p>
   </div>
   </div>
+
+</section>
+
+<!-- ============ LIGHTING ============ -->
+<section id="lighting">
+  <div class="sec-head rv"><div class="num">SEC. 07 — LIGHTING</div><h2>Lighting &amp; Shadow</h2><div class="sub">// 光と影・トゥーン調整</div></div>
+  <div class="rv">
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Pseudo Light（擬似光の強さ）</td><td>影の向きを決める光を、実際の光源から<b>擬似的な光</b>へ寄せます（初期値 <code class="inl">0.5</code>＝半々）。擬似的な光は<b>必ず上方向から当たります</b>（周囲の明るさの分布から向きを決め、水平より下にはならないよう制限しています）。そのため<b>光が当たっていてもメッシュの形に沿って影が入り</b>、平行光が無いワールドでも立体感が残ります。<b><code class="inl">1</code> で実際の光源の向きから完全に独立</b>し、<code class="inl">0</code> でライトの向きに忠実な陰影に戻ります（初期値は半々の <code class="inl">0.5</code>）。</td></tr>
+    <tr><td>Shadow Color / Intensity</td><td>擬似影の色と、影の濃さ（暗さ）を調整します。</td></tr>
+    <tr><td>Shadow Border</td><td>光と影の境界線の位置を調整します。アニメ調（トゥーン）の表現を作る際に重要です。</td></tr>
+    <tr><td>Shadow Blur</td><td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td></tr>
+    <tr><td>Shadow Normal Strength</td><td>ノーマルマップの凹凸をこの影へどれだけ反映させるかです。<code class="inl">1</code>（初期値）でノーマルマップどおり、<code class="inl">0</code> に近づけるほど元のメッシュの形だけで陰影が作られます（肌の細かい凹凸で影がザラつくときに下げます）。</td></tr>
+    <tr><td>Shadow Flat Mode / Flat Border / Flat Blur</td><td>面の向き（法線）ではなく「モデル自体の向き」と光の方向だけで影を決めます（初期値 OFF）。顔など「凹凸に応じた陰影ではなく作画のような平坦な影」にしたい部位向けです。Flat Border で影が出始める向きを、Flat Blur でその幅を決めます。</td></tr>
+    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 ON</b>）。影の縞や粗さが目立つワールドでは OFF にするか、Shadow Blur を上げて馴染ませてください。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 セクション設定のコピー/ペースト">
+    <p><b>各セクションの折り畳み見出しを右クリック</b>すると「コピー」「ペースト」メニューが表示されます。コピー対象は<b>そのセクションの数値設定のセット</b>です（<b>カラーとテクスチャは含まれません</b>＝マテリアルごとの色・画像はそのまま保てます。Lighting &amp; Shadow は <b>Shadow Intensity / Shadow Border / Shadow Blur の3項目</b>、Toon Shadow は <b>2 影 / 3 影 / 境界の色づけの ON/OFF と境界・ボケ足・ノーマルマップの反映度</b>です）。別のマテリアルの<b>同じセクション</b>の見出しを右クリックして「ペースト」を選ぶと、まとめて適用されます（機能の有効/無効も一緒に移ります）。複数マテリアルを選択してペーストすると選択中のすべてに適用され、Undo（Ctrl+Z）で戻せます。調整済みの設定を他の部位マテリアルへ揃えるときに使ってください。※ Transparency / Rendering の見出しコピーには、Blend Preset が管理する描画内部値（ZWrite 等）と Render Queue は含まれません。透明度の種類ごと揃えたい場合はペースト先でも同じ Preset を選んでください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 影の向きについて（v47_GUIr0〜）">
+    <p>本セクションの影は、実際の光源の向きと、<b>周囲の明るさの分布から決めた「擬似的な光」の向き</b>を混ぜて向きを決めます（Pseudo Light・初期値 <code class="inl">0.5</code>＝半々）。擬似的な光は<b>必ず上方向から当たる</b>ため、光を下から当てても影は上からの向きへ引き寄せられます（<code class="inl">1</code> にすると、光の向きに関係なく常に上から落ちます）。これは作画の作法に合わせた意図的な振る舞いです。</p>
+    <p><b>ハイライト（PBR）と逆光（Back Light）は従来どおり実際の光源に従います</b>。擬似光に切り替わるのは本セクションのトゥーン陰影だけです。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 多段影の使い方">
+    <p>影は外側から順に <b>1 影 → 2 影 → 3 影</b> と重なります。<b>Border は 1 影 &gt; 2 影 &gt; 3 影 の順に小さくする</b>のが基本で（小さいほど光が当たらない側に寄ります）、初期値もその並びになっています。アニメ調にしたいときは各 Blur を下げて境界をはっきりさせ、柔らかくしたいときは上げてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Shadow Intensity（影の濃さ）は 1 影・2 影・3 影のすべてに同じように効きます">
+    <p><code class="inl">0</code> にすれば段数に関係なく影が消えます。</p>
+    <p><b>Shadow Flat Mode を ON にしている間は、各影の Normal Strength は影には効きません</b>（法線を参照しなくなるため）。ノーマルマップ自体はハイライトや映り込みにはこれまでどおり効いています。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Receive Shadow の発現条件">
+    <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ 影を受けられるのは Opaque / Cutout のみです（Unity の仕様）">
+    <p>Fade / Transparent / Additive などの半透明プリセットは、Unity Built-in パイプラインの制約により平行光の影を受けられません（ON にしても影は乗りません）。前髪など「半透明にしたいが影も受けたい」部位は、<b>Cutout プリセット＋Dither Fade（ディザ擬似半透明）</b> を使用してください（Texture Layer の項を参照）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — GUI の表示（v40_GUIr1〜）">
+    <p>半透明プリセットでチェックが ON になっているときは、チェックボックスの右に <b>「（現在の Preset では無効）」</b> と表示され、下の説明も対処を案内する警告表示に切り替わります（表示のみで、設定値は変わりません）。チェックはそのまま操作できるので、<b>Opaque / Cutout に戻せば設定した内容がそのまま効きます</b>。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> Light Limit（環境光クランプ・白飛び/黒つぶれ防止）</h4>
+  <p>ワールドの環境光が過剰に明るい・暗いときに、アバターが受ける光量を一定範囲に制限し、白飛びや真っ暗で何も見えない状況を防ぎます。暗いワールドではより暗く、明るいワールドでは白飛びしない範囲で明るさに余裕を持たせています。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Light Min Limit</td><td><b>その部分が受ける光の下限</b>。影の中や暗いワールドで光量が下限に満たない分を、フラットな環境光として補います。<b>上げるほど影が持ち上がって明るくなり</b>、下げるほど影が濃く沈みます（<code class="inl">0</code> で下限なし＝影を完全に暗くできます）。</td></tr>
+    <tr><td>Light Max Limit</td><td>明所での明るさの上限（白飛び防止）。上げるほど明るいワールドで明るく見えます。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 Light Min Limit は「影の濃さの下限」としても使えます">
+    <p>下限は<b>画素ごとの受光量</b>に対して働くため、光の当たっている面はそのままに、<b>影になっている部分だけを持ち上げる</b>ことができます。暗いワールドで顔の陰影が潰れて見えないときや、影を薄く保ちたいときに上げてください。影の色そのものを変えたい場合は Lighting &amp; Shadow の <b>Shadow Color / Shadow Intensity</b> を使います（こちらは光量ではなく影の色と濃さを直接指定します）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>本機能は<b>常時有効</b>です。Lit（Unlit OFF）のときのみ作用し、<b>Unlit モードのときは光に応答しないため、この項目自体が自動的に非表示</b>になります。発光（Emission）と環境反射の映り込みは制限の対象外です。<b>追加のリアルタイムライトも、メイン光・環境光とまとめて 1 回の上限・下限処理にかかります</b>（追加ライトは頂点単位・最大4灯として扱われます）。<code class="inl">_LightMinLimit</code> / <code class="inl">_LightMaxLimit</code> はアニメーション可能です。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 環境光の立体化（常時有効・設定不要）">
+    <p>環境光（ライトプローブ）が主体のワールドや逆光の場面で、環境光に含まれる方向情報から光側/陰側を自動的に復元し、本体が一律の明るさで平面的に沈んで見えるのを軽減します。輪郭（シルエット）側には背面からの環境光がわずかに回り込み、逆光でも立体感が保たれます。調整項目はなく、常に最適な設定で動作します（平行光が強いワールドでは変化はわずかです）。</p>
+  </div>
+  </div>
+
+</section>
+
+<!-- ============ TOON SHADOW ============ -->
+<section id="toonshadow">
+  <div class="sec-head rv"><div class="num">SEC. 08 — LIGHTING</div><h2>Toon Shadow（多段の影）</h2><div class="sub">// 2 影・3 影・影の境界の色づけ</div></div>
+  <div class="rv">
+  <p><b>Lighting &amp; Shadow で決まった 1 段目の影の中へ、さらに濃い帯を重ねたり、境界に色を差したりする項目です。</b>いずれも<b>チェックボックスで ON/OFF</b>でき、<b>初期値はすべて OFF</b>（＝作成済みマテリアルの見た目は変わりません）。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Shadow 2nd（2 影）</td><td>1 段目の影の中に、もう 1 段濃い帯を重ねます。<b>チェックボックスで ON/OFF</b>（初期値 OFF）、<b>色の不透明度が濃さの強度</b>です。境界位置・ボケ足・ノーマルマップの反映度を個別に持ちます。</td></tr>
+    <tr><td>Shadow 3rd（3 影）</td><td>さらに奥に残る 3 段目の締め色です（首の下や袖の内側など）。項目の構成は 2 影と同じで、初期値 OFF です。</td></tr>
+    <tr><td>Shadow Border Color / Range</td><td>影の境界のすぐ内側に細い色の帯を入れます（境界だけを暖色に抜くなど）。<b>チェックボックスで ON/OFF</b>（初期値 OFF）、<b>不透明度が強度</b>、Range が帯の幅です。色は「そのチャンネルをどれだけ地の色へ戻すか」として働きます。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 重ね方のコツ">
+    <p>影は外側から順に <b>1 段目（Lighting &amp; Shadow）→ 2 影 → 3 影</b> と重なります。<b>Border は 1 段目 &gt; 2 影 &gt; 3 影 の順に小さくする</b>のが基本で（小さいほど光が当たらない側に寄ります）、初期値もその並びになっています。アニメ調にしたいときは各 Blur を下げて境界をはっきりさせ、柔らかくしたいときは上げてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Shadow Intensity（影の濃さ）は 1 段目・2 影・3 影のすべてに同じように効きます">
+    <p><code class="inl">0</code> にすれば段数に関係なく影が消えます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <p><b>Unlit モード（光を無視）が ON のときは、本セクションの項目は効きません</b>（陰影の計算そのものが行われないためです）。<b>Unlit モードのチェックは <code class="inl">PBR（BRDF）</code> の最上部にあります。</b></p>
+  </div>
+  </div>
+
 </section>
 
 <!-- ============ MATCAP ============ -->
 <section id="matcap">
-  <div class="sec-head rv"><div class="num">SEC. 08 — LIGHTING</div><h2>Matcap</h2><div class="sub">// 擬似的な光沢・環境反射</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 09 — LIGHTING</div><h2>Matcap</h2><div class="sub">// 擬似的な光沢・環境反射</div></div>
   <div class="rv">
   <p>常に一定の美しい光沢や環境の映り込みを「擬似的」に表現します。非常に処理が軽いため VRChat で重宝します。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -644,172 +869,40 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Highlight Threshold / Boost</td><td><b>Threshold</b>（明るさのしきい値）より明るい部分だけに <b>Boost</b> のゲインを乗せ、<b>鏡面のテカりだけを尖らせ</b>ます。暗部・ベースは持ち上げません。Contrast と併用するとより金属らしくなります（既定 Boost=0＝変化なし）。</td></tr>
     <tr><td>裏面で無効化</td><td>両面描画（Cull = Off）のとき、<b>裏面のメッシュに Matcap を当てません</b>。服の袖裏・コートの裏側などを暗く落ち着かせたいときに使います。既定は OFF。</td></tr>
     <tr><td>2枚目 Matcap（Mask Select）</td><td>1枚のマテリアルで、<b>部位ごとに 2 種類の Matcap を出し分け</b>ます。領域マスク（グレースケール）の<b>黒=1枚目／白=2枚目</b>で切り替わります。<b>1枚目と2枚目はそれぞれ独立して、カラー Tint・Strength・Blend を設定できます</b>（例：トリムは明るい金属、布は落ち着いたシルク）。既定は OFF。</td></tr>
+    <tr><td>3枚目 Matcap（Mask Select）</td><td>さらに <b>3 種類目の質感</b>を足します（例：布・革・金具）。<b>2枚目とは別のチャンネル</b>（既定 <code class="inl">G</code>）で領域を決め、<b>2枚目の結果の上へ重ねます</b>（黒=そこまでの結果のまま／白=3枚目／中間は補間）。<b>2枚目の領域指定には一切影響しません。</b>色・強さ・合成モード・コントラスト・ハイライトは1〜3枚目それぞれ独立です。既定は OFF。</td></tr>
   </tbody></table>
-  <div class="note info" data-label="NOTE — 2枚目 Matcap（部位ごとの質感切り替え）">
-    <p>「2枚目 Matcap を使う」を ON にすると、<b>Matcap テクスチャ 2</b>・<b>Matcap 2 のカラー Tint / Strength / Blend / Contrast / Highlight</b>・<b>共有マスク RGBA</b>・<b>領域マスクのチャンネル</b>が表示されます。共有マスクの指定チャンネル（既定 <code class="inl">R</code>）で Matcap を出し分け（黒=1枚目 / 白=2枚目 / 中間は補間）、マスクはメインテクスチャと同じ UV で参照します。</p>
-    <p><b>共有マスクは Fake Shadow Texture など他のマスク機能と共用のスロット</b>です（1枚の画像の R/G/B/A に最大4種類のマスクを詰められます。詳しくは <a href="#fakeshadowtex">Fake Shadow Texture</a> の項を参照）。<b>チャンネル選択のすぐ下に R/G/B/A の中身が並んで表示され、クリックで切り替えられます。</b>既定チャンネルは Matcap が <code class="inl">R</code>、Fake Shadow Texture が <code class="inl">B</code> のため、そのままでは衝突しません。<b>これまで領域マスクを設定していたマテリアルは、既定が <code class="inl">R</code> のため見た目が変わりません</b>（グレースケール画像は R=G=B のため値も同じです）。1枚目と2枚目は<b>それぞれ独立して色・強さ・合成モード・コントラスト・ハイライト強調を設定</b>できるため、部位ごとに別の質感を作り込めます。裏面無効化と寿命フェードは両 Matcap に共通で適用されます。<b>OFF のときや 2枚目を割り当てないときは、従来どおり 1枚の Matcap として動作し、処理負荷も変わりません。</b></p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 2枚目 Matcap（部位ごとの質感切り替え）について">
+    <p>「2枚目 Matcap を使う」を ON にすると、<b>Matcap テクスチャ 2</b>・<b>Matcap 2 のカラー Tint / Strength / Blend / Contrast / Highlight</b>・<b>共有マスク RGBA</b>・<b>領域マスクのチャンネル</b>が表示されます。共有マスクの指定チャンネル（既定 <code class="inl">R</code>）で Matcap を出し分け（黒=1枚目 / 白=2枚目 / 中間は補間）、マスクはメインテクスチャと同じ UV で参照します。<b>共有マスクは Fake Shadow Texture など他のマスク機能と共用のスロット</b>です（1枚の画像の R/G/B/A に最大4種類のマスクを詰められます。詳しくは Fake Shadow Texture の項を参照）。<b>チャンネル選択のすぐ下に R/G/B/A の中身が並んで表示され、クリックで切り替えられます。</b>既定チャンネルは Matcap が <code class="inl">R</code>、Fake Shadow Texture が <code class="inl">B</code> のため、そのままでは衝突しません。<b>これまで領域マスクを設定していたマテリアルは、既定が <code class="inl">R</code> のため見た目が変わりません</b>（グレースケール画像は R=G=B のため値も同じです）。1枚目と2枚目は<b>それぞれ独立して色・強さ・合成モード・コントラスト・ハイライト強調を設定</b>できるため、部位ごとに別の質感を作り込めます。裏面無効化と寿命フェードは両 Matcap に共通で適用されます。<b>OFF のときや 2枚目を割り当てないときは、従来どおり 1枚の Matcap として動作し、処理負荷も変わりません。</b></p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 3枚目 Matcap（3種類目の質感）について">
+    <p>「3枚目 Matcap を使う」を ON にすると、<b>Matcap テクスチャ 3</b>・<b>Matcap 3 のカラー Tint / Strength / Blend / Contrast / Highlight</b>・<b>共有マスク RGBA</b>・<b>領域マスクのチャンネル</b>が表示されます。<b>既定チャンネルは <code class="inl">G</code></b> で、2枚目（既定 <code class="inl">R</code>）とは<b>別のチャンネルを読むため、2枚目の領域指定には影響しません</b>。合成は「2枚目までの結果の上に 3枚目を重ねる」順序で、マスクが黒ならそこまでの結果がそのまま残ります。<b>1枚の共有マスクに「<code class="inl">R</code>＝2枚目の領域」「<code class="inl">G</code>＝3枚目の領域」を別々に描いておけば、1マテリアルで3種類の質感を出し分けられます</b>（例：布・革・金具）。<b>グレースケール画像は R=G=B のため全チャンネルに同じ絵が入ります</b>ので、2つ以上の機能で使うときは必ずチャンネルを分けて描いてください（同じチャンネルを2つの機能が読んでいる場合は Inspector が警告します）。裏面無効化と寿命フェードは全 Matcap に共通で適用されます。<b>OFF のときや 3枚目を割り当てないときは、従来どおり動作し処理負荷も変わりません。</b></p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — 「裏面で無効化」について">
-    <p>このオプションは描画設定の <b>Cull が Off（両面描画）</b>のときに効果を持ちます。裏面で Matcap を切ると、その面にはハイライトが乗らなくなるぶん自然に暗く見えます（裏地の沈み）。Cull が <b>Back（裏面を描画しない・既定）</b>の場合は裏面そのものが表示されないため、この項目を ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります。</p>
-  </div>
-  <p><b>補足:</b> Matcap もハイライト系として、パーティクルカラーのアルファに追従してフェードします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。<code class="inl">Transparent</code> ではマテリアル透明度（<code class="inl">_Color.a</code>）では透けずに残り、パーティクルの Color over Lifetime で映り込みごと自然に消えます。</p>
-  <div class="note warn" data-label="⚠ Unlit モードでは Matcap は表示されません">
-    <p>Unlit モードは光に応答しない自己発光専用のため、Matcap・環境反射・鏡面ハイライトはいずれも表示されません。Matcap や映り込みを使ったガラス表現は <b>Lit（Unlit OFF）</b>で使用してください。</p>
+    <p>このオプションは描画設定の <b>Cull が Off（両面描画）</b> のときに効果を持ちます。裏面で Matcap を切ると、その面にはハイライトが乗らなくなるぶん自然に暗く見えます（裏地の沈み）。Cull が <b>Back（裏面を描画しない・既定）</b> の場合は裏面そのものが表示されないため、この項目を ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります。</p>
   </div>
   </div>
-</section>
-
-<!-- ============ FAKE SHADOW MESH ============ -->
-<section id="fakeshadowmesh">
-  <div class="sec-head rv"><div class="num">SEC. 09 — LIGHTING</div><h2>Fake Shadow Mesh（影を落とす側）</h2><div class="sub">// メッシュから落とす影・光と頭に追従</div></div>
   <div class="rv">
-  <p>前髪などの<b>メッシュ自身の形を光の向きへ押し出して</b>、顔の上に影として落とす機能です。下記 <a href="#fakeshadowtex">Fake Shadow Texture</a> が UV に描いた<b>静止画</b>なのに対し、こちらは<b>頭の動きと光の向きに追従する</b>影です。</p>
-  <p><b>この設定は「影を落とす側」（前髪など）のマテリアルに行います。</b>受け手（顔など）側の設定は不要です。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Fake Shadow Mesh を有効化</td><td>機能の有効/無効（既定 OFF）。</td></tr>
-    <tr><td>影の重ね方</td><td>影が自分自身と重なる部分（前髪の房どうしの交差など）の見え方を選びます。<b>乗算</b>（既定）＝受け手の陰影に比例して暗くします。重なった部分はその分だけ濃くなります。<b>フラット</b>＝<b>重なっても濃さが一定</b>になります（下記の注意を参照）。</td></tr>
-    <tr><td>影の色</td><td>落ちる影の色。既定はやや青みのあるグレーです（白＝影なし）。</td></tr>
-    <tr><td>影の濃さ</td><td>影の強さ（<code class="inl">0</code>＝無効 〜 <code class="inl">1</code>＝最大）。アニメーション可能です。</td></tr>
-    <tr><td>落とす距離</td><td>メッシュを光の向きへ押し出す量（既定 <code class="inl">0.6</code>・<b>目安 <code class="inl">0.1</code>〜<code class="inl">1.0</code></b>）。<b>小さすぎると影が本体に埋もれ、大きすぎると影が浮いて見えます</b>。顔と前髪の隙間に合わせて調整してください。</td></tr>
-    <tr><td>影が届く奥行き</td><td>影が落ちる奥行きの上限（既定 <code class="inl">0.5</code>・<b>目安 <code class="inl">0.1</code>〜<code class="inl">1.0</code></b>）。<b>これより奥にあるものは暗くなりません</b>＝背景・遠くの壁・他のアバターは影響を受けません。顔まで影が届かない場合は少し大きく、周囲に影が漏れる場合は小さくします。</td></tr>
-    <tr><td>光が弱いときの向き (XYZ・ワールド空間)</td><td><b>暗いワールドで光の向きが頼りにならないとき</b>に、影を落とす向きを作者の指定へ寄せます。既定 <code class="inl">(0, 0.7071, 0.7071)</code>＝やや前上方から当たる想定です（<b>光の方向を指す向き</b>で、影はその反対側へ伸びます）。</td></tr>
-    <tr><td>上の向きへ切り替わる明るさ</td><td>どのくらい暗くなったら上記の向きへ寄せ始めるか（既定 <code class="inl">0.1</code>）。<b>Light Intensity と同じ目盛りで読めます</b>（<code class="inl">0.1</code>＝Directional Light の Intensity が 0.1 を下回るあたりから寄り始める）。<b>切り替えは滑らかに補間される</b>ため、明るさが変わってもパッと切り替わることはありません。</td></tr>
-  </tbody></table>
-  <div class="note info" data-label="NOTE — Render Queue は自動で調整されます">
-    <p>影は<b>受け手（顔など）より後に描かれる</b>必要があります。不透明な描画は手前から順に描かれるため、前髪は顔より先に描かれてしまい、<b>そのままでは影が顔に上書きされて消えます</b>。この機能を <b>ON にすると Render Queue が自動で +1</b> され（Blend Preset を選び直したときも同様）、<b>OFF に戻すと元に戻ります</b>。Opaque・Cutout・Fade など<b>どのプリセットでも同じように働きます</b>。</p>
-    <p><b>ただし Render Queue を手動で変更済みの場合は、自動調整を行いません</b>（利用者の設定を尊重するため）。その場合は Transparency / Rendering セクションの <b>Render Queue</b> で、<b>この（前髪側の）マテリアルの値を受け手より大きく</b>してください。<b>受け手と同じ値では影が出ません</b>（<code class="inl">+1</code> で足ります）。<b>影がまったく出ないときは、まずここを確認してください。</b></p>
-  </div>
-  <div class="note warn" data-label="⚠ ワールドによっては表示できません">
-    <p>この機能は、影の届く範囲を判定するためにワールド側の描画設定を利用します。<b>その設定が無いワールドでは影が出ません。</b> ただし背景が暗くなるといった破綻は起きず、<b>単に出ないだけ</b>です。</p>
-    <p><b>「光が弱いときの向き」が効く範囲について:</b> この設定が働くのは「<b>暗いが光はある</b>」ワールドです。<b>光がまったく無いワールドでは、そもそもこの影自体が表示できません</b>（影の届く範囲を判定する仕組みも同じ光源に依存しているため、両者は同時に失われます）。したがって「光が無いときの保険」は下記の自動フォールバックが担い、この設定は「<b>薄暗いときに影の向きが暴れないようにする</b>」ためのものだと考えてください。</p>
-  </div>
-  <div class="note tip" data-label="💡 TIP — 自動フォールバックの使い方">
-    <p>上記の「出ないワールド」でも影が絶えないよう、<b>受け手（顔など）のマテリアルの <a href="#fakeshadowtex">Fake Shadow Texture</a> では「自動フォールバック」が既定で ON</b> になっています。<b>この機能が出せるワールドでは描いた影が自動で隠れ、出せないワールドでは描いた影が代わりに出ます。</b>影が二重になることも、影が消えることもありません。なお <b>Fake Shadow Mesh を使わず描いた影だけを使う場合は、自動フォールバックを OFF</b>（＝描いた影を常時表示）にしてください。</p>
-    <p><b>Fake Shadow Texture（描いた影）との違い:</b> 描いた影は「<b>必ず出るが追従しない</b>」、こちらは「<b>追従するが出ないワールドがある</b>」という関係です。どちらか一方が他方を置き換えるものではないため、上記の自動フォールバックで組み合わせて使えます。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 「フラット」を選ぶときの注意">
-    <p>フラットは「<b>これ以上暗くしない</b>」という上限を置く方式です。そのため<b>重なっても濃さは一定</b>になりますが、代わりに<b>影の中では受け手の陰影やテクスチャの明暗が失われ</b>、<b>もともと影色より暗い部分（濃い色のテクスチャなど）には影が乗りません</b>。「重なりの濃さが気になる」場合はフラット、「影の中でも肌や布の陰影を残したい」場合は乗算を選んでください。</p>
-    <p><b>暗いワールドでも影は消えません。</b> フラットの影色は<b>周囲の明るさに自動で追従</b>します。上限を置く方式は、そのままだと<b>ワールドが暗くなるにつれ受け手のほうが影色より暗くなり、影が消えてしまう</b>ためです。<b>明るいワールドでの見え方は従来と変わりません</b>（暗いときだけ働きます）。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 仕様上の注意">
-    <p>影の形は<b>メッシュの形そのもの</b>になります（前髪の形がそのまま影になります）。受け手が曲面のため、落とす距離を大きくするほど影が受け手から剥離して見えます。<b>VR では両眼で見え方が変わる</b>ため、実際に VR で確認しながら距離を決めてください。影は<b>発光系の効果（Emission・Rim Light・Glitter など）は暗くしません</b>。無効時は描画そのものが発生しないため負荷はほぼゼロです。</p>
+  <div class="note info" data-label="NOTE — 補足">
+    <p>Matcap もハイライト系として、パーティクルカラーのアルファに追従してフェードします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。<code class="inl">Transparent</code> ではマテリアル透明度（<code class="inl">_Color.a</code>）では透けずに残り、パーティクルの Color over Lifetime で映り込みごと自然に消えます。</p>
   </div>
   </div>
-</section>
-
-<!-- ============ FAKE SHADOW TEXTURE ============ -->
-<section id="fakeshadowtex">
-  <div class="sec-head rv"><div class="num">SEC. 10 — LIGHTING</div><h2>Fake Shadow Texture（影を受ける側）</h2><div class="sub">// 意匠的な落ち影 / 前髪の影</div></div>
   <div class="rv">
-  <p>前髪の影のように「<b>作者が描いた影</b>」を、ワールドの光源に関係なく<b>常に同じ位置・同じ濃さ</b>でオブジェクトの上に表示する機能です。イラストの塗りとして意図した陰影を、どのワールドでも崩さずに見せたいときに使います。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Fake Shadow Texture を有効化</td><td>機能の有効/無効（既定 OFF）。</td></tr>
-    <tr><td>共有マスク RGBA（他機能と共用）</td><td>影の形を描いた画像を設定します。<b>Matcap の領域マスクと同じ共有スロット</b>です（下記「共有マスクの使い方」を参照）。</td></tr>
-    <tr><td>影を読むチャンネル (R/G/B/A)</td><td>共有マスクのどのチャンネルを影として読むか（既定 <code class="inl">B</code>）。Matcap の領域マスクは既定 <code class="inl">R</code> なので、そのままでも衝突しません。<b>すぐ下に R/G/B/A の中身が並んで表示され、クリックでも切り替えられます。</b></td></tr>
-    <tr><td>マスクを反転（黒＝影にする）</td><td>既定 OFF は「<b>白＝影 / 黒＝影なし</b>」。グレースケールで<b>黒く影を塗った</b>画像を使う場合は ON にしてください（<code class="inl">黒＝影</code>になります）。</td></tr>
-    <tr><td>影の色（乗算）</td><td>影の部分に掛ける色。既定はやや青みのあるグレーです。暗くしたいほど濃い色にします（白＝影なし）。</td></tr>
-    <tr><td>影の濃さ</td><td>影の強さ（<code class="inl">0</code>＝無効 〜 <code class="inl">1</code>＝最大）。アニメーション可能です。</td></tr>
-    <tr><td>Tiling / Offset</td><td>影マスクの繰り返しと位置。<b>Offset をずらせば、テクスチャを描き直さずに影の位置を微調整</b>できます。基準となる UV は Albedo テクスチャと同じです。</td></tr>
-    <tr><td>自動フォールバック</td><td><b>既定 ON</b>。この描いた影を <b><a href="#fakeshadowmesh">Fake Shadow Mesh</a>（上記）が表示できないワールドでのみ</b>表示します。<b>Fake Shadow Mesh とセットで使う設定</b>です。<b>Fake Shadow Mesh を使わず、描いた影だけを常に出したい場合は OFF にしてください。</b></td></tr>
-  </tbody></table>
-  <div class="note info" data-label="NOTE — Receive Shadow との違い（併用できます）">
-    <p>Lighting &amp; Shadow の <b>Receive Shadow</b> は、ワールドに実際の平行光とシャドウ設定があるときだけ現れる<b>物理的な落ち影</b>です。光の無いワールドや暗いワールドでは影が出ません。一方 Fake Shadow Texture は<b>光の状態に関係なく常に出る、作画としての影</b>です。役割が違うため、両方を同時に使えます。</p>
-  </div>
-  <div class="note tip" data-label="💡 TIP — 共有マスクの使い方">
-    <p>「共有マスク」は<b>1枚の画像の R/G/B/A に、別々の白黒マスクを最大4種類詰め込める</b>スロットです（Fake Shadow Texture と Matcap の領域マスクが共用します）。画像編集ソフトで、たとえば <b>R に Matcap の領域マスク / B に前髪の影</b>というように<b>チャンネルごとに別々の絵</b>を入れておき、各機能で読むチャンネルを指定してください。</p>
-    <p><b>チャンネルの中身は Inspector で確認できます。</b> チャンネル選択のすぐ下に <b>R/G/B/A の 4 枚が並んで表示</b>され、いま読んでいるチャンネルが枠で強調されます。<b>サムネイルをクリックすると、そのチャンネルに切り替わります。</b> R/G/B はそれぞれ赤・緑・青に着色して表示されるため、どのチャンネルの絵かひと目で分かります（アルファはグレースケール表示）。テクスチャ側の「Read/Write Enabled」を有効にする必要はありません。</p>
-    <p>グレースケール（白黒）の画像は R=G=B なので、<b>1種類しか使わない場合はチャンネルを気にせずそのまま置くだけで動きます</b>（アルファは不要です）。逆に、<b>複数機能で使うときは必ずチャンネルを分けてください</b> — グレースケール画像は全チャンネルに同じ絵が入るため、そのままだと Matcap の領域マスクと影が同じ形になってしまいます。</p>
-    <p><b>Texture Layer とは無関係です。</b> Fake Shadow Texture はこの共有マスクを使うため、<b>Texture Layer の色オーバーレイ・透明マスクは今までどおり自由に使えます</b>（同時使用できます）。</p>
-  </div>
-  <div class="note info" data-label="NOTE — 仕様上の注意">
-    <p>UV 空間に描いた<b>静止画</b>であり、幾何学的な自己遮蔽ではありません。そのため<b>頭の動きや光源の向きには追従しません</b>（常に同じ意匠で見せることが目的の機能です）。影はオブジェクトの色に対して掛かるため、<b>Unlit モードや暗いワールドでも同じように出ます</b>が、Emission・Rim Light・Glitter などの<b>発光系の効果は暗くしません</b>（発光している部分では影が見えにくくなります）。スクロール（流れる動き）は掛かりません。無効時はほぼ負荷ゼロです。</p>
+  <div class="note info" data-label="NOTE">
+    <p><b>Matcap は Unlit モードでも効きます</b>（<code class="inl">v47_GUIr0</code> より。<b>それ以前は Unlit で表示されませんでした</b>）。Matcap は光の当たり方ではなく<b>見る向きだけ</b>で決まる擬似的な光沢のため、光を無視する Unlit でも成立します。ただし <b>環境反射・鏡面ハイライトは Unlit では表示されません</b>（こちらは実際の光源と環境光を必要とするためです）。<b>映り込みを使ったガラス表現は Lit（Unlit OFF）</b> で使用してください。</p>
   </div>
   </div>
-</section>
 
-<!-- ============ EMISSION ============ -->
-<section id="emission">
-  <div class="sec-head rv"><div class="num">SEC. 11 — VFX</div><h2>Emission（発光・HDR対応）</h2><div class="sub">// 発光・HDR対応</div></div>
-  <div class="rv">
-  <p>暗闇でも自己発光するマテリアルを作ります。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Emission Color HDR / Intensity</td><td>発光色と強さを調整します。Intensity を上げると Unity の Bloom（光があふれる効果）が綺麗に効きます。</td></tr>
-    <tr><td>Emission Map</td><td>発光させたい場所を白黒画像等で指定します。</td></tr>
-    <tr><td>Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> に速度を入れると Emission Map が流れます（<code class="inl">0</code> で停止）。エネルギーの流動表現等に。</td></tr>
-    <tr><td>Pulse Speed / Pulse Min</td><td>発光を脈動（明滅）させます。<code class="inl">Pulse Speed</code> が点滅の速さ（<code class="inl">0</code> で無効）、<code class="inl">Pulse Min</code> が一番暗くなった時の明るさ（<code class="inl">0</code> で完全に消えるまで点滅）。</td></tr>
-  </tbody></table>
-  <p><b>補足:</b> 発光（Emission）も、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Color over Lifetime で発光ごと自然に消えます。</p>
-  </div>
-</section>
-
-<!-- ============ AUDIOLINK ============ -->
-<section id="audiolink">
-  <div class="sec-head rv"><div class="num">SEC. 12 — VFX</div><h2>AudioLink（音楽連動・発光リアクション）</h2><div class="sub">// 音楽連動・発光リアクション</div></div>
-  <div class="rv">
-  <p>ワールドで再生されている音楽に合わせて発光させる機能です。VRChat のクラブワールドやライブ演出で定番の機能です。</p>
-  <p>本シェーダーの AudioLink は、通常の <b>Emission（恒常発光）とは独立した「音反応専用の発光レイヤー」</b>として動作します。音の大きさに応じて発光を base（色×Intensity）に向けて加算するため、<b>通常 Emission を OFF にしても、AudioLink だけで音に合わせて発光させられます</b>。逆に通常 Emission を ON にすれば、恒常発光の上に音反応発光が重なります（両者は打ち消し合いません）。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Use AudioLink</td><td>機能の有効/無効。ON にすると反応量・Intensity が自動で <code class="inl">1</code> に設定され、すぐ反応する状態になります（既に値がある場合は維持）。</td></tr>
-    <tr><td>AudioLink Band</td><td>反応させる音域を <code class="inl">Bass</code>（低音）/ <code class="inl">LowMid</code> / <code class="inl">HighMid</code> / <code class="inl">Treble</code>（高音）から選びます。低音はキック、高音はハイハット等に反応します。</td></tr>
-    <tr><td>発光への反応量 (Master)</td><td>音への追従量。<code class="inl">0</code> で無反応、<code class="inl">1</code> で音量に完全連動（無音時は AudioLink 発光が消える）。<code class="inl">_AudioLinkEmission</code> はアニメーション可能です。</td></tr>
-    <tr><td>AudioLink Emission Color (HDR)</td><td>音反応で光らせる色（HDR）。通常 Emission とは別に指定できます。</td></tr>
-    <tr><td>AudioLink Emission Intensity</td><td>音反応発光の強さ。音のピーク時に到達する明るさの上限です（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
-  </tbody></table>
-  <p><b>発光する「場所」は Emission Map を共用します。</b> 通常 Emission を OFF にしている場合は、AudioLink セクションに表示される Emission Map で光らせたい場所を指定してください（白＝光る / 黒＝光らない。未設定なら全面が反応）。通常 Emission を ON にしている場合は、Emission セクションで設定した Emission Map がそのまま使われます。</p>
-  <div class="note tip" data-label="💡 TIP — 仕組み（重要）">
-    <p>AudioLink 発光は <code class="inl">Emission Map × AudioLink Emission Color × Intensity × （音量 × 反応量）</code> で計算される<b>加算レイヤー</b>です。<code class="inl">反応量</code> または <code class="inl">Intensity</code> が <code class="inl">0</code> だと光らないため、両方を <code class="inl">0</code> より大きくしてください（各 <code class="inl">1</code> が標準）。通常 Emission の Color / Intensity とは別系統なので、<b>通常 Emission の Intensity を 0 にしても AudioLink 発光には影響しません</b>。</p>
-    <p><b>使用上の注意:</b> 通常 Emission（恒常発光）も使いたい場合は Emission セクションを ON にしてください。AudioLink 発光のみで使う場合は Emission は OFF のままで構いません。</p>
-  </div>
-  <div class="note warn" data-label="⚠ ワールド環境依存の機能です">
-    <p>AudioLink は、VRChat ワールド側に <b>AudioLink システムが導入されている</b>場合にのみ動作します（ワールドがグローバルな音響データテクスチャを提供している必要があります）。AudioLink 非対応ワールドでは、本機能は自動的に無効化されます（破綻は発生しません）。これはソフトパーティクルと同様、ワールド側の環境に依存する仕様上の制約です。</p>
-  </div>
-  </div>
-</section>
-
-<!-- ============ GLITTER ============ -->
-<section id="glitter">
-  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Glitter / Sparkle（プロシージャルラメ・スパークル）</h2><div class="sub">// プロシージャルラメ・スパークル</div></div>
-  <div class="rv">
-  <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内でプロシージャルに生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Use Glitter</td><td>機能の有効/無効。ON にすると Intensity が自動で <code class="inl">1</code> に設定されます（既に値がある場合は維持）。</td></tr>
-    <tr><td>Glitter Color (HDR)</td><td>ラメの発光色（HDR）。Intensity を上げると Bloom に影響します。</td></tr>
-    <tr><td>Intensity</td><td>発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
-    <tr><td>Shape（形状）</td><td>粒の形を <code class="inl">Point</code>（丸点）/ <code class="inl">Star</code>（<b>先端の尖った十字のきらめき</b>）/ <code class="inl">Diamond</code>（菱形）/ <code class="inl">Fine Dust</code>（高密度の微細ラメ）から選びます。輪郭は<b>どのサイズでもシャープ</b>に保たれます（拡大してもぼやけません）。</td></tr>
-    <tr><td>Space（座標系）</td><td>粒の基準座標を <code class="inl">UV</code>（メッシュの UV に沿う・スクロールが自然・平面/パーティクル向き）/ <code class="inl">Object</code>（オブジェクト空間・三面投影〔Triplanar〕で Cube の側面や球の極でも引き延ばしなく均一）/ <b><code class="inl">View</code>（ワールド座標を基準に、粒が常にカメラを向く「ビルボード」表現。メッシュの UV 展開にも面の裏表にも一切影響されません）</b> から選びます。</td></tr>
-    <tr><td>Grain Scale（粒の大きさ）</td><td>1 粒の大きさ。<b>値を大きくするほど粒が大きく</b>、小さくするほど細かくなります（既定 <code class="inl">181</code>）。<b>粒を小さくするほど自動的に粒の数が増える</b>ため、細かいラメでも密度が不足しません。大きなラメにしたいときは値を上げてください（<code class="inl">290</code> 前後で粗めのラメになります）。</td></tr>
-    <tr><td>Coverage（被覆率）</td><td>実際に光る粒の割合。<code class="inl">0</code> に近いほどまばらに、<code class="inl">1</code> に近いほど密に光ります（既定 <code class="inl">0.6</code>）。</td></tr>
-    <tr><td>Size（粒サイズ）</td><td>1粒の<b>充填率</b>（セル内でどれだけ大きく描くか・既定 <code class="inl">0.7</code>）。密度と独立しているため、<b>粒を大きくしたまま密度を上げても欠けません</b>（粒の絶対サイズは Density で調整します）。</td></tr>
-    <tr><td>View Sharpness（視線シャープさ）</td><td>視線に対するきらめきの鋭さ。値が大きいほど、特定の角度で鋭く一瞬光ります。</td></tr>
-    <tr><td>Flicker Speed（明滅速度）</td><td>明滅の速さ（<code class="inl">0</code> で明滅なし）。<b>明滅は粒ごとにランダム</b>で、速さ・タイミングが 1 粒ずつ違います。さらに<b>周期の異なる 2 つの波を重ねている</b>ため、同じ場所で同じ点滅が繰り返されるパターンは実質知覚できません。</td></tr>
-    <tr><td>Scroll (X,Y)</td><td>粒を流れるように動かす速度（UV／Object それぞれの座標を平行移動）。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
-    <tr><td>AudioLink 連動</td><td>ON にすると、ラメの明滅を音（AudioLink）に合わせて駆動します。<code class="inl">Band</code>（反応させる音域）と <code class="inl">Sound Strength</code>（音の掛かり具合）で調整します。</td></tr>
-    <tr><td>Emission Map で局在化</td><td>ON にすると、Emission Map の輝度でラメの出る範囲を絞ります（白＝出る／黒＝出ない）。マップは Emission と共用です（未設定なら全面）。</td></tr>
-  </tbody></table>
-  <p><b>仕組み:</b> ラメは <code class="inl">Glitter Color × Intensity ×（形状 × 視線グリント × 明滅 ×（AudioLink）× マスク）</code> で計算される<b>加算発光レイヤー</b>です。テクスチャを使わないプロシージャル生成のため、サンプラー・キーワードを増やしません（アップロード時のコンパイル負荷は据え置き）。発光は透明度に追従し、パーティクルの寿命フェードや半透明にも自然に馴染みます。<code class="inl">Glitter Color</code> / <code class="inl">Intensity</code> / <code class="inl">Flicker Speed</code> などはアニメーションも可能です。</p>
-  <p><b>補足:</b> <code class="inl">AudioLink 連動</code> は、他の音連動機能と同様、VRChat ワールド側に AudioLink システムが導入されている場合にのみ動作します（非対応ワールドでは明滅の音連動のみ自動で無効化され、ラメ自体は通常どおり表示されます）。<code class="inl">Object</code> 座標系はオブジェクト空間基準のため、アバターが移動・回転しても粒が表面に固定されて追従します（<code class="inl">UV</code> はメッシュの UV 展開に依存するため、UV が引き延ばされた箇所では粒も伸びます）。両面表示（Cull Off）のメッシュでは背面の粒も正しく光ります。</p>
-  <p><b><code class="inl">View</code> 座標系について:</b> 粒がワールド座標に紐づいたまま<b>常にカメラを向く</b>ため、メッシュの UV 展開・面の向き・裏表を一切考慮しません。<code class="inl">Object</code> と同じく<b>三面投影（Triplanar）で合成</b>しているため、<b>斜めから見た面でも粒が引き延ばされません</b>。UV が用意されていないメッシュや、UV が大きく歪んだ箇所、両面ポリゴンでも粒の形と大きさが均一になります。オブジェクトのスケールにも左右されないため、<b>複数のメッシュにまたがっても粒の大きさが揃います</b>。VR でも左右の目で粒がずれません。なお、カメラを回すと粒の並びが入れ替わります（常に正面を向く表現のための仕様です）。</p>
-  </div>
-</section>
-
-<!-- ============ DISSOLVE ============ -->
-<section id="dissolve">
-  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Dissolve（ディゾルブ / 消失エフェクト）</h2><div class="sub">// 消失エフェクト</div></div>
-  <div class="rv">
-  <p>オブジェクトをノイズ模様に合わせて溶かすように消滅・出現させる機能です。</p>
-  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Dissolve Texture</td><td>溶け方の基準となるノイズ画像を設定します。</td></tr>
-    <tr><td>Threshold</td><td>消失の進行度（<code class="inl">-1.0</code>=完全表示 〜 <code class="inl">1.1</code>=完全消去）。これをアニメーションさせることで美しい消失エフェクトが作れます。</td></tr>
-    <tr><td>Noise Scale</td><td>ノイズパターンの細かさ（<code class="inl">1</code>=標準 / <code class="inl">10</code>=細かい）。オブジェクト空間・Triplanarマッピングを採用しているため、スケール変更や面の向きに関わらず均一な模様が維持されます。</td></tr>
-    <tr><td>Edge Width / Edge Color</td><td>溶け際（エッジ）の発光幅とHDRカラーを指定します。</td></tr>
-  </tbody></table>
-  <p><b>補足:</b> 溶け際（エッジ）の発光は、パーティクルカラーのアルファ（不透明度）に追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Transparent のガラスマテリアルを Dissolve で消す演出でも、エッジ発光ごと自然に消えます。</p>
-  </div>
 </section>
 
 <!-- ============ RIM LIGHT ============ -->
 <section id="rimlight">
-  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Rim Light（輪郭の光・逆光表現）</h2><div class="sub">// 輪郭の光・逆光表現</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 10 — LIGHTING</div><h2>Rim Light（輪郭の光・逆光表現）</h2><div class="sub">// 輪郭の光・逆光表現</div></div>
   <div class="rv">
   <p>モデルの輪郭（エッジ）部分を強調する機能です。Blend Mode で「光らせる」か「暗く落とす」かを切り替えられます。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
@@ -817,26 +910,77 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Rim Power</td><td>効果の太さを調整します。大きくするほど太く柔らかく、小さくするほど細く鋭いエッジになります。</td></tr>
     <tr><td>Blend Mode</td><td><code class="inl">Add</code>（既定）は縁を<b>加算で発光</b>させます（逆光・オーラ）。<code class="inl">Multiply</code> は縁を<b>暗色化</b>します。Rim Color を黒系にすると縁を暗く落とす縁取り（黒いリム）になります。</td></tr>
     <tr><td>裏面で無効化</td><td>両面描画（Cull = Off）のとき、<b>裏面のメッシュにリムを出しません</b>（Add/Multiply 両モードに作用）。服の袖裏・コートの裏側などを暗く落ち着かせたいときに使います。既定は OFF。</td></tr>
+    <tr><td>マスクで部位を絞る (Use Rim Mask)</td><td>共有マスクの指定チャンネル（既定 <code class="inl">A</code>）で、<b>リムを出す場所を部位ごとに絞ります</b>（白=出す / 黒=出さない / 中間は強さが比例）。「顔だけリムを消す」「金具だけ強く光らせる」といった調整ができます。<code class="inl">Add</code> / <code class="inl">Multiply</code> の<b>両モードに同じように効き</b>、環境順応・暗所の下限・環境色になじませるとも併用できます。マスクはメインテクスチャと同じ UV で参照します。既定は OFF。</td></tr>
+    <tr><td>Rim Shade を有効化（縁を暗く落とす）</td><td><b>Rim Light とは独立した、縁を暗く落とすレイヤー</b>です（既定 OFF）。<b>Rim Light の Blend Mode を <code class="inl">Add</code> にしたまま本機能を ON にすれば、光る縁と暗い縁を同時に出せます。</b>Rim Light を使わず、暗い縁だけを出すこともできます（このトグルだけを ON にしてください）。</td></tr>
+    <tr><td>Rim Shade Color / Intensity</td><td>縁を寄せる色と、その濃さ（<code class="inl">0</code>〜<code class="inl">4</code>）です。暗い色ほど強く落ち込みます（白＝変化なし）。<b>濃さを <code class="inl">1</code> より上げても、縁の色より暗くはなりません</b>（色が反転しないようにしているため）。<code class="inl">1</code> を超える範囲は<b>暗くなる帯の「全開になる部分」を広げる</b>方向に効きます（暗部が太く、縁がくっきりします）。<b>さらに濃く落としたいときは Rim Shade Color を暗い色にしてください。</b></td></tr>
+    <tr><td>Rim Shade Power</td><td>暗くする帯の太さです。<b>既定では Rim Light より太い帯</b>になります（<b>細い発光の縁＋広い暗部</b>、という使い分けを想定した初期値です）。</td></tr>
+    <tr><td>マスクで部位を絞る (Use Rim Shade Mask)</td><td>共有マスクの指定チャンネル（初期値 <code class="inl">A</code>）で、<b>暗くする場所を限定</b>します。<b>初期値は Rim Light のマスクと同じ <code class="inl">A</code></b> なので、両方のマスクを使う場合はどちらかのチャンネルを変えてください（Inspector が警告します）。</td></tr>
     <tr><td>環境順応 (Env Adapt)</td><td><b>周囲の明るさ（環境光＋メインのライト）に合わせてリムを減光</b>します。暗いワールドでリムだけが浮いて見えるのを防ぎます。値は「<b>環境の影響をどれだけ受けるか</b>」の度合いで、<code class="inl">1</code>（<b>既定</b>）で完全に追従、<code class="inl">0</code> で従来どおり明るさが一定のリムになります。<b>白でしっかり照らされている明るさ以上の場所では従来と同じ見た目</b>になり、そこから暗くなるほど減光します（＝暗い側にだけ効きます）。Add / Multiply 両モード、および Unlit にも作用します。</td></tr>
     <tr><td>暗所の下限 (Dark Floor)</td><td>真っ暗な場所でリムをどこまで残すかの下限です。<code class="inl">0</code>（既定）は完全に消灯、<code class="inl">0.2</code> 程度にすると<b>暗闇でもうっすら輪郭が残ります</b>。暗いワールドで減光しすぎると感じたときの調整はこの値で行います。環境順応が <code class="inl">0</code> より大きいときだけ表示されます。</td></tr>
     <tr><td>環境色になじませる (Env Tint)</td><td><b>周囲の環境光の色みをリムの色に乗せます</b>。寒色のワールドでは青寄りに、夕焼けなど暖色のワールドでは暖色寄りにリムが転びます。<code class="inl">0</code>（既定）で色は変わりません。<b>明るさは変えず色みだけを寄せる</b>ため、環境順応と併用しても二重に暗くなりません。環境順応とは独立しているので、<b>明るさは一定のまま色だけ馴染ませる</b>（環境順応 <code class="inl">0</code> ＋ 環境色になじませる <code class="inl">1</code>）といった使い方もできます。効果は<b>リム色に含まれる成分を環境光の色みの分だけ抑える</b>形で出るため、<b>白や淡色のリムほど変化がはっきり</b>します。</td></tr>
   </tbody></table>
-  <p><b>黒いリム（縁を暗くする）にするには:</b> Blend Mode を <code class="inl">Multiply</code> にし、Rim Color を黒〜暗色に設定してください。Intensity で暗くする強さ、Rim Power で縁取りの太さを調整します。</p>
-  <p><b>「裏面で無効化」について:</b> このオプションは描画設定の <b>Cull が Off（両面描画）</b>のときに効果を持ちます。Cull が <b>Back（裏面を描画しない・既定）</b>の場合は裏面そのものが表示されないため、ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります（Matcap の同名オプションと同じ考え方です）。</p>
-  <p><b>環境順応の使いどころ:</b> リムの発光は本来「光の当たり方に関係なく一定」の演出であるため、<b>暗いワールドではリムだけが明るく残って浮いて見える</b>ことがあります。環境順応（既定 <code class="inl">1</code>）が周囲の明るさに追従して自動的に暗くしてくれるので、そのままで多くのワールドに馴染みます。<b>明るいワールドでの見え方は変わらない</b>ため、調整が要るのは暗所だけです。暗所で消えすぎる場合は <b>暗所の下限</b> を上げる（または <b>環境順応</b> を少し下げる）のが目安です。逆に、アバターの見せ場としてリムを常に一定の明るさで光らせたい場合は、環境順応を <code class="inl">0</code> にすれば従来どおりの一定発光になります。</p>
-  <div class="note tip" data-label="💡 効き方を確認するときのコツ">
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 光る縁と暗い縁を同時に出すには（Rim Shade）">
+    <p>Rim Light の Blend Mode を <code class="inl">Add</code>（既定）のままにして、<b>Rim Shade を有効化</b>してください。Rim Light が縁を光らせ、Rim Shade が縁を暗く落とします。<b>両者は独立したレイヤー</b>なので、色・太さ・濃さ・マスクをそれぞれ別に設定できます。<b>Rim Shade だけを ON にすれば、Rim Light を使わずに暗い縁だけを出せます。</b><b>Rim Shade は Rim Light の <code class="inl">Multiply</code> と同じ計算</b>（縁の色を指定色へ寄せる乗算）なので、見え方の系統は同じです。違いは<b>独立して同時に使えること</b>と、<b>帯の太さ・色・マスクを別に持てること</b>です。Rim Shade も <b>Unlit モードで効きます</b>。<b>環境順応の 3 つの設定（環境順応 / 暗所の下限 / 環境色になじませる）は Rim Light と Rim Shade の共通設定</b>で、どちらにも同じように効きます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 黒いリム（縁を暗くする）にするには">
+    <p>Blend Mode を <code class="inl">Multiply</code> にし、Rim Color を黒〜暗色に設定してください。Intensity で暗くする強さ、Rim Power で縁取りの太さを調整します。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 「裏面で無効化」について">
+    <p>このオプションは描画設定の <b>Cull が Off（両面描画）</b> のときに効果を持ちます。Cull が <b>Back（裏面を描画しない・既定）</b> の場合は裏面そのものが表示されないため、ON にしても見た目は変わりません。Cull は「Transparency / Rendering」の詳細設定にあります（Matcap の同名オプションと同じ考え方です）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 環境順応の使いどころ">
+    <p>リムの発光は本来「光の当たり方に関係なく一定」の演出であるため、<b>暗いワールドではリムだけが明るく残って浮いて見える</b>ことがあります。環境順応（既定 <code class="inl">1</code>）が周囲の明るさに追従して自動的に暗くしてくれるので、そのままで多くのワールドに馴染みます。<b>明るいワールドでの見え方は変わらない</b>ため、調整が要るのは暗所だけです。暗所で消えすぎる場合は <b>暗所の下限</b> を上げる（または <b>環境順応</b> を少し下げる）のが目安です。逆に、アバターの見せ場としてリムを常に一定の明るさで光らせたい場合は、環境順応を <code class="inl">0</code> にすれば従来どおりの一定発光になります。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 効き方を確認するときのコツ">
     <p>環境順応は「<b>白でしっかり照らされている明るさより暗い側にだけ</b>」効きます。明るいワールドでライトを少し動かしても変化が出ないのは仕様です（明るい場所は従来と同じ見た目に保つため）。効き方を確かめたいときは、<b>Directional Light の Intensity を 0 に近づける</b>か、<b>暗い Skybox に変える</b>と変化がはっきり見えます。</p>
   </div>
-  <p><b>環境色になじませる（Env Tint）について:</b> こちらは<b>明るさではなく色み</b>を環境に寄せる調整で、環境順応とは独立して使えます。周囲の光の色を取り出して<b>色相だけ</b>をリム色に乗せるため、明るさが二重に落ちることはありません。既定は <code class="inl">0</code>（色を変えない）です。<b>白〜淡色のリム</b>ほど効果がはっきり出ます（もともと濃い色のリムでは変化が分かりにくい場合があります）。ワールドを渡り歩く用途で「どこでも浮かない」ことを狙うなら環境順応と併用、キャラクターの色を守りたい場合は <code class="inl">0</code> のままが無難です。</p>
-  <p><b>補足:</b> <code class="inl">Multiply</code> は Lit（Unlit OFF）でのみ効果が出ます（Unlit モードは光に応答しないため）。<code class="inl">Add</code> のリムライト発光は、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。</p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 環境色になじませる（Env Tint）について">
+    <p>こちらは<b>明るさではなく色み</b>を環境に寄せる調整で、環境順応とは独立して使えます。周囲の光の色を取り出して<b>色相だけ</b>をリム色に乗せるため、明るさが二重に落ちることはありません。既定は <code class="inl">0</code>（色を変えない）です。<b>白〜淡色のリム</b>ほど効果がはっきり出ます（もともと濃い色のリムでは変化が分かりにくい場合があります）。ワールドを渡り歩く用途で「どこでも浮かない」ことを狙うなら環境順応と併用、キャラクターの色を守りたい場合は <code class="inl">0</code> のままが無難です。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — マスクで部位を絞る（Use Rim Mask）について">
+    <p>リムは本来モデル全体の輪郭に一様に出ますが、<b>顔だけ出したくない／金具だけ強く光らせたい</b>といった調整をしたい場面があります。ON にすると共有マスクの指定チャンネル（既定 <code class="inl">A</code>）を読み、<b>白い場所だけリムが出ます</b>（中間色では強さが比例します）。裏面で無効化と同じ 1 箇所で効くため、<code class="inl">Add</code>（加算発光）でも <code class="inl">Multiply</code>（暗色化）でも同じように働きます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 環境順応の 3 設定は Rim Light と Rim Shade の共通設定です">
+    <p>Inspector でも「環境順応（Rim Light / Rim Shade 共通）」として 1 箇所にまとめて表示され、どちらか一方でも有効なら操作できます。</p>
+    <p><b>共有マスクは Fake Shadow Texture や 2枚目・3枚目 Matcap と共用のスロット</b>です（既定は <code class="inl">R</code>＝2枚目 Matcap / <code class="inl">G</code>＝3枚目 Matcap / <code class="inl">B</code>＝Fake Shadow / <code class="inl">A</code>＝リムライト）。<b>共有マスクの既定は「黒」＝マスクを割り当てないまま ON にするとリムが全面で消えます</b>（Inspector が警告します）。<b>グレースケール画像は R=G=B のため全チャンネルに同じ絵が入る</b>ので、複数の機能で使うときはチャンネルを分けて描いてください。Fake Shadow Texture と違い、独立した Tiling / Offset は持ちません（メインテクスチャと同じ UV）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 補足">
+    <p><code class="inl">Add</code> / <code class="inl">Multiply</code> の<b>どちらも Unlit モードで効きます</b>（<code class="inl">v47_GUIr0</code> より。それ以前は <code class="inl">Multiply</code> が Unlit で効きませんでした）。<code class="inl">Add</code> のリムライト発光は、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。</p>
+  </div>
+  </div>
+
 </section>
 
 <!-- ============ BACK LIGHT ============ -->
 <section id="backlight">
-  <div class="sec-head rv"><div class="num">SEC. 16 — VFX</div><h2>Back Light（逆光ライト）</h2><div class="sub">// 光が背後にあるときだけ光る逆光表現</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 11 — LIGHTING</div><h2>Back Light（逆光ライト）</h2><div class="sub">// 光が背後にあるときだけ光る逆光表現</div></div>
   <div class="rv">
   <p><b>メインの平行光（Directional Light）がキャラクターの背後にあるときだけ</b>、輪郭の広い範囲を発光させるイラスト調の逆光表現です。Rim Light が「見る角度で常に縁が光る」のに対し、Back Light は「光が背後にある時だけ光る」ことに加え、<b>影（シャドウ）で光が遮られている部分は光りません</b>（上着の内側・襟元など、体に遮られて逆光が届かない場所は発光しない）。シーンのライトの向きと遮蔽に反応する自然な逆光になります。</p>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ Unlit モードでは Back Light は効きません">
+    <p>光の向きと遮蔽を使う機能のため、ライティング計算を行わない Unlit モードでは発光しません。<b>Unlit のときは Back Light の項目自体が Inspector から隠れます</b>（設定値は保持され、Unlit を OFF に戻せば元の値のまま再表示されます）。</p>
+  </div>
+  </div>
+  <div class="rv">
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Back Light</td><td>機能の有効/無効。</td></tr>
     <tr><td>Back Light Color (HDR) / Intensity</td><td>逆光の色と強さです。HDR カラーなので Bloom と組み合わせると強く発光します。</td></tr>
@@ -847,27 +991,156 @@ details .dbody li{margin-bottom:10px}
     <tr><td>環境色になじませる (Env Tint)</td><td><b>周囲の環境光の色みを逆光の色に乗せます</b>。寒色のワールドでは青寄りに、暖色のワールドでは暖色寄りに転びます。<code class="inl">0</code>（既定）で色は変わりません。<b>明るさは変えず色みだけを寄せる</b>ため、環境順応と併用しても二重に暗くなりません。</td></tr>
     <tr><td>裏面で無効化</td><td>両面描画（Cull = Off）のとき、裏面のメッシュに逆光を出しません。既定は OFF。</td></tr>
   </tbody></table>
-  <p><b>Rim Light との違い:</b> Rim Light は光源の向きに関係なく「視線に対して縁」が光ります。Back Light は<b>シーンのメイン平行光の向き</b>を見て光が被写体の背後にある時だけ光り、さらに<b>影で遮られた部分は光りません</b>。両方を同時に使うこともできます。</p>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Rim Light との違い">
+    <p>Rim Light は光源の向きに関係なく「視線に対して縁」が光ります。Back Light は<b>シーンのメイン平行光の向き</b>を見て光が被写体の背後にある時だけ光り、さらに<b>影で遮られた部分は光りません</b>。両方を同時に使うこともできます。</p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="NOTE — 仕様上の注意（遮蔽について）">
     <p>光の遮蔽判定には<b>ワールドの影（シャドウ）</b>を利用します。<b>影の無いワールド</b>（シャドウが無効な環境）では遮蔽が働かず、光の向きだけで判定されるため、上着の内側などにも光が出ることがあります。また <b>Unlit モードでは無効</b>です（光に応答しないため。Rim の Multiply と同じ扱い）。</p>
   </div>
-  <div class="note tip" data-label="💡 環境順応について">
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 環境順応について">
     <p>逆光は「光が背後にあるか」と「影で遮られているか」だけで判定していたため、<b>ライトの強さを弱めても逆光の明るさは変わりません</b>でした。環境順応（既定 <code class="inl">1</code>）を使うと周囲の明るさに合わせて自動的に弱まり、暗いワールドでも風景に馴染みます。<b>明るいワールドでの見え方は変わらない</b>ため、調整が要るのは暗所だけです。効き方を確かめたいときは、<b>Directional Light の Intensity を 0 に近づける</b>か、<b>暗い Skybox に変える</b>と変化がはっきり見えます。Rim Light の同名の項目とまったく同じ仕組みなので、両方使う場合も設定の勘所は共通です。</p>
   </div>
-  <p><b>補足:</b> 発光は透明度（hlFade）に追従してフェードします。効果はメインの Directional Light を基準にするため、ワールドに Directional Light が無い場合は光りません。「裏面で無効化」は Cull = Off（両面描画）のときのみ意味を持ちます（Rim / Matcap の同名オプションと同じ考え方です）。</p>
   </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 補足">
+    <p>発光は透明度（hlFade）に追従してフェードします。効果はメインの Directional Light を基準にするため、ワールドに Directional Light が無い場合は光りません。「裏面で無効化」は Cull = Off（両面描画）のときのみ意味を持ちます（Rim / Matcap の同名オプションと同じ考え方です）。</p>
+  </div>
+  </div>
+
+</section>
+
+<!-- ============ FAKE SHADOW ============ -->
+<section id="fakeshadow">
+  <div class="sec-head rv"><div class="num">SEC. 12 — LIGHTING</div><h2>Fake Shadow（落ち影 / 前髪の影）</h2><div class="sub">// 影を落とす側（Mesh）と受ける側（Texture）</div></div>
+  <div class="rv">
+  <p>前髪などの影を表現する機能です。<b>出し方が 2 通り</b>あり、同じセクション内にまとめてあります。</p>
+  <ul>
+    <li><b>Fake Shadow Mesh（影を落とす側）</b>：メッシュの形から影を作ります。<b>頭の動きと光の向きに追従</b>します。</li>
+    <li><b>Fake Shadow Texture（影を受ける側）</b>：UV に描いた<b>静止画</b>の影です。<b>どのワールドでも必ず出せます</b>。</li>
+  </ul>
+  <p><b>Fake Shadow Mesh はワールドの描画設定によっては表示できません。</b>その場合に備えて、<b>Fake Shadow Texture を「保険」として併用</b>するのが基本的な使い方です（切り替えは <b>Fake Shadow Auto Fallback</b> が自動で行います）。Texture 側は <b>Bake to Base の「Fake Shadow の焼きこみ」</b>（前述）で自動生成できます。</p>
+  </div>
+  <div class="rv" id="fakeshadowmesh">
+  <h4><span class="hx">#</span> Fake Shadow Mesh（影を落とす側・メッシュから落とす影）</h4>
+  <p>前髪などの<b>メッシュ自身の形を光の向きへ押し出して</b>、顔の上に影として落とす機能です。下記 <b>Fake Shadow Texture</b> が UV に描いた<b>静止画</b>なのに対し、こちらは<b>頭の動きと光の向きに追従する</b>影です。</p>
+  <p><b>この設定は「影を落とす側」（前髪など）のマテリアルに行います。</b>受け手（顔など）側の設定は不要です。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Fake Shadow Mesh を有効化</td><td>機能の有効/無効（既定 OFF）。</td></tr>
+    <tr><td>影の重ね方</td><td>影が自分自身と重なる部分（前髪の房どうしの交差など）の見え方を選びます。<b>フラット</b>（既定）＝<b>重なっても濃さが一定</b>になります（下記の注意を参照）。<b>乗算</b>＝受け手の陰影に比例して暗くします。重なった部分はその分だけ濃くなります。</td></tr>
+    <tr><td>影の色</td><td>落ちる影の色。既定はやや青みのあるグレーです（白＝影なし）。</td></tr>
+    <tr><td>影の濃さ</td><td>影の強さ（<code class="inl">0</code>＝無効 〜 <code class="inl">1</code>＝最大）。アニメーション可能です。</td></tr>
+    <tr><td>落とす距離</td><td>メッシュを光の向きへ押し出す量（既定 <code class="inl">0.6</code>・<b>目安 <code class="inl">0.1</code>〜<code class="inl">1.0</code></b>）。<b>小さすぎると影が本体に埋もれ、大きすぎると影が浮いて見えます</b>。顔と前髪の隙間に合わせて調整してください。<b>マイナス（<code class="inl">-2</code>〜<code class="inl">0</code>）にすると、メッシュを光源の側へ押し出します</b>（顔に落ちる影は光源の側へずれます）。髪型によって、影の重なり方をこちらで合わせたいとき用です。光がカメラ側から当たっているときは、前髪など<b>落とす側自身にも影が乗ることがあります</b>（値がマイナスのときは Inspector に案内が出ます）。</td></tr>
+    <tr><td>影が届く奥行き</td><td>影が落ちる奥行きの上限（既定 <code class="inl">0.5</code>・<b>目安 <code class="inl">0.1</code>〜<code class="inl">1.0</code></b>）。<b>これより奥にあるものは暗くなりません</b>＝背景・遠くの壁・他のアバターは影響を受けません。顔まで影が届かない場合は少し大きく、周囲に影が漏れる場合は小さくします。</td></tr>
+    <tr><td>落ち影のグラデーション</td><td>影の<b>外周</b>をやわらげます（既定 <code class="inl">0</code>＝ぼかしなし）。上げるほど輪郭が広くぼけ、<b><code class="inl">1</code> に近づくと影全体が薄くなっていきます</b>。<b>房に厚みのある髪ではよく効きますが、平面のカードでできた前髪ではほとんど効きません</b>（下記の注意を参照）。</td></tr>
+    <tr><td>落ち影の奥行きのフェード</td><td>「影が届く奥行き」の<b>遠い側</b>で影をなだらかに消します（既定 <code class="inl">0</code>＝従来どおりその位置でぱったり終わる）。上げるほどフェードの始まりが手前に寄り、<b><code class="inl">1</code> では落とす側のすぐそばから薄れ始めます</b>。<b>メッシュの形に左右されず必ず効きます</b>。</td></tr>
+    <tr><td>光が弱いときの向き (XYZ・ワールド空間)</td><td><b>暗いワールドで光の向きが頼りにならないとき</b>に、影を落とす向きを作者の指定へ寄せます。既定 <code class="inl">(0, 0.7, 0.7)</code>＝やや前上方から当たる想定です（<b>光の方向を指す向き</b>で、影はその反対側へ伸びます）。</td></tr>
+    <tr><td>上の向きへ切り替わる明るさ</td><td>どのくらい暗くなったら上記の向きへ寄せ始めるか（既定 <code class="inl">0.1</code>）。<b>Light Intensity と同じ目盛りで読めます</b>（<code class="inl">0.1</code>＝Directional Light の Intensity が 0.1 を下回るあたりから寄り始める）。<b>切り替えは滑らかに補間される</b>ため、明るさが変わってもパッと切り替わることはありません。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Render Queue は自動で調整されます">
+    <p>影は<b>受け手（顔など）より後に描かれる</b>必要があります。不透明な描画は手前から順に描かれるため、前髪は顔より先に描かれてしまい、<b>そのままでは影が顔に上書きされて消えます</b>。この機能を <b>ON にすると Render Queue が自動で +1</b> され（Blend Preset を選び直したときも同様）、<b>OFF に戻すと元に戻ります</b>。Opaque・Cutout・Fade など<b>どのプリセットでも同じように働きます</b>。</p>
+    <p><b>ただし Render Queue を手動で変更済みの場合は、自動調整を行いません</b>（利用者の設定を尊重するため）。その場合は Transparency / Rendering セクションの <b>Render Queue</b> で、<b>この（前髪側の）マテリアルの値を受け手より大きく</b>してください。<b>受け手と同じ値では影が出ません</b>（<code class="inl">+1</code> で足ります）。<b>影がまったく出ないときは、まずここを確認してください。</b></p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ 【重要】ワールドによっては表示できません">
+    <p>この機能は、影の届く範囲を判定するためにワールド側の描画設定を利用します。<b>その設定が無いワールドでは影が出ません。</b> ただし背景が暗くなるといった破綻は起きず、<b>単に出ないだけ</b>です。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 「光が弱いときの向き」が効く範囲について">
+    <p>この設定が働くのは「<b>暗いが光はある</b>」ワールドです。<b>光がまったく無いワールドでは、そもそもこの影自体が表示できません</b>（影の届く範囲を判定する仕組みも同じ光源に依存しているため、両者は同時に失われます）。したがって「光が無いときの保険」は下記の自動フォールバックが担い、この設定は「<b>薄暗いときに影の向きが暴れないようにする</b>」ためのものだと考えてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 自動フォールバックの使い方">
+    <p>上記の「出ないワールド」でも影が絶えないようにする設定です。<b>受け手（顔など）のマテリアルの Fake Shadow Texture で「自動フォールバック」を ON</b> にすると、<b>この機能が出せるワールドでは描いた影が自動で隠れ、出せないワールドでは描いた影が代わりに出ます。</b>影が二重になることも、影が消えることもありません。<b>Fake Shadow Mesh と併用するなら ON にしてください。</b><b>既定は OFF（描いた影を常時表示）です。</b> Fake Shadow Mesh を使わず描いた影だけを使う場合は、そのままで構いません。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Fake Shadow Texture（描いた影）との違い">
+    <p>描いた影は「<b>必ず出るが追従しない</b>」、こちらは「<b>追従するが出ないワールドがある</b>」という関係です。どちらか一方が他方を置き換えるものではないため、上記の自動フォールバックで組み合わせて使えます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 「フラット」を選ぶときの注意">
+    <p>フラットは「<b>これ以上暗くしない</b>」という上限を置く方式です。そのため<b>重なっても濃さは一定</b>になりますが、代わりに<b>影の中では受け手の陰影やテクスチャの明暗が失われ</b>、<b>もともと影色より暗い部分（濃い色のテクスチャなど）には影が乗りません</b>。<b>既定はフラット</b>です。「影の中でも肌や布の陰影を残したい」場合は乗算に切り替えてください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 暗いワールドでも影は消えません">
+    <p>フラットの影色は<b>周囲の明るさに自動で追従</b>します。上限を置く方式は、そのままだと<b>ワールドが暗くなるにつれ受け手のほうが影色より暗くなり、影が消えてしまう</b>ためです。<b>明るいワールドでの見え方は従来と変わりません</b>（暗いときだけ働きます）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 落ち影のグラデーションが効きにくいメッシュがあります">
+    <p>この影は光の向きへ<b>メッシュをずらして描く</b>仕組みのため、画面に出る影の輪郭は「<b>カメラから見た落とす側のシルエット</b>」になります。ぼかしはその境目——面が横を向いていくところ——を薄くすることで作られます。したがって<b>房に厚みのある髪（筒状のメッシュ）ではよくぼけます</b>が、<b>平面のカードを並べて作った前髪では、カードの面内で向きが一定なため縁でも「横を向いた」状態にならず、ほとんど変化しません</b>。その場合は <b>落ち影の奥行きのフェード</b>（形に左右されません）を使うか、両方を併用してください。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>影の形は<b>メッシュの形そのもの</b>になります（前髪の形がそのまま影になります）。受け手が曲面のため、落とす距離を大きくするほど影が受け手から剥離して見えます。<b>VR では両眼で見え方が変わる</b>ため、実際に VR で確認しながら距離を決めてください。影は<b>発光系の効果（Emission・Rim Light・Glitter など）は暗くしません</b>。無効時は描画そのものが発生しないため負荷はほぼゼロです。</p>
+  </div>
+  </div>
+  <div class="rv" id="fakeshadowtex">
+  <h4><span class="hx">#</span> Fake Shadow Texture（影を受ける側・意匠的な落ち影 / 前髪の影）</h4>
+  <p>前髪の影のように「<b>作者が描いた影</b>」を、ワールドの光源に関係なく<b>常に同じ位置・同じ濃さ</b>でオブジェクトの上に表示する機能です。イラストの塗りとして意図した陰影を、どのワールドでも崩さずに見せたいときに使います。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Fake Shadow Texture を有効化</td><td>機能の有効/無効（既定 OFF）。</td></tr>
+    <tr><td>共有マスク RGBA（他機能と共用・既定 <code class="inl">B</code>）</td><td>影の形を描いた画像を設定します。<b>Matcap の領域マスクと同じ共有スロット</b>です（下記「共有マスクの使い方」を参照）。</td></tr>
+    <tr><td>影を読むチャンネル (R/G/B/A)</td><td>共有マスクのどのチャンネルを影として読むか（既定 <code class="inl">B</code>）。Matcap の領域マスクは既定 <code class="inl">R</code> なので、そのままでも衝突しません。<b>すぐ下に R/G/B/A の中身が並んで表示され、クリックでも切り替えられます。</b></td></tr>
+    <tr><td>マスクを反転（黒＝影にする）</td><td>既定 OFF は「<b>白＝影 / 黒＝影なし</b>」。グレースケールで<b>黒く影を塗った</b>画像を使う場合は ON にしてください（<code class="inl">黒＝影</code>になります）。</td></tr>
+    <tr><td>影の色（乗算）</td><td>影の部分に掛ける色。既定はやや青みのあるグレーです。暗くしたいほど濃い色にします（白＝影なし）。</td></tr>
+    <tr><td>影の濃さ</td><td>影の強さ（<code class="inl">0</code>＝無効 〜 <code class="inl">1</code>＝最大）。アニメーション可能です。</td></tr>
+    <tr><td>Tiling / Offset</td><td>影マスクの繰り返しと位置。<b>Offset をずらせば、テクスチャを描き直さずに影の位置を微調整</b>できます。基準となる UV は Albedo テクスチャと同じです。</td></tr>
+    <tr><td>自動フォールバック</td><td><b>既定 OFF</b>（描いた影を常に表示）。<b>ON にすると</b>、この描いた影を <b>Fake Shadow Mesh（上記）が表示できないワールドでのみ</b>表示します。<b>Fake Shadow Mesh とセットで使うときに ON にする設定</b>です（下記「自動フォールバックの使い方」を参照）。<b>Fake Shadow Mesh を使わず、描いた影だけを常に出したい場合は OFF のままで構いません。</b></td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Receive Shadow との違い（併用できます）">
+    <p>Lighting &amp; Shadow の <b>Receive Shadow</b> は、ワールドに実際の平行光とシャドウ設定があるときだけ現れる<b>物理的な落ち影</b>です。光の無いワールドや暗いワールドでは影が出ません。一方 Fake Shadow Texture は<b>光の状態に関係なく常に出る、作画としての影</b>です。役割が違うため、両方を同時に使えます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 共有マスクの使い方">
+    <p>「共有マスク」は<b>1枚の画像の R/G/B/A に、別々の白黒マスクを最大4種類詰め込める</b>スロットです（Fake Shadow Texture と Matcap の領域マスクが共用します）。画像編集ソフトで、<b>既定の割り当てどおり <code class="inl">R</code> に 2枚目 Matcap の領域 / <code class="inl">G</code> に 3枚目 Matcap の領域 / <code class="inl">B</code> に前髪の影 / <code class="inl">A</code> にリムライトのマスク</b>、というように<b>チャンネルごとに別々の絵</b>を入れておき、各機能で読むチャンネルを指定してください。<b>どの機能がどのチャンネルを既定にしているかは、Inspector のスロット名に出ます</b>（例：Fake Shadow Texture では「共有マスク RGBA（他機能と共用・<b>既定 <code class="inl">B</code></b>）」）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — チャンネルの中身は Inspector で確認できます">
+    <p>チャンネル選択のすぐ下に <b>R/G/B/A の 4 枚が並んで表示</b>され、いま読んでいるチャンネルが枠で強調されます。<b>サムネイルをクリックすると、そのチャンネルに切り替わります。</b> R/G/B はそれぞれ赤・緑・青に着色して表示されるため、どのチャンネルの絵かひと目で分かります（アルファはグレースケール表示）。テクスチャ側の「Read/Write Enabled」を有効にする必要はありません。</p>
+    <p>グレースケール（白黒）の画像は R=G=B なので、<b>1種類しか使わない場合はチャンネルを気にせずそのまま置くだけで動きます</b>（アルファは不要です）。逆に、<b>複数機能で使うときは必ずチャンネルを分けてください</b> — グレースケール画像は全チャンネルに同じ絵が入るため、そのままだと Matcap の領域マスクと影が同じ形になってしまいます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Texture Layer とは無関係です">
+    <p>Fake Shadow Texture はこの共有マスクを使うため、<b>Texture Layer の色オーバーレイ・透明マスクは今までどおり自由に使えます</b>（同時使用できます）。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>UV 空間に描いた<b>静止画</b>であり、幾何学的な自己遮蔽ではありません。そのため<b>頭の動きや光源の向きには追従しません</b>（常に同じ意匠で見せることが目的の機能です）。影はオブジェクトの色に対して掛かるため、<b>Unlit モードや暗いワールドでも同じように出ます</b>が、Emission・Rim Light・Glitter などの<b>発光系の効果は暗くしません</b>（発光している部分では影が見えにくくなります）。スクロール（流れる動き）は掛かりません。無効時はほぼ負荷ゼロです。</p>
+  </div>
+  </div>
+
 </section>
 
 <!-- ============ OUTLINE ============ -->
 <section id="outline">
-  <div class="sec-head rv"><div class="num">SEC. 17 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 13 — VFX</div><h2>Outline &amp; Sweep</h2><div class="sub">// 輪郭線 ＆ 周回発光オプション</div></div>
   <div class="rv">
-  <h4><span class="hx">#</span> Outline（アウトライン / 輪郭線）</h4>
   <p>メッシュの輪郭線を描くベース機能です。トゥーン調の縁取りから、HDR カラー＋Bloom によるネオン管のような発光輪郭まで対応します。<b>球・キューブ・文字・衣装・小物など任意の3Dメッシュに対応</b>し、スキンメッシュではアニメーションにも追従します。基本の輪郭線はテクスチャ・UV展開なしで描けます（<b>マスクは任意</b>：目尻など部分的に線を消したいときだけマスク画像を使えます）。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Outline</td><td>機能の有効/無効。</td></tr>
     <tr><td>Base Color (HDR)</td><td>輪郭線の色。HDR 対応のため Intensity を上げると Bloom（光の滲み）が綺麗に効きます。<b>A（アルファ）は輪郭線自体の不透明度</b>です（<code class="inl">v34</code> から有効・既定 <code class="inl">1</code>＝不透明）。</td></tr>
-    <tr><td>Self-Illuminate（自己発光）</td><td>輪郭線がワールドのライティングを無視して自己発光する度合い（<code class="inl">0</code>〜<code class="inl">1</code>・<b>既定 0</b>）。<code class="inl">0</code>（既定）では<b>輪郭線がシーンの明るさ（メイン Directional Light の総量＋環境光、Light Min/Max Limit に追従）に均一に追従</b>します（Directional Light があれば明るく（白）、シーン全体が暗いときだけ灰色〜黒・線は均一で明暗の境界は出ません・真っ暗では Light Min Limit で止まり <code class="inl">0</code> で消灯）。<code class="inl">1</code> ではライティングを無視して<b>常時発光（従来のネオン）</b>になります。発光の強さは <b>Base Color (HDR) の明るさ</b>で調整してください。アニメーション可能です。<b>※この値が次の Intensity / Line Width の効き方（明るさの基準）を左右するため、先に決められるよう Base Color の直後に配置しています。</b></td></tr>
+    <tr><td>Self-Illuminate（自己発光）</td><td>輪郭線がワールドのライティングを無視して自己発光する度合い（<code class="inl">0</code>〜<code class="inl">1</code>・<b>既定 <code class="inl">0</code></b>）。<code class="inl">0</code>（既定）では<b>輪郭線がシーンの明るさ（メイン Directional Light の総量＋環境光、Light Min/Max Limit に追従）に均一に追従</b>します（<b>Directional Light があれば明るく（白）、シーン全体が暗いときだけ灰色〜黒</b>・線は均一で明暗の境界は出ません・真っ暗では Light Min Limit で止まり <code class="inl">0</code> で消灯）。<code class="inl">1</code> ではライティングを無視して<b>常時発光（従来のネオン）</b>になります。発光の強さは <b>Base Color (HDR) の明るさ</b>で調整してください。アニメーション可能です。<b>※この値が次の Intensity / Line Width の効き方（明るさの基準）を左右するため、先に決められるよう Base Color の直後に配置しています。</b></td></tr>
     <tr><td>Intensity（光の強さ）</td><td>線の発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
     <tr><td>Line Width（線の太さ）</td><td>輪郭線の太さ（メッシュの押し出し量）。スライダーは <code class="inl">0〜20</code>（<code class="inl">0.01</code> 刻み・小数第2位まで）で、<code class="inl">0</code> で線が消えます。細い線の微調整向けのレンジです（表示値は内部値の便宜的な倍率で、効果・保存値の意味は値の大小に依存しません）。</td></tr>
     <tr><td>Extrude Mode（押し出し方式）</td><td><code class="inl">Normal</code>＝法線方向（<b>ベベル付き文字・文字列など複数パーツのメッシュ・スムーズな一般モデル向け</b>）/ <code class="inl">PivotScale</code>＝ピボットから外向き（<b>キューブ等のハードエッジな単一凸形状向け</b>・角が割れません）。</td></tr>
@@ -875,19 +1148,29 @@ details .dbody li{margin-bottom:10px}
     <tr><td>Use Outline Mask（マスクで部分的に消す）</td><td>輪郭線をテクスチャマスクで<b>部分的に消す</b>機能（既定 OFF）。目尻・口元など、線を出したくない箇所だけ消せます。ON にすると下記のマスク欄が表示されます。</td></tr>
     <tr><td>Outline Mask</td><td>グレースケールのマスク画像。<b>白＝線あり / 黒＝線なし</b>（中間はグラデーション）。<b>メインテクスチャと同じ UV</b>で参照します。マスクで消した部分は深度を書かないため、半透明時の裏側の透けも増えません。</td></tr>
   </tbody></table>
-  <div class="note tip" data-label="💡 TIP — 有効化したときの初期値">
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 有効化したときの初期値">
     <p>Outline を有効にすると、扱いやすい初期設定（Intensity <code class="inl">1</code> / Line Width <code class="inl">0.1</code> / Sweep OFF）で始まります。値はあとから自由に変更できます。なお Outline を一度 OFF にして再び有効化すると、この初期設定に戻ります。</p>
   </div>
-  <div class="note tip" data-label="💡 TIP — 仕組み（重要）">
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 仕組み（重要）">
     <p>輪郭線は「メッシュを少し膨らませた複製を裏面だけ描画する」方式（反転外殻）で幾何学的に描かれます。そのため<b>キューブのような平面メッシュでも正確に輪郭線が出ます</b>。</p>
   </div>
-  <div class="note warn" data-label="⚠ Extrude Mode の使い分け">
-    <p><code class="inl">Normal</code>：法線に沿って押し出すため線の太さが均一。ハードエッジ（フラットシェーディング）の角では線が途切れることがあります。その場合は <code class="inl">PivotScale</code> に切り替えるか、モデル側にベベル/スムーズ法線を付けてください。</p>
-    <p><code class="inl">PivotScale</code>：ピボットから放射状に押し出すため角が割れませんが、<b>文字列のような複数パーツのメッシュや凹形状では線の太さが不均一になります</b>（ピボットを向く側に線が出ません）。単一の凸形状専用と考えてください。</p>
   </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ Extrude Mode の使い分け">
+    <ul style="margin:4px 0 0 20px">
+      <li><code class="inl">Normal</code>：法線に沿って押し出すため線の太さが均一。ハードエッジ（フラットシェーディング）の角では線が途切れることがあります。その場合は <code class="inl">PivotScale</code> に切り替えるか、モデル側にベベル/スムーズ法線を付けてください。</li>
+      <li><code class="inl">PivotScale</code>：ピボットから放射状に押し出すため角が割れませんが、<b>文字列のような複数パーツのメッシュや凹形状では線の太さが不均一になります</b>（ピボットを向く側に線が出ません）。単一の凸形状専用と考えてください。</li>
+    </ul>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note info" data-label="🧍 アバター本体への適用ガイド">
     <ul style="margin:4px 0 0 20px">
-      <li>スキンメッシュのボーン変形に輪郭線が追従します。Extrude Mode は <b>Normal を使用</b>してください（<code class="inl">PivotScale</code> は全身メッシュでは破綻します）。</li>
+      <li>スキンメッシュのボーン変形に輪郭線が追従します。Extrude Mode は <b><code class="inl">Normal</code> を使用</b>してください（<code class="inl">PivotScale</code> は全身メッシュでは破綻します）。</li>
       <li>線の太さはアバターのスケールに比例します（巨大/小型アバターでも見た目の比率が保たれます）。</li>
       <li>顔など<b>輪郭線を出したくない部位は、そのマテリアル側で Outline を OFF</b>（または Line Width を <code class="inl">0</code>）にしてください。アバターは部位ごとにマテリアルが分かれているのが一般的なので、これが部位制御の基本手段です。1枚のマテリアル内で<b>目尻など一部だけ消したい場合は Use Outline Mask</b>（白＝線あり／黒＝線なし）が使えます。</li>
       <li>該当マテリアルの頂点処理が約2倍＋ドローコールが1つ増えます。本体規模でも実用範囲ですが、Performance Rank を重視する場合は適用範囲を絞ってください。</li>
@@ -899,25 +1182,159 @@ details .dbody li{margin-bottom:10px}
   <p>Outline の輪郭線の上を、ひときわ明るい発光の筋がぐるりと周回するオプションです。ネオン管・サイバーガジェット・魔法陣などの「光が走る」演出に使えます。Outline が有効なときのみ機能します。</p>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Use Sweep</td><td>オプションの有効/無効。</td></tr>
-    <tr><td>Base Glow（管の基本輝度）</td><td>周回する筋が走る土台＝輪郭線（管）の基本の明るさ（<code class="inl">0</code>〜<code class="inl">1</code>・既定 <code class="inl">1</code>）。<b>下げると「淡く光る管の上を強い光の筋が走る」コントラスト</b>が作れます。Sweep 専用の設定です（Sweep を有効化すると表示）。<b>Sweep を OFF にすると Base Glow は効かなくなり、輪郭線は均一なソリッド線</b>になります（明るさは Intensity と Base Color で調整）。</td></tr>
+    <tr><td>Base Glow（管の基本輝度）</td><td>周回する筋が走る土台＝輪郭線（管）の基本の明るさ（<code class="inl">0</code>〜<code class="inl">1</code>・既定 <code class="inl">0.3</code>）。<b>下げると「淡く光る管の上を強い光の筋が走る」コントラスト</b>が作れます。<code class="inl">v34</code> から<b>筋の明るさは Sweep OFF のソリッド線と同じ明るさが上限</b>になり、Sweep で輪郭線が飽和（白飛び）しなくなりました。そのため <b><code class="inl">1</code> にすると管と筋が同じ明るさになり筋が見えなくなります</b>（GUI で Sweep を有効化したとき <code class="inl">1</code> 付近なら自動で <code class="inl">0.3</code> に補正されます）。Sweep 専用の設定です（Sweep を有効化すると表示）。<b>Sweep を OFF にすると Base Glow は効かなくなり、輪郭線は均一なソリッド線</b>になります（明るさは Intensity と Base Color で調整）。</td></tr>
     <tr><td>Width（筋の長さ）</td><td>光の筋の全長。小さいほど点状に、大きいほど長く光ります。</td></tr>
     <tr><td>Sharpness（減衰の鋭さ）</td><td>筋の中心から<b>両側へ対称に</b>かかる減衰の鋭さ。大きいほど中心が鋭く際立ち、小さいほど全体がなだらかに光ります。</td></tr>
-    <tr><td>Speed（周回速度）</td><td>周回する速さ。<b>符号で周回方向が反転</b>します（正＝一方向 / 負＝逆方向）。<code class="inl">0</code> で停止。アニメーション可能です。（表示値は便宜的な倍率で、効果・保存値の意味は値の大小に依存しません。）</td></tr>
+    <tr><td>Speed（周回速度）</td><td>周回する速さ。<b>符号で周回方向が反転</b>します（正＝一方向 / 負＝逆方向）。<code class="inl">0</code> で停止。アニメーション可能で、<b>Inspector に表示される数値がそのままアニメーションの値</b>になります。</td></tr>
     <tr><td>Count（筋の本数）</td><td>同時に周回する筋の本数（<code class="inl">1</code>〜<code class="inl">8</code> の<b>整数</b>）。<code class="inl">2</code> 以上で等間隔の複数の光が追いかけ合います。</td></tr>
-    <tr><td>Pivot Offset（周回中心）</td><td>筋が周回する中心のオフセット（オブジェクト空間）。通常は <code class="inl">(0,0,0)</code> のままで構いません。<b>アバター本体に使う場合は Y を胸の高さ（例: 1.0）に</b>設定すると周回が均等になります。</td></tr>
+    <tr><td>Pivot Offset（周回中心）</td><td>筋が周回する中心のオフセット（オブジェクト空間）。通常は <code class="inl">(0,0,0)</code> のままで構いません。<b>アバター本体に使う場合は Y を胸の高さ（例: <code class="inl">1.0</code>）に</b>設定すると周回が均等になります。</td></tr>
     <tr><td>Edge Fade（透過時の放射抑制）</td><td>半透明（Transparent / Fade）で本体越しに <b>Sweep が放射状に透けて見える</b>場合に、リムの筋を残して内側の放射だけを抑えます（<code class="inl">0</code>〜<code class="inl">8</code>・既定 <code class="inl">2</code>）。<code class="inl">0</code> で無効。<b>滑らかな曲面（球・有機的なメッシュ）向けの機能</b>です。<b>不透明では裏側が本体に隠れるため効果はありません。</b> ⚠️ ハードエッジのメッシュ（キューブ等）ではリムの筋も減衰するため、その場合は <code class="inl">0</code> にしてください（輪郭線そのものは Edge Fade の影響を受けず、常に表示されます）。</td></tr>
   </tbody></table>
-  <div class="note tip" data-label="💡 TIP — 仕組み">
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 仕組み">
     <p>光の筋の位置は<b>カメラから見た画面上の角度</b>で生成されるため、<b>どの方向から見ても、いま見えている輪郭を筋が一周</b>します。ビュー（見る側）基準のエフェクトであるため、頭（カメラ）を傾けると周回の起点も画面と一緒に回ります。また VRChat のミラー内では周回方向が反転して見えますが、これは Matcap など視点依存エフェクト共通の仕様です。</p>
   </div>
+  </div>
+  <div class="rv">
   <div class="note warn" data-label="⚠ Outline / Sweep 共通の注意">
     <ul style="margin:4px 0 0 20px">
       <li>パーティクルにこのマテリアルを使う場合、輪郭線がパーティクル1粒ごとに描画されるため、<b>パーティクル用途では OFF を推奨</b>します（ON の場合、線は寿命フェードに追従します）。</li>
       <li>本機能はシェーダーキーワードを使わないため、有効化しても<b>アップロード時のコンパイル時間（バリアント数）は増えません</b>。OFF 時は描画負荷ほぼゼロですが、専用パスの分だけドローコールが 1 つ増えます。</li>
-      <li>Transparent / Fade 系プリセットでは、本体が半透明になると裏側が本体越しに透けて見える場合があります。<b>輪郭線そのものは常に表示されます</b>（幾何学的に描くため、どのメッシュでも消えません）。Sweep の放射状の透けが気になる場合は、滑らかな曲面では Sweep の <b>Edge Fade</b>（既定 <code class="inl">2</code>）が内側の放射を抑えます（ハードエッジのメッシュでは <code class="inl">0</code> を推奨）。</li>
+      <li>Transparent / Fade 系プリセットでは、本体が半透明になると裏側（輪郭色の内壁）が本体越しに透けて見える場合があります。<code class="inl">v34</code> からは <b>Alpha Sync</b>（既定 ON）により、透けて見える輪郭色が<b>本体の透明度に追従して一緒に薄くなります</b>（本体が完全透明なら線も消えます）。Alpha Sync を OFF にすると従来どおり<b>透明度に関係なく常時表示</b>されます（幾何学的に描くため、どのメッシュでも消えません）。Sweep の放射状の透けが気になる場合は、滑らかな曲面では Sweep の <b>Edge Fade</b>（既定 <code class="inl">2</code>）が内側の放射を抑えます（ハードエッジのメッシュでは <code class="inl">0</code> を推奨）。</li>
     </ul>
   </div>
   </div>
+
+</section>
+
+<!-- ============ EMISSION ============ -->
+<section id="emission">
+  <div class="sec-head rv"><div class="num">SEC. 14 — VFX</div><h2>Emission（発光・HDR対応）</h2><div class="sub">// 発光・HDR対応</div></div>
+  <div class="rv">
+  <p>暗闇でも自己発光するマテリアルを作ります。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Emission Color HDR / Intensity</td><td>発光色と強さを調整します。Intensity を上げると Unity の Bloom（光があふれる効果）が綺麗に効きます。</td></tr>
+    <tr><td>Emission Map</td><td>発光させたい場所を白黒画像等で指定します。発光の色に使うのは RGB です。<b>アルファは「発光系のマスク」</b>として、下の <code class="inl">Emission Map のアルファでマスク</code>・AudioLink・Glitter が共用できます（下記）。</td></tr>
+    <tr><td>Emission Map のアルファでマスク</td><td>ON にすると、Emission Map の<b>アルファ</b>で光る範囲を絞ります（不透明＝光る／透明＝光らない）。アルファは<b>メインテクスチャと同じ UV で読む</b>ため、<code class="inl">Scroll</code> や Tiling で発光の模様を動かしても、<b>光る範囲は動きません</b>（例：服の決まった部分の中だけを光の筋が流れる）。<b>初期値は OFF</b>。</td></tr>
+    <tr><td>Scroll（スクロール）</td><td><code class="inl">X</code>・<code class="inl">Y</code> に速度を入れると Emission Map が流れます（<code class="inl">0</code> で停止）。エネルギーの流動表現等に。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
+    <tr><td>Pulse Speed / Pulse Min</td><td>発光を脈動（明滅）させます。<code class="inl">Pulse Speed</code> が点滅の速さ（<code class="inl">0</code> で無効）、<code class="inl">Pulse Min</code> が一番暗くなった時の明るさ（<code class="inl">0</code> で完全に消えるまで点滅）。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — Emission Map のアルファ（発光系のマスク）について">
+    <p>アルファは <b>Emission・AudioLink・Glitter が共用する 1 枚のマスク</b>です。それぞれの節のチェック（Emission／AudioLink は <code class="inl">Emission Map のアルファでマスク</code>、Glitter は <code class="inl">マスクに使うチャンネル</code> を <code class="inl">アルファ (A)</code>）で、読むかどうかを機能ごとに選べます。<b>同じ絵を読むため、同じ範囲に効きます</b>（機能ごとに範囲を分けることはできません）。アルファの無い画像は全面が <code class="inl">1</code>（＝マスクなし）として読まれます。Emission Map の Import 設定の <b>Alpha Is Transparency は OFF</b> にしてください（ON だと透明な部分の発光の色が変わることがあります）。どちらの状態も Inspector に警告が出ます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 補足">
+    <p>発光（Emission）も、パーティクルカラーのアルファに追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Color over Lifetime で発光ごと自然に消えます。</p>
+  </div>
+  </div>
+
+</section>
+
+<!-- ============ GLITTER ============ -->
+<section id="glitter">
+  <div class="sec-head rv"><div class="num">SEC. 15 — VFX</div><h2>Glitter / Sparkle（プロシージャルラメ・スパークル）</h2><div class="sub">// プロシージャルラメ・スパークル</div></div>
+  <div class="rv">
+  <p>テクスチャを使わずに、細かな輝きの粒（ラメ／スパークル）を表面に散らす装飾用の発光レイヤーです。粒はシェーダー内でプロシージャルに生成されるため、専用のノイズ画像は不要です。<b>視線を動かすと粒がきらめきます</b>（金属ラメ・フレークのような、見る角度で瞬く表現）。通常の Emission（恒常発光）とは独立した加算レイヤーとして動作するため、<b>Emission を OFF にしても、Glitter だけで発光</b>させられます。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Use Glitter</td><td>機能の有効/無効。ON にすると Intensity が自動で <code class="inl">1</code> に設定されます（既に値がある場合は維持）。</td></tr>
+    <tr><td>Glitter Color (HDR)</td><td>ラメの発光色（HDR）。Intensity を上げると Bloom に影響します。</td></tr>
+    <tr><td>Intensity</td><td>発光の強さ（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
+    <tr><td>Shape（形状）</td><td>粒の形を <code class="inl">Point</code>（丸点）/ <code class="inl">Star</code>（<b>先端の尖った十字のきらめき</b>）/ <code class="inl">Diamond</code>（菱形）/ <code class="inl">Fine Dust</code>（高密度の微細ラメ）から選びます。輪郭は<b>どのサイズでもシャープ</b>に保たれます（拡大してもぼやけません）。</td></tr>
+    <tr><td>Space（座標系）</td><td>粒の基準座標を <code class="inl">UV</code>（メッシュの UV に沿う・スクロールが自然・平面/パーティクル向き）/ <code class="inl">Object</code>（オブジェクト空間・三面投影〔Triplanar〕で Cube の側面や球の極でも引き延ばしなく均一）/ <b><code class="inl">View</code>（ワールド座標を基準に、粒が常にカメラを向く「ビルボード」表現。メッシュの UV 展開にも面の裏表にも一切影響されません）</b> から選びます。</td></tr>
+    <tr><td>Grain Scale（粒の大きさ）</td><td>1 粒の大きさ。<b>値を大きくするほど粒が大きく</b>、小さくするほど細かくなります（既定 <code class="inl">181</code>）。<b>粒を小さくするほど自動的に粒の数が増える</b>ため、細かいラメでも密度が不足しません。大きなラメにしたいときは値を上げてください（<code class="inl">290</code> 前後で粗めのラメになります）。</td></tr>
+    <tr><td>Coverage（被覆率）</td><td>実際に光る粒の割合。<code class="inl">0</code> に近いほどまばらに、<code class="inl">1</code> に近いほど密に光ります（既定 <code class="inl">0.6</code>）。</td></tr>
+    <tr><td>Size（粒サイズ）</td><td>1粒の<b>充填率</b>（セル内でどれだけ大きく描くか・既定 <code class="inl">0.7</code>）。密度と独立しているため、<b>粒を大きくしたまま密度を上げても欠けません</b>（粒の絶対サイズは Grain Scale で調整します）。</td></tr>
+    <tr><td>View Sharpness（視線シャープさ）</td><td>視線に対するきらめきの鋭さ。値が大きいほど、特定の角度で鋭く一瞬光ります。</td></tr>
+    <tr><td>Flicker Speed（明滅速度）</td><td>明滅の速さ（<code class="inl">0</code> で明滅なし）。<b>明滅は粒ごとにランダム</b>で、速さ・タイミングが 1 粒ずつ違います。さらに<b>周期の異なる 2 つの波を重ねている</b>ため、同じ場所で同じ点滅が繰り返されるパターンは実質知覚できません。</td></tr>
+    <tr><td>Scroll (X,Y)</td><td>粒を流れるように動かす速度（UV／Object それぞれの座標を平行移動）。<b>入力欄は X/Y のみ</b>です（Z/W は未使用）。</td></tr>
+    <tr><td>AudioLink 連動</td><td>ON にすると、ラメの明滅を音（AudioLink）に合わせて駆動します。<code class="inl">Band</code>（反応させる音域）と <code class="inl">Sound Strength</code>（音の掛かり具合）で調整します。</td></tr>
+    <tr><td>Emission Map で局在化</td><td>ON にすると、Emission Map でラメの出る範囲を絞ります。マップは Emission と共用です（未設定なら全面）。</td></tr>
+    <tr><td>マスクに使うチャンネル</td><td>局在化に使う Emission Map のチャンネルを選びます。<b><code class="inl">明るさ (RGB)</code></b>（初期値）＝発光の絵の明るさ（白＝出る／黒＝出ない）。発光と同じ UV で読むため、Emission の Tiling・スクロールに合わせて動きます。<b><code class="inl">アルファ (A)</code></b>＝Emission Map のアルファ（不透明＝出る／透明＝出ない）。<b>メインテクスチャと同じ UV で読み、Emission の Tiling・スクロールの影響を受けません</b>。発光の色（RGB）とは別に描けるので、<b>光らせない場所にもラメを置けます</b>。アルファは Emission・AudioLink のマスクと共用です（Emission 節の「Emission Map のアルファ」の説明を参照）。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕組み">
+    <p>ラメは <code class="inl">Glitter Color × Intensity ×（形状 × 視線グリント × 明滅 ×（AudioLink）× マスク）</code> で計算される<b>加算発光レイヤー</b>です。テクスチャを使わないプロシージャル生成のため、サンプラー・キーワードを増やしません（アップロード時のコンパイル負荷は据え置き）。発光は透明度に追従し、パーティクルの寿命フェードや半透明にも自然に馴染みます。<code class="inl">Glitter Color</code> / <code class="inl">Intensity</code> / <code class="inl">Flicker Speed</code> などはアニメーションも可能です。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — アルファ (A) を使うときの注意">
+    <p>①アルファの無い画像（JPG やアルファ無しの PNG）はアルファが全面 <code class="inl">1</code> として読まれるため、ラメは全面に出ます。②Emission Map の Import 設定の <b>Alpha Is Transparency は OFF</b> にしてください。ON だと Unity が取り込み時に透明な部分の色を周りの色で埋めるため、ラメを置かない場所の発光の色が変わることがあります。どちらの状態も Inspector に警告が出ます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 補足">
+    <p><code class="inl">AudioLink 連動</code> は、他の音連動機能と同様、VRChat ワールド側に AudioLink システムが導入されている場合にのみ動作します（非対応ワールドでは明滅の音連動のみ自動で無効化され、ラメ自体は通常どおり表示されます）。<code class="inl">Object</code> 座標系はオブジェクト空間基準のため、アバターが移動・回転しても粒が表面に固定されて追従します（<code class="inl">UV</code> はメッシュの UV 展開に依存するため、UV が引き延ばされた箇所では粒も伸びます）。両面表示（Cull Off）のメッシュでは背面の粒も正しく光ります。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — View 座標系について">
+    <p>粒がワールド座標に紐づいたまま<b>常にカメラを向く</b>ため、メッシュの UV 展開・面の向き・裏表を一切考慮しません。<code class="inl">Object</code> と同じく<b>三面投影（Triplanar）で合成</b>しているため、<b>斜めから見た面でも粒が引き延ばされません</b>。UV が用意されていないメッシュや、UV が大きく歪んだ箇所、両面ポリゴンでも粒の形と大きさが均一になります。オブジェクトのスケールにも左右されないため、<b>複数のメッシュにまたがっても粒の大きさが揃います</b>。VR でも左右の目で粒がずれません。なお、カメラを回すと粒の並びが入れ替わります（常に正面を向く表現のための仕様です）。</p>
+  </div>
+  </div>
+
+</section>
+
+<!-- ============ AUDIOLINK ============ -->
+<section id="audiolink">
+  <div class="sec-head rv"><div class="num">SEC. 16 — VFX</div><h2>AudioLink（音楽連動・発光リアクション）</h2><div class="sub">// 音楽連動・発光リアクション</div></div>
+  <div class="rv">
+  <p>ワールドで再生されている音楽に合わせて発光させる機能です。VRChat のクラブワールドやライブ演出で定番の機能です。</p>
+  <p>本シェーダーの AudioLink は、通常の <b>Emission（恒常発光）とは独立した「音反応専用の発光レイヤー」</b> として動作します。音の大きさに応じて発光を base（色×Intensity）に向けて加算するため、<b>通常 Emission を OFF にしても、AudioLink だけで音に合わせて発光させられます</b>。逆に通常 Emission を ON にすれば、恒常発光の上に音反応発光が重なります（両者は打ち消し合いません）。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Use AudioLink</td><td>機能の有効/無効。ON にすると反応量・Intensity が自動で <code class="inl">1</code> に設定され、すぐ反応する状態になります（既に値がある場合は維持）。</td></tr>
+    <tr><td>AudioLink Band</td><td>反応させる音域を <code class="inl">Bass</code>（低音）/ <code class="inl">LowMid</code> / <code class="inl">HighMid</code> / <code class="inl">Treble</code>（高音）から選びます。低音はキック、高音はハイハット等に反応します。</td></tr>
+    <tr><td>発光への反応量 (Master)</td><td>音への追従量。<code class="inl">0</code> で無反応、<code class="inl">1</code> で音量に完全連動（無音時は AudioLink 発光が消える）。<code class="inl">_AudioLinkEmission</code> はアニメーション可能です。</td></tr>
+    <tr><td>AudioLink Emission Color (HDR)</td><td>音反応で光らせる色（HDR）。通常 Emission とは別に指定できます。</td></tr>
+    <tr><td>AudioLink Emission Intensity</td><td>音反応発光の強さ。音のピーク時に到達する明るさの上限です（<code class="inl">0</code>〜<code class="inl">16</code>）。</td></tr>
+    <tr><td>Emission Map のアルファでマスク</td><td>ON にすると、Emission Map の<b>アルファ</b>で音反応発光の範囲を絞ります（不透明＝光る／透明＝光らない）。Emission のマスクと<b>同じ絵</b>で、メインテクスチャと同じ UV で読みます（Emission 節の「Emission Map のアルファ」の説明を参照）。<b>初期値は OFF</b>。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 発光する「場所」は Emission Map を共用します">
+    <p>通常 Emission を OFF にしている場合は、AudioLink セクションに表示される Emission Map で光らせたい場所を指定してください（白＝光る / 黒＝光らない。未設定なら全面が反応）。通常 Emission を ON にしている場合は、Emission セクションで設定した Emission Map がそのまま使われます。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note tip" data-label="💡 仕組み（重要）">
+    <p>AudioLink 発光は <code class="inl">Emission Map × AudioLink Emission Color × Intensity × （音量 × 反応量）</code> で計算される<b>加算レイヤー</b>です。<code class="inl">反応量</code> または <code class="inl">Intensity</code> が <code class="inl">0</code> だと光らないため、両方を <code class="inl">0</code> より大きくしてください（各 <code class="inl">1</code> が標準）。通常 Emission の Color / Intensity とは別系統なので、<b>通常 Emission の Intensity を <code class="inl">0</code> にしても AudioLink 発光には影響しません</b>。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 使用上の注意">
+    <p>通常 Emission（恒常発光）も使いたい場合は Emission セクションを ON にしてください。AudioLink 発光のみで使う場合は Emission は OFF のままで構いません。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ ワールド環境依存の機能です">
+    <p>AudioLink は、VRChat ワールド側に <b>AudioLink システムが導入されている</b>場合にのみ動作します（ワールドがグローバルな音響データテクスチャを提供している必要があります）。<br>AudioLink 非対応ワールドでは、本機能は自動的に無効化されます（破綻は発生しません）。これはソフトパーティクルと同様、ワールド側の環境に依存する仕様上の制約です。</p>
+  </div>
+  </div>
+
+</section>
+
+<!-- ============ DISSOLVE ============ -->
+<section id="dissolve">
+  <div class="sec-head rv"><div class="num">SEC. 17 — VFX</div><h2>Dissolve（ディゾルブ / 消失エフェクト）</h2><div class="sub">// 消失エフェクト</div></div>
+  <div class="rv">
+  <p>オブジェクトをノイズ模様に合わせて溶かすように消滅・出現させる機能です。</p>
+  <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
+    <tr><td>Dissolve Texture</td><td>溶け方の基準となるノイズ画像を設定します。</td></tr>
+    <tr><td>Threshold</td><td>消失の進行度（<code class="inl">-1.0</code>=完全表示 〜 <code class="inl">1.1</code>=完全消去）。これをアニメーションさせることで美しい消失エフェクトが作れます。</td></tr>
+    <tr><td>Noise Scale</td><td>ノイズパターンの細かさ（<code class="inl">1</code>=標準 / <code class="inl">10</code>=細かい）。オブジェクト空間・Triplanarマッピングを採用しているため、スケール変更や面の向きに関わらず均一な模様が維持されます。</td></tr>
+    <tr><td>Edge Width / Edge Color</td><td>溶け際（エッジ）の発光幅とHDRカラーを指定します。</td></tr>
+  </tbody></table>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 補足">
+    <p>溶け際（エッジ）の発光は、パーティクルカラーのアルファ（不透明度）に追従してフェードイン/アウトします（<code class="inl">Fade</code>/<code class="inl">Additive</code>、および <code class="inl">Transparent</code> のパーティクル寿命フェード時）。Transparent のガラスマテリアルを Dissolve で消す演出でも、エッジ発光ごと自然に消えます。</p>
+  </div>
+  </div>
+
 </section>
 
 <!-- ============ PARTICLE / ANIM ============ -->
@@ -926,10 +1343,12 @@ details .dbody li{margin-bottom:10px}
   <div class="rv">
   <h4><span class="hx">#</span> Particle Color（パーティクルとの連携）</h4>
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
-    <tr><td>Vertex Color Blend Mode</td><td>既定は <code class="inl">None</code>（パーティクルの頂点カラーを反映しません）。<code class="inl">Multiply</code>（乗算）に変更すると、Particle System 側の色（Color over Lifetime 等）を受け取ります。</td></tr>
+    <tr><td>Vertex Color Blend Mode</td><td>既定は <code class="inl">None</code>＝<b>Particle System の頂点カラーを受け取りません</b>（Color / Color over Lifetime / Color by Speed で付けた色も、そのアルファも届きません）。<b>パーティクルに使うマテリアルでは <code class="inl">Multiply</code>（乗算）に変更してください。</b><code class="inl">Multiply</code> にすると Particle System 側の色を受け取り、<b>パーティクルの寿命に合わせたフェード</b>（Color over Lifetime のアルファ）も効くようになります。アバターや小物など、メッシュの頂点カラーが意図せず乗ってほしくない用途では <code class="inl">None</code> のままにします。</td></tr>
   </tbody></table>
+  </div>
+  <div class="rv">
   <div class="note warn" data-label="⚠ パーティクルでは Reflection Strength を 0 にしてください">
-    <p>パーティクルは何枚も重なって描画されるため、<b>映り込みの計算が重なった枚数ぶん積み上がって描画負荷になります</b>。パーティクルの見た目に映り込みが要ることはほとんどないため、<code class="inl">Vertex Color Blend Mode</code> を <code class="inl">Multiply</code> にするマテリアルでは <b>PBR の Reflection Strength を <code class="inl">0</code></b> にしておくのが基本です（<code class="inl">0</code> なら計算ごとスキップされ、負荷はゼロになります）。この組み合わせになっていると Inspector に警告が出ます。なお <b>Unlit モードを ON にしている場合は、映り込みの計算そのものがスキップされる</b>ため負荷はかからず、警告も出ません。</p>
+    <p>パーティクルは何枚も重なって描画されるため、<b>映り込みの計算が重なった枚数ぶん積み上がって描画負荷になります</b>。パーティクルの見た目に映り込みが要ることはほとんどないため、<code class="inl">Vertex Color Blend Mode</code> を <code class="inl">Multiply</code> にするマテリアルでは <b>PBR の Reflection Strength を <code class="inl">0</code></b> にしておくのが基本です（<code class="inl">0</code> なら計算ごとスキップされ、負荷はゼロになります）。この組み合わせになっていると Inspector に警告が出ます。なお <b>Unlit モード（Inspector の <code class="inl">Unlit モード (光を無視)</code>）を ON にしている場合は、映り込みの計算そのものがスキップされる</b>ため負荷はかからず、警告も出ません。</p>
   </div>
   </div>
   <div class="rv">
@@ -938,11 +1357,15 @@ details .dbody li{margin-bottom:10px}
   <table><thead><tr><th>プロパティ</th><th>説明</th></tr></thead><tbody>
     <tr><td>Fade Distance</td><td>境界線がフェードアウト（透ける）距離を調整します。</td></tr>
   </tbody></table>
-  <p><b>仕様上の注意:</b> ZWrite が Off の時（半透明プリセット時）にのみ動作します。また、VRChatのサムネイルカメラ等（正投影カメラ）では不具合を防ぐため自動で無効化されます。</p>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE — 仕様上の注意">
+    <p>ZWrite が Off の時（半透明プリセット時）にのみ動作します。また、VRChatのサムネイルカメラ等（正投影カメラ）では不具合を防ぐため自動で無効化されます。</p>
+  </div>
+  </div>
+  <div class="rv">
   <div class="note warn" data-label="⚠ ワールド環境依存の機能です">
-    <p>ソフトパーティクルは、VRChat ワールド側のカメラが「深度テクスチャ」を生成している場合にのみ動作します。具体的には、ワールドが <b>Deferred Rendering</b>、<b>ポストプロセスを使用</b>、または<b>他のソフトパーティクルシェーダーを使用</b>している場合に有効になります。</p>
-    <p>上記の条件を満たさないシンプルな Forward Rendering ワールドでは、ソフトパーティクル機能は自動的に無効化され、通常の半透明描画として表示されます。これは VRChat ワールド側のレンダリング設定に依存する仕様上の制約であり、アバター側のシェーダーから制御することはできません。他のVRChat用シェーダーでも同様の制約があります。</p>
-    <p><b>【未対応ワールドでの挙動】</b> 境界線が残った状態で半透明描画されますが、エフェクト自体は正常に表示されます。完全透過などの破綻は発生しません。</p>
+    <p>ソフトパーティクルは、VRChat ワールド側のカメラが「深度テクスチャ」を生成している場合にのみ動作します。具体的には、ワールドが <b>Deferred Rendering</b>、<b>ポストプロセスを使用</b>、または<b>他のソフトパーティクルシェーダーを使用</b>している場合に有効になります。<br>上記の条件を満たさないシンプルな Forward Rendering ワールドでは、ソフトパーティクル機能は自動的に無効化され、通常の半透明描画として表示されます。<br>これは VRChat ワールド側のレンダリング設定に依存する仕様上の制約であり、アバター側のシェーダーから制御することはできません。他のVRChat用シェーダーでも同様の制約があります。<br><b>【未対応ワールドでの挙動】</b> 境界線が残った状態で半透明描画されますが、エフェクト自体は正常に表示されます。完全透過などの破綻は発生しません。</p>
   </div>
   </div>
   <div class="rv">
@@ -959,6 +1382,10 @@ Material._Layer1AlphaMask    <span class="cm">// Float (0/1)   ─ 透明マス�
 Material._FakeShadowColor    <span class="cm">// Color         ─ Fake Shadow Texture の影色</span>
 Material._FakeShadowStrength <span class="cm">// Float         ─ Fake Shadow Texture の濃さ (0=無効)</span>
 Material._FakeShadowOffset   <span class="cm">// Vector        ─ Fake Shadow Texture の位置 (X,Y)</span>
+Material._FSMeshColor        <span class="cm">// Color         ─ Fake Shadow Mesh の影色</span>
+Material._FSMeshStrength     <span class="cm">// Float         ─ Fake Shadow Mesh の濃さ (0=無効)</span>
+Material._FSMeshDistance     <span class="cm">// Float         ─ Fake Shadow Mesh の落とす距離 (-2〜2)</span>
+Material._FSReceiveRange     <span class="cm">// Float         ─ Fake Shadow Mesh の影が届く奥行き</span>
 Material._EmissionColor      <span class="cm">// Color (HDR)   ─ 発光色</span>
 Material._EmissionIntensity  <span class="cm">// Float         ─ 発光の強さ</span>
 Material._EmissionPulseSpeed <span class="cm">// Float         ─ 発光の脈動速度 (0=無効)</span>
@@ -967,33 +1394,66 @@ Material._RimColor           <span class="cm">// Color (HDR)   ─ 輪郭光の�
 Material._RimPower           <span class="cm">// Float         ─ 輪郭光の太さ</span>
 Material._RimIntensity       <span class="cm">// Float         ─ 輪郭光の強さ</span>
 Material._RimBlendMode       <span class="cm">// Float (0/1)   ─ 0=Add(加算発光) / 1=Multiply(暗色化・黒リム)</span>
+Material._RimEnvAdapt        <span class="cm">// Float         ─ リムの環境順応 (0〜1)</span>
+Material._RimEnvFloor        <span class="cm">// Float         ─ リムの暗所の下限 (0〜1)</span>
+Material._RimEnvTint         <span class="cm">// Float         ─ リムを環境色になじませる度合い (0〜1)</span>
+Material._RimUseMask         <span class="cm">// Float (0/1)   ─ リムのマスクの ON/OFF</span>
+Material._RimShadeColor      <span class="cm">// Color         ─ Rim Shade（暗い縁）の色</span>
+Material._RimShadeIntensity  <span class="cm">// Float         ─ Rim Shade（暗い縁）の濃さ</span>
+Material._BackLightColor     <span class="cm">// Color (HDR)   ─ 逆光ライトの色</span>
+Material._BackLightIntensity <span class="cm">// Float         ─ 逆光ライトの強さ</span>
+Material._BackLightEnvAdapt  <span class="cm">// Float         ─ 逆光の環境順応 (0〜1)</span>
+Material._BackLightEnvFloor  <span class="cm">// Float         ─ 逆光の暗所の下限 (0〜1)</span>
+Material._BackLightEnvTint   <span class="cm">// Float         ─ 逆光を環境色になじませる度合い (0〜1)</span>
 Material._OutlineColor          <span class="cm">// Color (HDR) ─ 輪郭線の色</span>
 Material._OutlineIntensity      <span class="cm">// Float       ─ 輪郭線の発光の強さ</span>
 Material._OutlineBaseGlow       <span class="cm">// Float       ─ Sweep の管の基本輝度（筋とのコントラスト）</span>
 Material._OutlineSelfGlow       <span class="cm">// Float       ─ 輪郭線の自己発光度合い（0=ライティング追従 / 1=自己発光）</span>
 Material._OutlineSweepSpeed     <span class="cm">// Float       ─ Sweep の周回速度（符号で方向反転）</span>
+Material._UseOutlineMask        <span class="cm">// Float (0/1) ─ 輪郭線マスクの ON/OFF</span>
+Material._OutlineAlphaSync      <span class="cm">// Float (0/1) ─ 輪郭線を本体の透明度に追従させるか</span>
 Material._MatcapStrength     <span class="cm">// Float         ─ Matcap の合成強度</span>
 Material._MatcapColor        <span class="cm">// Color         ─ Matcap のカラー Tint</span>
+Material._Matcap2Strength    <span class="cm">// Float         ─ 2枚目 Matcap の合成強度</span>
+Material._Matcap2Color       <span class="cm">// Color         ─ 2枚目 Matcap のカラー Tint</span>
+Material._Matcap3Strength    <span class="cm">// Float         ─ 3枚目 Matcap の合成強度</span>
+Material._Matcap3Color       <span class="cm">// Color         ─ 3枚目 Matcap のカラー Tint</span>
 Material._ReflectionStrength <span class="cm">// Float         ─ 反射影響度（環境反射の強さ）</span>
 Material._LightMinLimit      <span class="cm">// Float         ─ 環境光クランプ下限</span>
 Material._LightMaxLimit      <span class="cm">// Float         ─ 環境光クランプ上限</span>
+Material._ReceiveShadow      <span class="cm">// Float (0/1)   ─ 落ち影受光の ON/OFF</span>
+Material._ShadowPseudoLight  <span class="cm">// Float         ─ 擬似光の強さ（影の向きの決め方・0〜1）</span>
+Material._UseShadow2nd       <span class="cm">// Float (0/1)   ─ 2 影の ON/OFF</span>
+Material._UseShadow3rd       <span class="cm">// Float (0/1)   ─ 3 影の ON/OFF</span>
+Material._UseShadowBorderColor <span class="cm">// Float (0/1) ─ 影の境界の色づけの ON/OFF</span>
+Material._Shadow2ndColor     <span class="cm">// Color         ─ 2 影の色（不透明度＝強度）</span>
+Material._Shadow3rdColor     <span class="cm">// Color         ─ 3 影の色（不透明度＝強度）</span>
+Material._ShadowBorderColor  <span class="cm">// Color         ─ 影の境界の色づけの色（不透明度＝強度）</span>
+Material._UseDitherFade      <span class="cm">// Float (0/1)   ─ ディザ擬似半透明の ON/OFF</span>
+Material._DistanceDarkenColor    <span class="cm">// Color     ─ 距離減光の色</span>
+Material._DistanceDarkenStrength <span class="cm">// Float     ─ 距離減光の強さ</span>
 Material._AudioLinkEmission  <span class="cm">// Float         ─ AudioLink 反応量 (Master)</span>
 Material._AudioLinkEmissionColor     <span class="cm">// Color (HDR) ─ AudioLink 発光色</span>
-Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLink 発光の強さ</span></div>
+Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLink 発光の強さ</span>
+Material._GlitterColor       <span class="cm">// Color (HDR)   ─ Glitter 発光色</span>
+Material._GlitterIntensity   <span class="cm">// Float         ─ Glitter 発光の強さ</span>
+Material._GlitterSpeed       <span class="cm">// Float         ─ Glitter 明滅速度</span>
+Material._GlitterScrollSpeed <span class="cm">// Vector        ─ Glitter スクロール速度 (X,Y)</span>
+Material._GlitterALStrength  <span class="cm">// Float         ─ Glitter AudioLink の掛かり具合</span></div>
   <p><b>手順（VRChat Avatar 例）</b></p>
-  <ul>
+  <ol>
     <li>Animator Controller を開く</li>
     <li>対象の GameObject を選択した状態でキーフレームを追加</li>
     <li><code class="inl">Add Property</code> → <code class="inl">Skinned Mesh Renderer</code>（または <code class="inl">Mesh Renderer</code>）→ <code class="inl">Materials</code> → 対象マテリアル → 上記プロパティ名で追加</li>
-  </ul>
+  </ol>
   </div>
   <div class="rv">
   <h3>パーティクル（Particle System）での使用について</h3>
   <p>本シェーダーはパーティクルエフェクトへの使用を想定して設計されています。</p>
-  <ul>
+  <ol>
     <li>Particle System の <code class="inl">Renderer &gt; Material</code> に本マテリアルをセット</li>
     <li>マテリアルの <code class="inl">Vertex Color Blend Mode</code> を <code class="inl">Multiply</code> に変更</li>
-  </ul>
+  </ol>
   <p><b>以上で動作します。</b> <code class="inl">Enable Mesh GPU Instancing</code> のチェックや <code class="inl">Custom Vertex Streams</code> などの追加設定は一切不要です。</p>
   </div>
 </section>
@@ -1078,7 +1538,7 @@ Material._AudioLinkEmissionIntensity <span class="cm">// Float       ─ AudioLi
 <script>
 // ticker
 (function(){
-  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×2,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
+  var items="LIGHTWEIGHT TOON SHADER,PARTICLE FX READY,HDR EMISSION,AUDIOLINK,GLITTER / SPARKLE,DISSOLVE,RIM LIGHT,OUTLINE + SWEEP,MATCAP ×3,TOON SHADOW,FAKE SHADOW,RIM SHADE,SOFT PARTICLES,DISTANCE FADE,BACK LIGHT,DISTANCE DARKEN,DITHER FADE,RECEIVE SHADOW,TEXTURE LAYER,LIGHT LIMIT,SPECULAR REFLECTION,BUILT-IN RP,VRCHAT SDK3".split(",");
   var half=items.map(function(t){return t+"<b>///</b>"}).join("");
   document.getElementById("ticker").innerHTML=half+half;
 })();
@@ -1106,6 +1566,23 @@ secs.forEach(function(s){if(s)spy.observe(s)});
 // glitch pulse
 var gr=document.getElementById("glitchRoot");
 setInterval(function(){gr.classList.add("g-on");setTimeout(function(){gr.classList.remove("g-on")},380)},3400);
+// mobile menu（幅 960px 以下：MENU ボタンでサイドバーを引き出す。背景・リンク・Esc・画面幅の拡大で閉じる）
+(function(){
+  var btn=document.getElementById("menuBtn"),bd=document.getElementById("navBackdrop"),nav=document.getElementById("sidebar");
+  if(!btn||!nav)return;
+  var lbl=btn.querySelector(".lbl");
+  function set(open){
+    document.body.classList.toggle("nav-open",open);
+    btn.setAttribute("aria-expanded",open?"true":"false");
+    lbl.textContent=btn.getAttribute(open?"data-close":"data-open");
+  }
+  btn.addEventListener("click",function(){set(!document.body.classList.contains("nav-open"))});
+  if(bd)bd.addEventListener("click",function(){set(false)});
+  nav.addEventListener("click",function(e){if(e.target.closest("a"))set(false)});
+  addEventListener("keydown",function(e){if(e.key==="Escape")set(false)});
+  var mq=matchMedia("(min-width:961px)"),off=function(){if(mq.matches)set(false)};
+  if(mq.addEventListener)mq.addEventListener("change",off);else mq.addListener(off);
+})();
 </script>
 </body>
 </html>

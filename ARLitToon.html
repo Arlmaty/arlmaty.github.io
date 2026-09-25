@@ -169,15 +169,31 @@ details .dbody li{margin-bottom:10px}
 .footer{border-top:1px solid var(--line);margin-top:90px;padding:40px 0 60px;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;letter-spacing:.1em}
 .footer .c{color:var(--ac)}
 
-@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.wrap{padding:0 24px}.hero-scroll{left:24px}.hero-deco{display:none}}
+/* ===== mobile menu（幅 960px 以下：サイドバーを画面上部の MENU ボタンで開く引き出しにする） ===== */
+.menu-btn,.nav-backdrop{display:none}
+@media(max-width:960px){
+.main{margin-left:0}.wrap{padding:0 24px}.hero-scroll{left:24px}.hero-deco{display:none}
+.sidebar{padding-top:64px;transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+body.nav-open{overflow:hidden}
+body.nav-open .sidebar{transform:none;visibility:visible;transition:transform .25s ease;box-shadow:6px 0 28px rgba(11,11,18,.18)}
+body.nav-open .nav-backdrop{display:block;position:fixed;inset:0;z-index:45;background:rgba(11,11,18,.35)}
+.menu-btn{display:flex;align-items:center;gap:10px;position:fixed;top:12px;left:12px;z-index:70;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--ac);background:rgba(250,250,252,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--ac-line);padding:9px 12px;cursor:pointer;box-shadow:0 2px 12px rgba(11,11,18,.08)}
+.menu-btn .bars{position:relative;width:16px;height:2px;background:currentColor;transition:background .2s}
+.menu-btn .bars::before,.menu-btn .bars::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;transition:transform .2s}
+.menu-btn .bars::before{transform:translateY(-5px)}.menu-btn .bars::after{transform:translateY(5px)}
+body.nav-open .menu-btn .bars{background:transparent}
+body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .menu-btn .bars::after{transform:rotate(-45deg)}
+}
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-beam" id="beam"></div>
 <div class="progress" id="progress"></div>
+<button class="menu-btn" id="menuBtn" type="button" aria-controls="sidebar" aria-expanded="false" data-open="MENU" data-close="CLOSE"><span class="bars" aria-hidden="true"></span><span class="lbl">MENU</span></button>
+<div class="nav-backdrop" id="navBackdrop"></div>
 
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="brand">
     <div class="tag">ALTIMA STUDIO</div>
     <h1><svg class="mk" viewBox="0 0 800.07 800.07" aria-hidden="true"><rect x="97.49" y="97.49" width="605.1" height="605.1" rx="67.2" ry="67.2" transform="translate(-165.7 400.03) rotate(-45)" fill="currentColor"></rect><path fill="var(--bg)" d="M400.04,569.39c-17.67,0-32-14.33-32-32v-150c0-14.97,5.83-29.04,16.43-39.62,10.58-10.56,24.63-16.38,39.57-16.38h.07l153.61.19-178.16-178.16-208.38,208.38c-12.5,12.49-32.76,12.49-45.25,0-12.5-12.5-12.5-32.76,0-45.26l214.03-214.03c21.83-21.84,57.36-21.84,79.2,0l197.5,197.5c16.08,16.09,20.84,40.05,12.12,61.06-8.71,20.98-29.01,34.54-51.72,34.54h-.07l-164.95-.2v141.98c0,17.67-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M538.66,282.67h-281.61c-17.67,0-32-14.33-32-32s14.33-32,32-32h281.61c17.67,0,32,14.33,32,32s-14.33,32-32,32Z"></path><path fill="var(--bg)" d="M400.66,710.71c-14.34,0-28.68-5.46-39.6-16.37l-215.14-215.14c-12.5-12.5-12.5-32.76,0-45.26,12.5-12.49,32.76-12.49,45.25,0l209.48,209.48,209.48-209.48c12.5-12.49,32.76-12.49,45.25,0,12.5,12.5,12.5,32.76,0,45.26l-215.14,215.14c-10.92,10.91-25.26,16.37-39.6,16.37Z"></path></svg>ARLitToon</h1>
@@ -1550,6 +1566,23 @@ secs.forEach(function(s){if(s)spy.observe(s)});
 // glitch pulse
 var gr=document.getElementById("glitchRoot");
 setInterval(function(){gr.classList.add("g-on");setTimeout(function(){gr.classList.remove("g-on")},380)},3400);
+// mobile menu（幅 960px 以下：MENU ボタンでサイドバーを引き出す。背景・リンク・Esc・画面幅の拡大で閉じる）
+(function(){
+  var btn=document.getElementById("menuBtn"),bd=document.getElementById("navBackdrop"),nav=document.getElementById("sidebar");
+  if(!btn||!nav)return;
+  var lbl=btn.querySelector(".lbl");
+  function set(open){
+    document.body.classList.toggle("nav-open",open);
+    btn.setAttribute("aria-expanded",open?"true":"false");
+    lbl.textContent=btn.getAttribute(open?"data-close":"data-open");
+  }
+  btn.addEventListener("click",function(){set(!document.body.classList.contains("nav-open"))});
+  if(bd)bd.addEventListener("click",function(){set(false)});
+  nav.addEventListener("click",function(e){if(e.target.closest("a"))set(false)});
+  addEventListener("keydown",function(e){if(e.key==="Escape")set(false)});
+  var mq=matchMedia("(min-width:961px)"),off=function(){if(mq.matches)set(false)};
+  if(mq.addEventListener)mq.addEventListener("change",off);else mq.addListener(off);
+})();
 </script>
 </body>
 </html>

@@ -279,7 +279,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
   <h3>バージョン（更新履歴 / Changelog）</h3>
   <p>バージョンは小数点を使わない整数で <code class="inl">v{見出し版}_GUIr{GUI 枝番}</code> と表記します。見出し版（<code class="inl">v</code> の数字）の基準はシェーダー本体 <code class="inl">ARLitToon.shader</code> の <code class="inl">_ShaderVersion</code>、<code class="inl">GUIr</code> の数字は GUI（<code class="inl">ARLitToonGUI.cs</code>）の枝番です。現在の版はマテリアル Inspector のヘッダ（<code class="inl">✦ ARLit Toon ✦ v48_GUIr0</code>）で確認できます。本履歴には各版の<b>変更点のみ</b>を記載します。各機能の使い方・設定値は前述の「機能とプロパティ一覧」を参照してください。</p>
   <div class="note tip" data-label="最新版 — v48_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
-    <p><span class="vtag">v48_GUIr0</span> <b>3枚目の Matcap と、リムライトのマスクを追加しました。</b></p>
+    <p><span class="vtag">v48_GUIr0</span> <b>3枚目の Matcap と、リムライトのマスクを追加しました。</b><br><b>⚠️ 利用規約を改定しました（第2版・本版から適用）。</b> VRChat などソーシャル VR 向けの利用は、これまでどおり個人・法人を問わず追加の使用料なくご利用いただけます。<b>ソーシャル VR 向け以外（ゲーム・アプリケーション・映像作品など）で法人が利用する場合は、別途ライセンス契約が必要になりました</b>（個人は無償）。このほか、Built-in Render Pipeline 以外への移植は許諾制とし、改変物にも本規約が適用されることを明記しました。<code class="inl">v47</code> 以前の版には、その版に同梱された利用規約が引き続き適用されます。詳しくは「<a href="#license" style="color:var(--ac)">利用規約（ライセンス）</a>」を参照してください。</p>
     <p><span class="vtag">v47_GUIr0</span> <b>影を多段に重ねられるようにし、向きの決め方を選べるようにしました。</b></p>
     <p><span class="vtag">v46_GUIr1</span> <b>Inspector の項目の並び順を変更しました。</b></p>
     <p><span class="vtag">v46_GUIr0</span> <b>Fake Shadow まわりを大きく強化しました。</b></p>
@@ -767,7 +767,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
   </div>
   <div class="rv">
   <div class="note tip" data-label="💡 セクション設定のコピー/ペースト">
-    <p><b>各セクションの折り畳み見出しを右クリック</b>すると「コピー」「ペースト」メニューが表示されます。コピー対象は<b>そのセクションの数値設定のセット</b>です（<b>カラーとテクスチャは含まれません</b>＝マテリアルごとの色・画像はそのまま保てます。Lighting &amp; Shadow は <b>Shadow Intensity / Shadow Border / Shadow Blur の3項目</b>、Toon Shadow は <b>2 影 / 3 影 / 境界の色づけの ON/OFF と境界・ボケ足・ノーマルマップの反映度</b>です）。別のマテリアルの<b>同じセクション</b>の見出しを右クリックして「ペースト」を選ぶと、まとめて適用されます（機能の有効/無効も一緒に移ります）。複数マテリアルを選択してペーストすると選択中のすべてに適用され、Undo（Ctrl+Z）で戻せます。調整済みの設定を他の部位マテリアルへ揃えるときに使ってください。※ Transparency / Rendering の見出しコピーには、Blend Preset が管理する描画内部値（ZWrite 等）と Render Queue は含まれません。透明度の種類ごと揃えたい場合はペースト先でも同じ Preset を選んでください。</p>
+    <p><b>各セクションの折り畳み見出しを右クリック</b>すると「コピー」「ペースト」メニューが表示されます。コピー対象は<b>そのセクションの数値設定のセット</b>です（<b>カラーとテクスチャは含まれません</b>＝マテリアルごとの色・画像はそのまま保てます。Lighting &amp; Shadow は <b>Shadow Intensity / Shadow Border / Shadow Blur の3項目</b>、Toon Shadow は <b>2 影 / 3 影 / 境界の色づけの ON/OFF と境界・ボケ足・ノーマルマップの反映度</b>です）。別のマテリアルの<b>同じセクション</b>の見出しを右クリックして「ペースト」を選ぶと、まとめて適用されます（機能の有効/無効も一緒に移ります）。複数マテリアルを選択してペーストすると選択中のすべてに適用され、Undo（Ctrl+Z）で戻せます。調整済みの設定を他の部位マテリアルへ揃えるときに使ってください。<br>※ Transparency / Rendering の見出しコピーには、Blend Preset が管理する描画内部値（ZWrite 等）と Render Queue は含まれません。透明度の種類ごと揃えたい場合はペースト先でも同じ Preset を選んでください。</p>
   </div>
   </div>
   <div class="rv">
@@ -1486,43 +1486,103 @@ Material._GlitterALStrength  <span class="cm">// Float         ─ Glitter Audio
 
   <div class="rv">
   <h3>利用規約（ライセンス）</h3>
-  <p><b>本シェーダーの著作権は ARL に帰属します。</b> 本パッケージを購入・ダウンロードした時点で、以下の利用規約に同意したものとみなします。</p>
-  <h4><span class="hx">#</span> 【許可される事項】</h4>
-  <div style="position:relative;border:1px solid var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 60%);padding:20px 22px 16px;margin:14px 0 18px;overflow:hidden">
-    <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;font-weight:700;color:var(--ac);margin-bottom:8px">FOR CREATORS — 同梱販売 OK</div>
-    <div style="font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.8">ARLitToon シェーダーを同梱した3Dモデル（アバター、アバターギミック、ワールドアイテム等）の販売および配布ができます。</div>
-    <div style="font-size:13px;color:var(--ink2);margin-top:8px">VRChat のアバター衣装・ギミッククリエイターの皆さんは、ご自身の作品に本シェーダーを組み込んで BOOTH 等でそのまま販売・配布できます（クレジット表記は不要）。下記の「同梱配布時の必須ファイル」だけご確認ください。</div>
+  <p><b>ARLitToon 利用規約 第2版</b>（本規約を同梱した版の公開日から施行します）</p>
+  <p>本シェーダーを入手した時点、または利用した時点で、以下の利用規約に同意したものとみなします。</p>
   </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第1条（適用範囲）</h4>
+  <ol>
+    <li>本規約は、本規約を同梱した版の ARLitToon およびその改変物に適用されます。</li>
+    <li>本規約の施行前の版には、その版に同梱された利用規約が引き続き適用されます。</li>
+    <li>新しい版では利用規約が変更されることがあります。新しい版を入手または利用した場合は、その版に同梱された利用規約が適用されます。</li>
+    <li>本シェーダーが他の商品（ヘイローアセット等）に同梱されている場合、本シェーダーの部分には、その商品の利用規約ではなく本規約が適用されます。</li>
+  </ol>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第2条（定義）</h4>
   <ul>
-    <li>ご自身の VRChat アバター、ワールド、ゲーム制作等への組み込みおよび商用利用（動画配信などを含む）。</li>
-    <li>本シェーダーのコードおよび GUI スクリプトの改変。</li>
-    <li>本シェーダーを使用した際、作者名（ARL）や本シェーダー名（ARLitToon）のクレジット表記は任意（不要）です。</li>
+    <li>「本シェーダー」：<code class="inl">ARLitToon.shader</code>、<code class="inl">ARLitToonGUI.cs</code>、<code class="inl">ARLitToonBaker.cs</code>、<code class="inl">README.md</code> その他 ARLitToon を構成するファイル。</li>
+    <li>「改変物」：本シェーダーの全部または一部を改変・翻案・移植・流用して作成したもの（他のレンダリングパイプライン向けに変換したものを含みます）。</li>
+    <li>「ソーシャル VR プラットフォーム」：VRChat その他、利用者が作成したアバター・ワールド等をアップロードし、他の利用者と交流するためのオンラインサービス。</li>
+    <li>「ソーシャル VR 向けの利用」：ソーシャル VR プラットフォームにアップロードされるアバター・ワールド・アバターギミック・ワールドアイテム等への組み込み、それらの制作・販売・配布、ソーシャル VR プラットフォーム上での使用・撮影・配信、およびそれらの宣伝用の画像・動画の制作と公開（Unity エディタ上での制作・レンダリングを含みます）。</li>
+    <li>「法人等」：法人および法人格のない団体。ただし、個人事業主および同人サークルは「個人」として扱います。</li>
+    <li>「個人」：法人等以外の自然人（個人事業主および同人サークルを含みます）。</li>
   </ul>
-  <div class="note info" data-label="【同梱配布時の必須ファイル】">
-    <p>ARLitToon シェーダーを作品（アバター・ギミック・ワールドアイテム等）に同梱して配布・販売する場合は、シェーダーが正しく動作するよう、以下の <b>3 ファイルを必ずセットで同梱</b>してください。</p>
-    <ul style="margin:4px 0 8px 20px">
-      <li><code class="inl">ARLitToon.shader</code>（シェーダー本体）</li>
-      <li><code class="inl">ARLitToonGUI.cs</code>（マテリアル Inspector 用 GUI スクリプト／<code class="inl">Editor</code> フォルダ内）</li>
-      <li><code class="inl">README.md</code>（本ガイド）</li>
-    </ul>
-    <p>※ <code class="inl">ARLitToonGUI.cs</code> が欠けると Inspector のカスタム GUI が表示されず、マテリアルを正しく設定できません。<code class="inl">README.md</code> は使用方法と本利用規約を受け取り手に伝えるために同梱してください。</p>
   </div>
-  <div class="note tip" data-label="【同梱を推奨するファイル】">
-    <ul style="margin:4px 0 8px 20px">
+  <div class="rv">
+  <h4><span class="hx">#</span> 第3条（著作権）</h4>
+  <ol>
+    <li>本シェーダーの著作権は ARL に帰属します。</li>
+    <li>改変物においても、本シェーダーに由来する部分の著作権は ARL に帰属します。改変物の利用・配布には本規約が適用されます。</li>
+  </ol>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第4条（ソーシャル VR 向けの利用）</h4>
+  <p>個人・法人等を問わず、本シェーダー（またはこれを同梱した商品）の入手に要する代金のほかに追加の使用料なく、次のことができます。</p>
+  <ul>
+    <li>ソーシャル VR 向けの利用（商用利用を含みます）。</li>
+    <li>本シェーダーを同梱した3Dモデル（アバター、アバターギミック、ワールドアイテム等）の、ソーシャル VR 向けの販売および配布。</li>
+    <li>本シェーダーのコードおよび GUI スクリプトの改変（第6条の範囲内）。</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第5条（ソーシャル VR 向け以外での利用）</h4>
+  <ol>
+    <li>個人は、ソーシャル VR 向け以外での利用（商用利用を含みます）を追加の使用料なく行えます。</li>
+    <li>法人等が業務としてソーシャル VR 向け以外で利用する場合（ゲーム、アプリケーション、映像作品等への組み込みを含みます）は、事前に ARL との間で別途ライセンス契約を締結する必要があります。</li>
+    <li>お問い合わせ先：ALTIMA 公式ショップ（<a href="https://altima.booth.pm/" target="_blank" rel="noopener noreferrer" style="color:var(--ac)">https://altima.booth.pm/</a>）のメッセージ機能</li>
+  </ol>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第6条（対応レンダリングパイプライン）</h4>
+  <p>本シェーダーおよび改変物は、Unity の Built-in Render Pipeline での利用に限り許諾します。URP・HDRP その他のレンダリングパイプライン向けへの移植・変換およびその利用は、第4条・第5条にかかわらず、ARL の事前の許諾なく行うことはできません。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第7条（他の販売経路での提供）</h4>
+  <p>ARL は、本シェーダーを本規約と異なる条件で他の販売経路から提供することがあります。その販売経路で入手した場合は、その販売経路の利用条件が適用され、本規約は適用されません。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第8条（同梱配布時の必須ファイル）</h4>
+  <p>ARLitToon シェーダーを作品（アバター・ギミック・ワールドアイテム等）に同梱して配布・販売する場合は、シェーダーが正しく動作するよう、以下の <b>3 ファイルを必ずセットで同梱</b>してください。</p>
+  <ul>
+    <li><code class="inl">ARLitToon.shader</code>（シェーダー本体）</li>
+    <li><code class="inl">ARLitToonGUI.cs</code>（マテリアル Inspector 用 GUI スクリプト／<code class="inl">Editor</code> フォルダ内）</li>
+    <li><code class="inl">README.md</code>（本ガイド）</li>
+  </ul>
+  </div>
+  <div class="rv">
+  <div class="note info" data-label="NOTE">
+    <p>※ <code class="inl">ARLitToonGUI.cs</code> が欠けると Inspector のカスタム GUI が表示されず、マテリアルを正しく設定できません。<code class="inl">README.md</code> は使用方法と本利用規約を受け取り手に伝えるために同梱してください。</p>
+    <p><b>【同梱を推奨するファイル】</b></p>
+    <ul style="margin:4px 0 0 20px">
       <li><code class="inl">ARLitToonBaker.cs</code>（テクスチャ焼きこみツール／<code class="inl">Editor</code> フォルダ内）</li>
     </ul>
-    <p>※ こちらは<b>必須ではありませんが、同梱を推奨します</b>。同梱すると受け取り手も <code class="inl">Bake to Base</code>（焼きこみ）を使えます。同梱しなくてもシェーダーは完全に正常動作し、焼きこみの機能のみが使えなくなります。</p>
-    <p>※ 万一この 1 ファイルが原因で Unity のコンパイルが通らない場合（バージョン差や他アセットとの競合など）は、<b><code class="inl">ARLitToonBaker.cs</code> を削除すれば復旧します</b>。必須にしていないのはこのためです。</p>
+    <p>※ こちらは<b>必須ではありませんが、同梱を推奨します</b>。同梱すると受け取り手も <code class="inl">Bake to Base</code>（焼きこみ）を使えます。同梱しなくてもシェーダーは完全に正常動作し、焼きこみの機能のみが使えなくなります。<br>※ 万一この 1 ファイルが原因で Unity のコンパイルが通らない場合（バージョン差や他アセットとの競合など）は、<b><code class="inl">ARLitToonBaker.cs</code> を削除すれば復旧します</b>。必須にしていないのはこのためです。</p>
   </div>
-  <h4><span class="hx">#</span> 【禁止事項】</h4>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第9条（禁止事項）</h4>
   <ul>
-    <li>本シェーダー（改変物を含む）単体での無断再配布、転載、および販売（※ご自身の作品に同梱して販売・配布する場合は問題ありません）。</li>
-    <li>VRChat等において、ARLitToonシェーダーを利用したアバターを「パブリックアバター」としてアップロードする行為（第三者がアバターをクローン・抽出できる状態にすること）。</li>
+    <li>本シェーダー（改変物を含みます）単体での無断再配布、転載、および販売（※ご自身の作品に同梱して販売・配布する場合は問題ありません）。</li>
+    <li>ソーシャル VR プラットフォームにおいて、本シェーダーを利用したアバターを「パブリックアバター」としてアップロードする行為（第三者がアバターをクローン・抽出できる状態にすること）。</li>
+    <li>本規約で許諾されていない範囲での利用。</li>
   </ul>
-  <h4><span class="hx">#</span> 【免責事項】</h4>
-  <ul>
-    <li>本シェーダーを利用したことによって生じるいかなるトラブルや損害に対しても、作者（ARL）は一切の責任を負わないものとします。</li>
-  </ul>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第10条（クレジット表記）</h4>
+  <p>作者名（ARL）や本シェーダー名（ARLitToon）のクレジット表記は任意（不要）です。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第11条（免責事項）</h4>
+  <p>本シェーダーの利用によって生じたトラブルや損害について、ARL は、ARL の故意または重大な過失による場合を除き、責任を負わないものとします。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第12条（規約の変更）</h4>
+  <p>ARL は、法令の改正その他必要がある場合、民法の定めに従い、あらかじめ変更内容および効力発生日を本 README または販売ページで周知したうえで、本規約を変更することがあります。</p>
+  </div>
+  <div class="rv">
+  <h4><span class="hx">#</span> 第13条（準拠法・正文）</h4>
+  <p>本規約は日本法に準拠し、日本語版を正文とします。翻訳版との間に解釈の相違がある場合は日本語版が優先します。</p>
   </div>
 </section>
 

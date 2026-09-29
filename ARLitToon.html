@@ -762,7 +762,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
     <tr><td>Shadow Blur</td><td>影のボケ足（滑らかさ）を調整します。Sphereなどの影がカクつく場合や、落ち影を綺麗に馴染ませたい場合は数値を少し上げてください。</td></tr>
     <tr><td>Shadow Normal Strength</td><td>ノーマルマップの凹凸をこの影へどれだけ反映させるかです。<code class="inl">1</code>（初期値）でノーマルマップどおり、<code class="inl">0</code> に近づけるほど元のメッシュの形だけで陰影が作られます（肌の細かい凹凸で影がザラつくときに下げます）。</td></tr>
     <tr><td>Shadow Flat Mode / Flat Border / Flat Blur</td><td>面の向き（法線）ではなく「モデル自体の向き」と光の方向だけで影を決めます（初期値 OFF）。顔など「凹凸に応じた陰影ではなく作画のような平坦な影」にしたい部位向けです。Flat Border で影が出始める向きを、Flat Blur でその幅を決めます。</td></tr>
-    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 ON</b>）。影の縞や粗さが目立つワールドでは OFF にするか、Shadow Blur を上げて馴染ませてください。</td></tr>
+    <tr><td>Receive Shadow（落ち影を受ける）</td><td>ワールドの平行光が落とす影（木々・建物の落ち影や自分の前髪の影など）を、上記のトゥーン影（Shadow Color / Border / Blur）として受け取ります（<b>既定 OFF</b>）。<b>2 影・3 影にも同じ設定が効きます</b>（OFF にすると、どの段も落ち影を受けません）。影の縞や粗さが目立つワールドでは OFF のまま使うか、Shadow Blur を上げて馴染ませてください。</td></tr>
   </tbody></table>
   </div>
   <div class="rv">
@@ -790,6 +790,11 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
   <div class="rv">
   <div class="note info" data-label="NOTE — Receive Shadow の発現条件">
     <p>ワールドにリアルタイムの平行光（Directional Light）があり、そのライトの影（Shadows）が有効で、シャドウ描画距離の範囲内にいるときのみ影を受けます。条件を満たさないワールドでは従来どおりの表示です（OFF と同じ見た目）。アバターが影を「落とす」機能は従来から有効で、本設定の対象は「受ける」側のみです。</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ 立ち位置によって影が出たり消えたりすることがあります">
+    <p>影の細かさはワールドの設定（シャドウ描画距離や、ライトの影の設定）で決まり、アバターの立つ位置によって切り替わります。トゥーンの影は境界がはっきりしているため、その切り替わりが「影が出る／消える」としてはっきり見えてしまいます。<b>これはシェーダー側では抑えられない</b>ため、v48_GUIr0 から初期値を OFF にしました。ON にする場合は、Shadow Blur を上げると目立ちにくくなります。</p>
   </div>
   </div>
   <div class="rv">

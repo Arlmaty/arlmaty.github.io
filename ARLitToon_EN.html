@@ -768,7 +768,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
     <tr><td>Shadow Blur</td><td>Adjusts the softness (smoothness) of the shadow edge. Raise the value a little if shadows on spheres and the like look jagged, or if you want cast shadows to blend in nicely.</td></tr>
     <tr><td>Shadow Normal Strength</td><td>How much the bumps of the normal map are reflected in this shadow. At <code class="inl">1</code> (default) it follows the normal map; the closer to <code class="inl">0</code>, the more the shading is made only from the original mesh shape (lower it when fine skin bumps make the shadow grainy).</td></tr>
     <tr><td>Shadow Flat Mode / Flat Border / Flat Blur</td><td>Decides the shadow only from "the orientation of the model itself" and the light direction, not from the surface direction (normals) (default OFF). For parts such as faces where you want "a flat, illustrated shadow rather than shading that follows bumps". Flat Border decides the direction where the shadow starts, and Flat Blur its width.</td></tr>
-    <tr><td>Receive Shadow</td><td>Receives the shadows cast by the world's directional light (shadows of trees and buildings, the shadow of your own bangs, etc.) as the toon shadow above (Shadow Color / Border / Blur) (<b>default ON</b>). In worlds where stripes or roughness of the shadows are noticeable, turn it OFF or raise Shadow Blur to blend them in.</td></tr>
+    <tr><td>Receive Shadow</td><td>Receives the shadows cast by the world's directional light (shadows of trees and buildings, the shadow of your own bangs, etc.) as the toon shadow above (Shadow Color / Border / Blur) (<b>default OFF</b>). <b>The same setting also applies to the 2nd and 3rd shadow</b> (when it is OFF, no tier receives cast shadows). In worlds where stripes or roughness of the shadows are noticeable, keep it OFF or raise Shadow Blur to blend them in.</td></tr>
   </tbody></table>
   </div>
   <div class="rv">
@@ -800,6 +800,11 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
   <div class="rv">
   <div class="note info" data-label="NOTE — Conditions for Receive Shadow to appear">
     <p>Shadows are received only when the world has a realtime directional light, its shadows are enabled, and you are within the shadow draw distance. In worlds that do not meet these conditions, the display is as before (the same look as OFF). The avatar's ability to "cast" shadows has always been enabled; this setting only concerns the "receiving" side.</p>
+  </div>
+  </div>
+  <div class="rv">
+  <div class="note warn" data-label="⚠ The shadow may appear and disappear depending on where you stand">
+    <p>How detailed the shadow is depends on the world's settings (the shadow draw distance and the light's shadow settings), and it switches with the position where the avatar stands. Because toon shadows have a sharp boundary, that switch shows up clearly as "the shadow appearing / disappearing". <b>This cannot be suppressed by the shader</b>, so the default is OFF from v48_GUIr0. If you turn it ON, raising Shadow Blur makes it less noticeable.</p>
   </div>
   </div>
   <div class="rv">

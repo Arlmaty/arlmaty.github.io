@@ -324,7 +324,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
     <tr><td>2nd テクスチャ（色・合成モード・別マスク）</td><td>Texture Layer（別マスクはアルファへ焼き込み／マスクだけの構成はマスクをアルファへ焼き直し）</td></tr>
     <tr><td>アルファマスク（＋透過率調整 Scale/Value）</td><td>Texture Layer 透明マスク（透過率調整はマスク画像へ焼き込み）/ メインテクスチャのアルファへ焼き込み</td></tr>
     <tr><td>影（色 / 強さ / 境界 / ぼかし）・2 影 / 3 影・境界の色づけ・明るさ上限下限</td><td>Lighting &amp; Shadow / Toon Shadow（2 影・3 影・境界の色づけ）/ Light Limit</td></tr>
-    <tr><td>シャドウ受光（落ち影の受け取り ON/OFF）</td><td>Receive Shadow（設定がある場合のみ引き継ぎ）</td></tr>
+    <tr><td>シャドウ受光（落ち影の受け取り ON/OFF）</td><td>Receive Shadow（設定がある場合のみ引き継ぎ。無い場合は ARLitToon の初期値＝v48_GUIr0 以降は OFF。ON を引き継いだときはレポートで注意をお知らせします）</td></tr>
     <tr><td>落ち影専用シェーダー（FakeShadow）のマテリアル</td><td>Fake Shadow Mesh（影用メッシュはそのまま利用・下記参照）</td></tr>
     <tr><td>ノーマルマップ / 反射（Smoothness・Metallic 等）</td><td>PBR（BRDF）</td></tr>
     <tr><td>発光（色 / テクスチャ / マスク / スクロール / 点滅）</td><td>Emission（マスクは Emission Map のアルファへ焼き込み〔ラメのマスクと取り合うときは RGB へ〕・点滅はパルスに近似）</td></tr>
@@ -588,7 +588,8 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
     <li>⑪<b>発光のマスクを Emission Map のアルファへ移すようにしました</b>（ARLitToon v48_GUIr0 以降）。<b>v6_GUIr0 までは発光の色へ掛け合わせていたため、発光がスクロールするとマスクも一緒に流れ、位置がずれていました</b>（警告も出ませんでした）。アルファはラメのマスクとの共用枠のため、両方が別の画像のときはラメを優先し、発光のマスクは従来どおり発光の色へ掛け合わせます（位置がずれる場合はレポートで警告）。</li>
     <li>⑫<b>組み立てた発光テクスチャと、そのチャンネルごとの中身（RGB／アルファ）を <code class="inl">Textures/EmissionMap_&lt;マテリアル名&gt;/</code> にまとめて書き出す</b>ようにしました。</li>
     <li>⑬<b>発光テクスチャ自身のアルファと、発光色のアルファを反映するようにしました。</b> 変換元はどちらも発光の強さに掛けますが、<b>v6_GUIr0 までは捨てていたため、透明な部分（色が黒でない場合）が光り、発光色のアルファが 1 未満のときは発光が強すぎました</b>（警告も出ませんでした）。今後は発光テクスチャのアルファを発光の色へ、発光色のアルファを Intensity へ掛け合わせます。</li>
-    <li>⑭<b>ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました</b>（ウィンドウ上部のタブ。初回はシェーダーの Inspector と同じ言語で開き、切り替えた言語は保存されます。変換レポートは日本語のみ）。</li>
+    <li>⑭<b>シャドウ受光（Receive Shadow）を ON で引き継いだとき、レポートで注意をお知らせする</b>ようにしました。ARLitToon v48_GUIr0 で Receive Shadow の初期値が OFF になりました（リアルタイムの平行光があるワールドで、立ち位置によって影が出たり消えたりすることがあるため）。<b>変換元で ON にしている場合は、これまでどおり ON を引き継ぎます</b>（変換元も同じ仕組みで影を受けているため）。変換元に設定が無い場合は ARLitToon の初期値（OFF）になります。</li>
+    <li>⑮<b>ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました</b>（ウィンドウ上部のタブ。初回はシェーダーの Inspector と同じ言語で開き、切り替えた言語は保存されます。変換レポートは日本語のみ）。</li>
   </ul>
   </div>
   <div class="rv">

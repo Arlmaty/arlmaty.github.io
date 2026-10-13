@@ -184,10 +184,6 @@ body.nav-open .nav-backdrop{display:block;position:fixed;inset:0;z-index:45;back
 body.nav-open .menu-btn .bars{background:transparent}
 body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .menu-btn .bars::after{transform:rotate(-45deg)}
 }
-
-/* ===== converter page ===== */
-.vlist{list-style:none;margin-left:6px}
-.vlist li{margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -273,7 +269,7 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
       <li>本ツールは ARLitToon シェーダー本体とは別の付属ツールです。</li>
       <li>lilToon はプロパティ名の読み取りにのみ参照し、lilToon 本体のコード・アセットは含みません・変更しません。</li>
       <li>対応シェーダー版: <b>ARLitToon v48_GUIr0</b>（それ以前の版でも動作します。存在しない項目は自動でスキップ）。</li>
-      <li>本ツール自身のバージョン: <b>v7_GUIr0</b>（更新履歴は末尾「バージョン」節を参照。上記の「対応シェーダー版」とは別の番号です）。</li>
+      <li>本ツール自身のバージョン: <b>v7_GUIr0</b>（更新履歴は末尾「バージョン（更新履歴 / Changelog）」節を参照。上記の「対応シェーダー版」とは別の番号です）。</li>
     </ul>
   </div>
   </div>
@@ -563,72 +559,25 @@ body.nav-open .menu-btn .bars::before{transform:rotate(45deg)}body.nav-open .men
 
 <!-- ============ VERSION ============ -->
 <section id="version">
-  <div class="sec-head rv"><div class="num">SEC. 10 — VERSION</div><h2>バージョン</h2><div class="sub">// versioning and changelog</div></div>
+  <div class="sec-head rv"><div class="num">SEC. 10 — VERSION</div><h2>バージョン（更新履歴 / Changelog）</h2><div class="sub">// versioning and changelog</div></div>
   <div class="rv">
-  <p>本ツールは <code class="inl">converter/Editor/ARLitToonConverter.cs</code> の<b>1ファイル</b>ですが、ARLitToon シェーダー本体（<code class="inl">Shaders/ARLitToon.shader</code> ＋ <code class="inl">Editor/ARLitToonGUI.cs</code>）と同じ <b>B方式</b>（<code class="inl">v{N}_GUIr{M}</code>）でバージョンを管理します。ウィンドウ上部・完了ダイアログ・変換レポートの先頭に表示されます。</p>
-  <ul>
-    <li><b><code class="inl">N</code>（変換ロジックの版・shader 相当）</b>：変換で書き込むプロパティの追加/変更、共有マスクの割当変更、変換対象外シェーダーの追加など、<b>変換結果に影響する変更</b>をしたら +1 し、GUI 枝番を 0 に戻す。</li>
-    <li><b><code class="inl">M</code>（GUI 枝番・GUI.cs 相当）</b>：ウィンドウのレイアウト・表示文言など、<b>変換結果に影響しない UI のみの変更</b>のとき +1（変換ロジックは無変更）。</li>
-  </ul>
-  <p>上記の「対応シェーダー版」（ARLitToon 側の最終確認バージョン）とは<b>別の番号</b>です。混同しないでください。</p>
+  <p>最新版の変更点は下記に、それ以前の履歴は折り畳み内にまとめています。バージョンは小数点を使わない整数で <code class="inl">v{変換ロジックの版}_GUIr{GUI 枝番}</code> と表記します（ARLitToon シェーダー本体と同じ方式）。本ツールは <code class="inl">converter/Editor/ARLitToonConverter.cs</code> の 1 ファイルで、変換で書き込むプロパティの追加・変更、共有マスクの割り当て変更、変換対象外にするシェーダーの追加など<b>変換結果に影響する変更</b>をしたときは <code class="inl">v</code> の数字を上げて <code class="inl">GUIr</code> を <code class="inl">0</code> に戻し、ウィンドウのレイアウト・表示文言など<b>変換結果に影響しない変更</b>のときは <code class="inl">GUIr</code> の数字だけを上げます。現在の版はウィンドウ上部・完了ダイアログ・変換レポートの先頭で確認できます。冒頭の「対応シェーダー版」（ARLitToon 側の最終確認バージョン）とは<b>別の番号</b>です。混同しないでください。本履歴には各版の<b>変更点のみ</b>を記載します。各項目の変換内容は前述の「主な変換マッピング」を参照してください。</p>
+  <div class="note tip" data-label="最新版 — v7_GUIr0" style="border-color:var(--ac-line);background:linear-gradient(135deg,var(--ac-dim),#fff 70%)">
+    <p><span class="vtag">v7_GUIr0</span> <b>ARLitToon v48_GUIr0（3枚目の Matcap・リムライトのマスク）に対応しました。</b><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・メインカラー2nd / 3rd の「UV Mode = MatCap」に対応しました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・MatCap を 2 枚とも使い、両方にマスクがある構成で、1枚目のマスクも反映できるようになりました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・変換元が 4 層以上のマトキャップを使っている場合は、優先順で 3 つまで割り当てるようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・リムライトのテクスチャを Rim マスクへ変換するようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・リムシェード（縁を暗くする）に対応しました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・光沢（反射・スペキュラ）の質感を移植するようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・メインカラー2nd が「マスクだけ」の構成で、マスクが効いていなかった不具合を修正しました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・リムシェードのマスクを共有マスクの <code class="inl">B</code> に固定で入れるのをやめました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・マスクが 1 枚だけのときも、共有マスクを生成して ARLitToon の既定チャンネルを読むようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・ラメの「色 / マスク」テクスチャを反映するようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・発光のマスクを Emission Map のアルファへ移すようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・組み立てた発光テクスチャと、そのチャンネルごとの中身（RGB／アルファ）を書き出すようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・発光テクスチャ自身のアルファと、発光色のアルファを反映するようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・シャドウ受光（Receive Shadow）を ON で引き継いだとき、レポートで注意をお知らせするようにしました。</span><span class="lead" style="display:block;padding-left:1em;text-indent:-1em">・ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました。</span></p>
   </div>
-  <div class="rv">
-  <p><span class="vtag">v7_GUIr0</span> <b>ARLitToon v48_GUIr0（3枚目 Matcap・リムライトのマスク）へ追従</b>。</p>
-  <ul class="vlist">
-    <li>①<b>メインカラー2nd / 3rd の「UV Mode = MatCap」に対応</b>しました。<b>v5_GUIr0 までは UV Mode を読まずに 2nd を無条件で Texture Layer へ変換していたため、マトキャップとして使われていた場合に投影方式が失われて絵が別物になり、警告も出ませんでした。</b>今後は Matcap スロットへ変換します（3rd も同様。UV Mode が MatCap 以外のときは従来どおり）。</li>
-    <li>②<b>MatCap を 2 枚とも使い、両方にマスクがある構成で、1枚目のマスクも反映できるようになりました</b>（共有マスクの <code class="inl">R</code> と <code class="inl">G</code> へ詰めた画像を自動生成します）。v5_GUIr0 までは領域マスクが 1 本しか無かったため 1枚目のマスクは反映できず、レポートで通知するだけでした。</li>
-    <li>③変換先の Matcap スロットが 3 つになったため、<b>変換元が 4 層以上のマトキャップを使っている場合は優先順で 3 つまで割り当て、あふれた層をレポートで通知</b>します。</li>
-    <li>④<b>リムライトのテクスチャを Rim マスクへ変換</b>するようにしました（変換元のリム色テクスチャは乗算で効くため、黒い領域はリムが出ません＝実質マスクとして使われています）。<b>v5_GUIr0 までは「対応機能がないため反映していません」と警告して捨てていました</b>（ARLitToon 側に受け皿が無かったため）。色の変化までは再現できません。</li>
-    <li>⑤<b>リムシェード（縁を暗くする）に対応しました</b>。<b>v5_GUIr0 までは変換も警告もされず、黙って落ちていました。</b><b>ARLitToon v48_GUIr0 以降では、専用の Rim Shade へそのまま変換します</b>（色・太さ・濃さ・マスクをそれぞれ専用の項目へ移します）。<b>Rim Shade はリムライトとは独立したレイヤー</b>なので、<b>リムライトとリムシェードが両方有効な変換元も、両方そのまま再現できます。</b>ARLitToon が v47_GUIr0 以前の場合は、従来どおり Rim Light の Multiply モードで近似し（リムライトと同時には使えないため、両方有効なときはリムライトを優先して）レポートで通知します。</li>
-    <li>⑥<b>光沢（反射・スペキュラ）の質感を移植するようにしました。</b> 変換元は光沢を「面」として塗るのに対し、ARLitToon は物理的な光の反射で表現するため、<b>設定値をそのまま持ち込むと光沢が針の先のような点になり、布のツヤが消えていました</b>。変換元で反射とスペキュラが有効なときは、<b>Smoothness に上限をかけてツヤを広げ、Metallic をわずかに持たせ、Specular Highlight を上げます</b>。<b>環境反射（Reflection Strength）は上げません</b>（ワールドのリフレクションプローブに依存せず、パーティクルの描画負荷にもならないため）。強すぎる・弱すぎる場合は PBR（BRDF） の Smoothness / Specular Highlight で調整してください。</li>
-    <li>⑦<b>メインカラー2nd が「マスクだけ」の構成で、マスクが効いていなかった不具合を修正しました。</b><b>v6_GUIr0 までは変換元のマスク画像をそのまま Layer テクスチャに割り当てていました</b>が、ARLitToon の Texture Layer は<b>テクスチャのアルファ</b>を合成マスクとして読むため、<b>マスクがまったく効かず、さらに乗算ではマスクの黒い領域で下地が暗く落ちていました</b>。今後は「RGB = 白 / アルファ = マスク」に焼き直した画像を生成して割り当てます（「マスクテクスチャを焼き込んだ合成テクスチャを生成する」が ON のとき。OFF のときは従来どおり割り当てたうえで見た目が崩れる旨を警告します）。</li>
-    <li>⑧<b>リムシェードのマスクを共有マスクの <code class="inl">B</code> に固定で入れるのをやめました。</b> リムライトのマスクが無いときは ARLitToon の既定と同じ <code class="inl">A</code> に、両方あるときは空いているチャンネルを <code class="inl">G</code> → <code class="inl">R</code> → <code class="inl">B</code> の順に使います。<b>以前は常に <code class="inl">B</code> に入れていたため、変換後にそのマテリアルへ Fake Shadow を焼きこむと、リムシェードのマスクが影の形に置き換わっていました</b>（焼きこみは <code class="inl">B</code> を上書きするため）。<code class="inl">B</code> しか空いていないときは、その旨をレポートで警告します。</li>
-    <li>⑨<b>マスクが 1 枚だけのときも、共有マスクを生成して ARLitToon の既定チャンネルを読むようにしました</b>（焼き込み ON のとき）。<b>以前は変換元のマスク画像をそのまま割り当てて <code class="inl">R</code> を読ませていた</b>ため、たとえばリムライトのマスクだけの変換元では、Inspector の表示（既定 <code class="inl">A</code>）と実際に読むチャンネル（<code class="inl">R</code>）が食い違っていました。あわせて、<b>各チャンネルの中身を機能ごとの個別画像としても保存</b>するようにしました（<code class="inl">Textures/SharedMask_&lt;マテリアル名&gt;/</code>）。</li>
-    <li>⑩<b>ラメの「色 / マスク」テクスチャを反映するようにしました。</b> <b>v6_GUIr0 までは受け皿が無く、マスク付きのラメが全面に出ていました</b>（警告も出ませんでした）。今後はテクスチャの明るさ × アルファを Emission Map のアルファへ焼き込み、ARLitToon のラメのマスクにします（ARLitToon v48_GUIr0 以降・焼き込み ON のとき。発光の色は変わりません）。</li>
-    <li>⑪<b>発光のマスクを Emission Map のアルファへ移すようにしました</b>（ARLitToon v48_GUIr0 以降）。<b>v6_GUIr0 までは発光の色へ掛け合わせていたため、発光がスクロールするとマスクも一緒に流れ、位置がずれていました</b>（警告も出ませんでした）。アルファはラメのマスクとの共用枠のため、両方が別の画像のときはラメを優先し、発光のマスクは従来どおり発光の色へ掛け合わせます（位置がずれる場合はレポートで警告）。</li>
-    <li>⑫<b>組み立てた発光テクスチャと、そのチャンネルごとの中身（RGB／アルファ）を <code class="inl">Textures/EmissionMap_&lt;マテリアル名&gt;/</code> にまとめて書き出す</b>ようにしました。</li>
-    <li>⑬<b>発光テクスチャ自身のアルファと、発光色のアルファを反映するようにしました。</b> 変換元はどちらも発光の強さに掛けますが、<b>v6_GUIr0 までは捨てていたため、透明な部分（色が黒でない場合）が光り、発光色のアルファが 1 未満のときは発光が強すぎました</b>（警告も出ませんでした）。今後は発光テクスチャのアルファを発光の色へ、発光色のアルファを Intensity へ掛け合わせます。</li>
-    <li>⑭<b>シャドウ受光（Receive Shadow）を ON で引き継いだとき、レポートで注意をお知らせする</b>ようにしました。ARLitToon v48_GUIr0 で Receive Shadow の初期値が OFF になりました（リアルタイムの平行光があるワールドで、立ち位置によって影が出たり消えたりすることがあるため）。<b>変換元で ON にしている場合は、これまでどおり ON を引き継ぎます</b>（変換元も同じ仕組みで影を受けているため）。変換元に設定が無い場合は ARLitToon の初期値（OFF）になります。</li>
-    <li>⑮<b>ウィンドウの表示言語を「日本語 / English」で切り替えられるようにしました</b>（ウィンドウ上部のタブ。初回はシェーダーの Inspector と同じ言語で開き、切り替えた言語は保存されます。変換レポートは日本語のみ）。</li>
-  </ul>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v6_GUIr0</span> <b>多段の影を引き継ぐようにした</b>（ARLitToon v47_GUIr0 対応）。<b>2 影・3 影</b> の色・強度・境界・ボケ足・ノーマルマップの反映度と、<b>境界の色づけ</b>を引き継ぎます（これまでは「2影は 1 段に簡略化」という警告を出していました）。いずれも <b>ON/OFF は専用チェックボックスへ写し</b>、不透明度は「濃さの強度」として渡します。<b>落ち影を受ける度合い・影色へのメインカラー乗算・明るい場所での薄め方は書き込みません</b>（ARLitToon 側で固定運用になったため）。影色テクスチャ・AO マップなど<b>画像で指定する項目は引き継げない</b>ため、従来どおり警告でお知らせします。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v5_GUIr0</span> <b>ARLitToon v46_GUIr0 へ追従</b>。</p>
-  <ul class="vlist">
-    <li>①<b>変換元で反射を使っていないマテリアルの環境反射を明示的に OFF にした</b>（ARLitToon v45 で <code class="inl">Reflection Strength</code> の初期値が <code class="inl">0</code> → <code class="inl">1</code> に変わったため、従来の実装のままだと<b>反射を使っていなかった素材すべてに映り込みが乗る</b>状態になっていた）。</li>
-    <li>②<b><code class="inl">Specular Highlight</code> を常に <code class="inl">0</code>（物理そのまま）にした</b>（同じく v45 でこの項目の意味が「ハイライトの量」から「物理項への上乗せ（最大約 5 倍）」へ変わったため、従来どおり値を写すと過剰に光っていた）。</li>
-    <li>③<b>変換後のアバターを Prefab として保存する機能を追加</b>（既定 ON・保存先の既定は出力フォルダと同じ）。<b>保存の結果は成功・失敗・スキップのいずれでも必ずレポートに出ます</b>（Missing Script がある場合は該当する GameObject まで表示）。<b>Hierarchy の変換済みアバターは、保存した Prefab のインスタンスになります。</b></li>
-    <li>④<b>描画モード「[高負荷] 屈折」「[高負荷] 屈折ぼかし」と Gem を <code class="inl">Transparent</code>（ガラス材質向け）へ変換</b>するようにした（メインカラーのアルファは元の数値をそのまま引き継ぎ、値をレポートに表示）。</li>
-    <li>⑤<b>リムライトの強さ・太さを変換後の既定値（Rim Power <code class="inl">1</code> / Rim Intensity <code class="inl">0.1</code>）に設定</b>するようにした（元の値を換算して持ち込むとリムが強く出すぎるため。元に寄せる場合の目安はレポートに表示）。</li>
-    <li>⑥<b>ガラス材質のメインカラーのアルファを <code class="inl">10/255</code> に設定</b>するようにした（変換元はアルファ <code class="inl">255</code> でも屈折で透けるため、そのまま持ち込むと不透明の白い板になる）。</li>
-    <li>⑦<b>MatCap の「通常（置き換え）」合成の近似先を加算 → 乗算へ変更</b>（加算だと素材が白く発光するため）。</li>
-    <li>⑧<b>変換後のアバターから Pipeline Manager を外す機能を追加</b>（既定 ON・複製時のみ）。付いたままだと元アバターと同じアップロード先を指し、変換後をアップロードすると元を上書きしてしまうため。</li>
-    <li>⑨<b>落ち影マテリアルの変換方式の既定を「ベースマテリアルへ統合する」に変更</b>（影用スロットが 1 つ減るため）。</li>
-    <li>⑩<b>メインカラー2nd が「マスクのみ」の構成のとき、Texture Layer の合成モードを <code class="inl">Multiply</code>（既定）に設定</b>するようにした（Normal だとマスク領域で下地の陰影が失われ、貼り付けたように浮くため。下地を置き換えたい場合は Normal へ変更・レポートで案内）。<b>2nd テクスチャがある構成は変換元のブレンドモードをそのまま引き継ぎます。</b></li>
-    <li>⑪<b>メインカラー2nd がテクスチャ未設定でマスクのみの場合に、まったく変換されなかった不具合を修正</b>（色オーバーレイが ON にならずマスクも運ばれていなかった）。マスク画像を Layer テクスチャへ割り当てます。</li>
-    <li>⑫<b>変換後のマテリアルが黒くなる 2 つのケースで <code class="inl">Metallic</code> を <code class="inl">0</code> にするようにした</b>＝メタリックマップが設定されている場合（再現できないため全面金属に化ける）と、環境反射が <code class="inl">0</code> なのに <code class="inl">Metallic</code> だけ高い場合（映り込む先が無い）。いずれもレポートで通知します。</li>
-  </ul>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v4_GUIr0</span> <b>「ベースマテリアルへ統合する」で影が出ない不具合を修正</b>。統合先の Render Queue を受け手より後ろへ（+1）調整するようにした（Fake Shadow Mesh は受け手より後に描くことが動作条件のため）。修正前は Inspector で Fake Shadow Mesh を OFF→ON すると出る、という症状になっていた。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v3_GUIr0</span> <b>落ち影マテリアルの変換方式を選べるようにした</b>（「影用メッシュをそのまま変換する」／「ベースマテリアルへ統合する」）。統合を選ぶと、同じレンダラーのベースマテリアルへ Fake Shadow Mesh を移植し、影用スロットを削除する。ベースが同居しない場合は自動で従来方式へフォールバック。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v2_GUIr2</span> <b>変換レポートに「スキップしたマテリアル」の専用セクションを追加</b>。マテリアル名・シェーダー名・スキップ理由に加え、<b>アバター内のどこで使われているか（GameObject パスとマテリアルスロット番号）を一覧表示</b>するようにした。また、すでに ARLitToon になっているマテリアルが件数だけ増えて行に出ず件数と内訳が合わなかった問題も解消。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v2_GUIr1</span> <b>出力フォルダの既定がアバター名に追従しない不具合を修正</b>（アバター未設定のままウィンドウを開くと <code class="inl">.../Materials</code> で固定され、後からアバターを入れても変わらなかった）。あわせて既定のフォルダ名に<b>元 Prefab アセットの名前</b>を使うようにし、「マスクテクスチャを焼き込んだ合成テクスチャを生成する」の既定 ON を EditorPrefs で保持するようにした。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v2_GUIr0</span> 落ち影専用シェーダー（FakeShadow）のマテリアルを、スキップせず <b>ARLitToon の Fake Shadow Mesh へ変換</b>するようにした（影用メッシュはそのまま利用・base pass は不可視化）。</p>
-  </div>
-  <div class="rv">
-  <p><span class="vtag">v1_GUIr0</span> バージョン管理を導入（本節・ウィンドウ表示・レポート表示を新設）。</p>
+  <details>
+    <summary>過去の更新履歴を開く（クリックで展開）</summary>
+    <div class="dbody"><ul style="list-style:none;margin-left:0">
+      <li><span class="vtag">v6_GUIr0</span> <b>多段の影を引き継ぐようにしました</b>（ARLitToon v47_GUIr0 対応）。<b>2 影・3 影</b> の色・強度・境界・ボケ足・ノーマルマップの反映度と、<b>境界の色づけ</b>を引き継ぎます（これまでは「2影は 1 段に簡略化」という警告を出していました）。いずれも <b>ON/OFF は専用チェックボックスへ写し</b>、不透明度は「濃さの強度」として渡します。<b>落ち影を受ける度合い・影色へのメインカラー乗算・明るい場所での薄め方は書き込みません</b>（ARLitToon 側で固定運用になったため）。影色テクスチャ・AO マップなど<b>画像で指定する項目は引き継げない</b>ため、従来どおり警告でお知らせします。</li>
+      <li><span class="vtag">v5_GUIr0</span> <b>ARLitToon v46_GUIr0 に対応し、変換後のアバターを Prefab として保存する機能などを追加しました。</b></li>
+      <li><span class="vtag">v4_GUIr0</span> <b>「ベースマテリアルへ統合する」で影が出ない不具合を修正しました。</b> 統合先の Render Queue を受け手より後ろへ（+1）調整するようにしました（Fake Shadow Mesh は受け手より後に描くことが動作条件のため）。修正前は Inspector で Fake Shadow Mesh を OFF→ON すると出る、という症状になっていました。</li>
+      <li><span class="vtag">v3_GUIr0</span> <b>落ち影マテリアルの変換方式を選べるようにしました</b>（「影用メッシュをそのまま変換する」／「ベースマテリアルへ統合する」）。統合を選ぶと、同じレンダラーのベースマテリアルへ Fake Shadow Mesh を移植し、影用スロットを削除します。ベースが同居しない場合は自動で従来方式へフォールバックします。</li>
+      <li><span class="vtag">v2_GUIr2</span> <b>変換レポートに「スキップしたマテリアル」の専用セクションを追加しました。</b> マテリアル名・シェーダー名・スキップ理由に加え、<b>アバター内のどこで使われているか（GameObject パスとマテリアルスロット番号）を一覧表示</b>するようにしました。また、すでに ARLitToon になっているマテリアルが件数だけ増えて行に出ず、件数と内訳が合わなかった問題も解消しました。</li>
+      <li><span class="vtag">v2_GUIr1</span> <b>出力フォルダの既定がアバター名に追従しない不具合を修正しました</b>（アバター未設定のままウィンドウを開くと <code class="inl">.../Materials</code> で固定され、後からアバターを入れても変わりませんでした）。あわせて既定のフォルダ名に<b>元 Prefab アセットの名前</b>を使うようにし、「マスクテクスチャを焼き込んだ合成テクスチャを生成する」の既定 ON を EditorPrefs で保持するようにしました。</li>
+      <li><span class="vtag">v2_GUIr0</span> <b>落ち影専用シェーダー（FakeShadow）のマテリアルを、スキップせず ARLitToon の Fake Shadow Mesh へ変換するようにしました</b>（影用メッシュはそのまま利用・base pass は不可視化）。</li>
+      <li><span class="vtag">v1_GUIr0</span> <b>バージョン管理を導入しました</b>（本節・ウィンドウ表示・レポート表示を新設）。</li>
+    </ul></div>
+  </details>
   </div>
 </section>
 
